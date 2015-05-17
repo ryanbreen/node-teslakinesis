@@ -5,9 +5,28 @@
 // Stream data from Tesla's streaming API to either a flat file or a MongoDB database
 //
 var request = require('request');
+var kinesis = require('kinesis');
 var teslams = require('teslams');
 var fs = require('fs');
 var util = require('util');
+
+var telemetry_buffer = [];
+
+var Readable = require('stream').Readable;
+
+var TeslaTelemetryStream = function(options) {
+    Readable.call(this, options);
+};
+
+util.inherits(TeslaTelemetryStream, Readable);
+
+TeslaTelemetryStream.prototype._read = function(n) {
+    if (telemetry_buffer.length > 0) {
+        tesla_telemetry_stream.push(telemetry_buffer.shift());
+    }
+};
+
+var tesla_telemetry_stream = new TeslaTelemetryStream();
 
 function argchecker( argv ) {
     if (argv.kinesis == true) throw 'MongoDB database name is unspecified. Use -d dbname or --db dbname';
@@ -69,22 +88,28 @@ var argv = require('optimist')
 
 argv = argv.argv;
 
-var creds = {
-    username: argv.username,
-    password: argv.password
-}
-
-console.log(creds);
-
-argv.napcheck *= 60000;
-argv.sleepcheck *= 60000;
-
 if ( argv.help == true ) {
     console.log(usage);
     process.exit(1);
 }
 
-var nFields = argv.values.split(",").length + 1; // number of fields including ts
+var creds = {
+    username: argv.username,
+    password: argv.password
+};
+
+console.log(creds);
+
+console.log('starting kinesis stream %s', argv.stream);
+var kinesis_sink = require('kinesis').stream(argv.stream);
+
+// Wire up our readable stream to feed data to the kinesis sink
+tesla_telemetry_stream.pipe(kinesis_sink);
+
+argv.napcheck *= 60000;
+argv.sleepcheck *= 60000;
+
+var fields = argv.values.split(",");
 
 function tsla_poll( vid, long_vid, token ) {    
     pcount++;
@@ -219,7 +244,7 @@ function tsla_poll( vid, long_vid, token ) {
                 pcount = pcount - 1;
                 return;
             } else {
-                ulog('Poll return HTTP OK and body is this:\n' + body);
+                ulog('Poll returned HTTP OK and body is this:\n' + body);
                 // put short delay to avoid infinite recursive loop and stack overflow
                 setTimeout(function() {
                     tsla_poll( vid, long_vid, token ); // poll again
@@ -256,9 +281,14 @@ function tsla_poll( vid, long_vid, token ) {
             
                 //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
                 
-                record = vals.slice(0, nFields);
-                util.log('Writing record %s', record);
-                
+                var record = {};
+                for (i=0; i<vals.length; i++) {
+                    record[fields[i]] = vals[i];
+                }
+
+                util.log('Writing record %s', JSON.stringify(record));
+                telemetry_buffer.push(JSON.stringify(record));
+                //tesla_telemetry_stream.push(JSON.stringify(record));
 /**
                   doc = { 'ts': +vals[0], 'record': record };
                   collectionS.insert(doc, { 'safe': true }, function(err,docs) {
