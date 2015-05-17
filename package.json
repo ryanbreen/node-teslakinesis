@@ -1,0 +1,33 @@
+{
+  "name": "node-teslakinesis",
+  "version": "0.0.1",
+  "description": "Stream Tesla Telemetry data to AWS Kinesis",
+  "main": "index.js",
+  "dependencies": {
+    "event-stream": "^3.3.1",
+    "kinesis": "^1.2.0",
+    "optimist": "^0.6.1",
+    "request": "^2.55.0",
+    "teslams": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryanbreen/node-teslakinesis"
+  },
+  "keywords": [
+    "node",
+    "tesla",
+    "kinesis",
+    "aws"
+  ],
+  "author": "Ryan Breen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ryanbreen/node-teslakinesis/issues"
+  },
+  "homepage": "https://github.com/ryanbreen/node-teslakinesis"
+}
