@@ -4,6 +4,7 @@
 //
 // Stream data from Tesla's streaming API to either a flat file or a MongoDB database
 //
+var es = require('event-stream');
 var request = require('request');
 var kinesis = require('kinesis');
 var teslams = require('teslams');
@@ -21,12 +22,14 @@ var TeslaTelemetryStream = function(options) {
 util.inherits(TeslaTelemetryStream, Readable);
 
 TeslaTelemetryStream.prototype._read = function(n) {
+    console.log("Read called")
     if (telemetry_buffer.length > 0) {
         tesla_telemetry_stream.push(telemetry_buffer.shift());
     }
 };
 
 var tesla_telemetry_stream = new TeslaTelemetryStream();
+//tesla_telemetry_stream.pause();
 
 function argchecker( argv ) {
     if (argv.kinesis == true) throw 'MongoDB database name is unspecified. Use -d dbname or --db dbname';
@@ -70,7 +73,9 @@ var argv = require('optimist')
     .boolean(['s', 'z'])
     .alias('S', 'stream')
     .describe('S', 'AWS Kinesis stream')
-    .default('f', 'streaming.out')
+    .default('S', 'tesla')
+    .alias('f', 'file')
+    .describe('f', 'Log file containing streaming data')
     .alias('r', 'maxrpm')
     .describe('r', 'Maximum number of requests per minute')
     .default('r', 6)
@@ -103,13 +108,49 @@ console.log(creds);
 console.log('starting kinesis stream %s', argv.stream);
 var kinesis_sink = require('kinesis').stream(argv.stream);
 
-// Wire up our readable stream to feed data to the kinesis sink
-tesla_telemetry_stream.pipe(kinesis_sink);
-
 argv.napcheck *= 60000;
 argv.sleepcheck *= 60000;
 
 var fields = argv.values.split(",");
+
+var reading = false;
+
+var write_to_kinesis = function(line) {
+    var vals = line.split(/[,\n\r]/);
+
+    if (vals.length !== (fields.length+1)) {
+        console.log('Invalid line %s.  Skipping.', line);
+        return;
+    }
+
+    var record = {};
+    record["timestamp"] = vals[0];
+    for (i=1; i<vals.length; i++) {
+        record[fields[i-1]] = vals[i];
+    }
+
+    //console.log('Writing record %s', JSON.stringify(record));
+    telemetry_buffer.push(JSON.stringify(record));
+
+    if (!reading) {
+        // Wire up our readable stream to feed data to the kinesis sink
+        tesla_telemetry_stream.pipe(kinesis_sink);
+        reading = true;
+    }
+}
+
+// Support loading a file that contains a streaming log.  This gives us a mechanism to test input without a car
+// in motion.
+if (argv.file) {
+    fs.createReadStream('tesla.out').
+        pipe(es.split(/[\r]?\n/)).
+        pipe(es.mapSync(function(data) {
+        //console.log(data);
+              write_to_kinesis(data);
+          }));
+
+    return;
+}
 
 function tsla_poll( vid, long_vid, token ) {    
     pcount++;
@@ -260,7 +301,8 @@ function tsla_poll( vid, long_vid, token ) {
             pcount = pcount - 1;
             return;
         } else { // all other unexpected responses
-            ulog('Unexpected problem with request:\n    Response status code = ' + response.statusCode + '  Error code = ' + error + '\n Polling again in 10 seconds...');
+            ulog('Unexpected problem with request:\n    Response status code = ' + response.statusCode + 
+                '  Error code = ' + error + '\n Polling again in 10 seconds...');
             // put short delay to avoid infinite recursive loop and stack overflow
             setTimeout(function() {
                 tsla_poll( vid, long_vid, token ); // poll again
@@ -270,7 +312,7 @@ function tsla_poll( vid, long_vid, token ) {
         }
     }).on('data', function(data) {
         // TODO: parse out shift_state field and assign to a global for better sleep checking
-        var d, vals, i, record, doc;              
+        var d, vals;
         d = data.toString().trim();
         vals = d.split(/[,\n\r]/);
         //check we have a valid timestamp to avoid interpreting corrupt stream data             
@@ -280,14 +322,7 @@ function tsla_poll( vid, long_vid, token ) {
             if (argv.kinesis) {
             
                 //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
-                
-                var record = {};
-                for (i=0; i<vals.length; i++) {
-                    record[fields[i]] = vals[i];
-                }
-
-                util.log('Writing record %s', JSON.stringify(record));
-                telemetry_buffer.push(JSON.stringify(record));
+                write_to_kinesis(data.toString().trim());
                 //tesla_telemetry_stream.push(JSON.stringify(record));
 /**
                   doc = { 'ts': +vals[0], 'record': record };
