@@ -10,7 +10,7 @@ exports.handler = function(event, context) {
         ddb.putItem({
           Item: {
             'timestamp': { 'N': payload['timestamp'] },
-            'speed': { 'N': payload['speed'] ? payload['speed'] : -1 },
+            'speed': { 'N': payload['speed'] && payload['speed'] !== '' ? payload['speed'] : '-1' },
             'odometer': { 'N': payload['odometer'] },
             'soc': { 'N': payload['soc'] },
             'elevation': { 'N': payload['elevation'] },
@@ -18,7 +18,7 @@ exports.handler = function(event, context) {
             'est_lat': { 'N': payload['est_lat'] },
             'est_lng': { 'N': payload['est_lng'] },
             'power': { 'N': payload['power'] },
-            'shift_state': { 'S': payload['shift_state'] },
+            'shift_state': { 'S': payload['shift_state'] && payload['shift_state'] !== '' ? payload['shift_state'] : 'O' },
             'range': { 'N': payload['range'] },
             'est_range': { 'N': payload['est_range'] },
             'heading': { 'N': payload['heading'] }
