@@ -9,6 +9,7 @@ exports.handler = function(event, context) {
 
         ddb.putItem({
           Item: {
+            'id': { 'S': payload['usersha'] + '_' + payload['timestamp'] },
             'timestamp': { 'N': payload['timestamp'] },
             'speed': { 'N': payload['speed'] && payload['speed'] !== '' ? payload['speed'] : '-1' },
             'odometer': { 'N': payload['odometer'] },
@@ -23,7 +24,7 @@ exports.handler = function(event, context) {
             'est_range': { 'N': payload['est_range'] },
             'heading': { 'N': payload['heading'] }
           },
-          TableName: 'tesla'
+          TableName: 'tesla_vehicle_status'
         }, function(err, data) {
           if (err) return console.error('Failed to write to dynamo due to %s', err);
           console.log('wrote to dynamo: %s', data);

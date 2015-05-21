@@ -4,6 +4,7 @@
 //
 // Stream data from Tesla's streaming API to either a flat file or a MongoDB database
 //
+var crypto = require('crypto');
 var es = require('event-stream');
 var request = require('request');
 var kinesis = require('kinesis');
@@ -105,6 +106,10 @@ var creds = {
 
 console.log(creds);
 
+var shasum = crypto.createHash('sha256');
+shasum.update(creds.username, 'utf8');
+var usersha = shasum.digest('hex');
+
 console.log('starting kinesis stream %s', argv.stream);
 var kinesis_sink = require('kinesis').stream(argv.stream);
 
@@ -124,6 +129,7 @@ var write_to_kinesis = function(line) {
     }
 
     var record = {};
+    record["usersha"] = usersha;
     record["timestamp"] = vals[0];
     for (i=1; i<vals.length; i++) {
         record[fields[i-1]] = vals[i];
