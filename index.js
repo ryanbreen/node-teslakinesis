@@ -104,8 +104,6 @@ var creds = {
     password: argv.password
 };
 
-console.log(creds);
-
 var shasum = crypto.createHash('sha256');
 shasum.update(creds.username, 'utf8');
 var usersha = shasum.digest('hex');
