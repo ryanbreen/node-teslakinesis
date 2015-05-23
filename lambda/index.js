@@ -26,10 +26,9 @@ exports.handler = function(event, context) {
           },
           TableName: 'tesla_vehicle_status'
         }, function(err, data) {
-          if (err) return console.error('Failed to write to dynamo due to %s', err);
+          if (err) return context.fail(err);
           console.log('wrote to dynamo: %s', data);
-          context.done();
+          context.succeed();
         });
-        console.log('Decoded payload:', payload);
     });
 };
