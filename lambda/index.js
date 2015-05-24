@@ -1,5 +1,4 @@
 var AWS = require('aws-sdk');
-var ddb = new AWS.DynamoDB();
 exports.handler = function(event, context) {
     event.Records.forEach(function(record) {
         // Kinesis data is base64 encoded so decode here
