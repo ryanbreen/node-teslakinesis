@@ -1,0 +1,19 @@
+{
+  "Records": [
+    {
+      "kinesis": {
+        "partitionKey": "partitionKey-3",
+        "kinesisSchemaVersion": "1.0",
+        "data": "eyJ2ZWhpY2xlX2lkIjoiMTAwMSIsInRpbWVzdGFtcCI6IjE0MzE3MzI0MzM0ODUiLCJzcGVlZCI6IiIsIm9kb21ldGVyIjoiMzIyODkuNCIsInNvYyI6Ijg1IiwiZWxldmF0aW9uIjoiNTAiLCJlc3RfaGVhZGluZyI6IjY4IiwiZXN0X2xhdCI6IjQyLjQ3OTg2MyIsImVzdF9sbmciOiItNzEuMjA4MzgxIiwicG93ZXIiOiIzNSIsInNoaWZ0X3N0YXRlIjoiIiwicmFuZ2UiOiIxNzAiLCJlc3RfcmFuZ2UiOiIxMzIiLCJoZWFkaW5nIjoiNjgifQo=",
+        "sequenceNumber": "49545115243490985018280067714973144582180062593244200961"
+      },
+      "eventSource": "aws:kinesis",
+      "eventID": "shardId-000000000000:49545115243490985018280067714973144582180062593244200961",
+      "invokeIdentityArn": "arn:aws:iam::465070256155:role/lambda_kinesis_role",
+      "eventVersion": "1.0",
+      "eventName": "aws:kinesis:record",
+      "eventSourceARN": "arn:aws:kinesis:tesla",
+      "awsRegion": "us-east-1"
+    }
+  ]
+}

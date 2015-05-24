@@ -1,0 +1,23 @@
+{
+  "name": "node-teslakinesis-lambda",
+  "version": "0.0.0",
+  "description": "Lambda function for processing teslakinesis data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "npm": "^2.10.1",
+    "aws-sdk": "^2.1.30",
+    "grunt": "^0.4.5",
+    "grunt-aws-lambda": "^0.4.0"
+  },
+  "bundledDependencies": [
+    "pg"
+  ],
+  "dependencies": {
+    "pg": "^4.3.0"
+  }
+}
