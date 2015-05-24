@@ -10,7 +10,10 @@ module.exports = function(grunt) {
     },
     lambda_deploy: {
       default: {
-        arn: 'arn:aws:lambda:us-east-1:465070256155:function:tesla_data_insert'
+        arn: 'arn:aws:lambda:us-east-1:465070256155:function:tesla_data_insert',
+        options: {
+          profile: 'lambda_deployer'
+        }
       }
     },
     lambda_package: {

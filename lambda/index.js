@@ -1,16 +1,22 @@
 var AWS = require('aws-sdk');
+var crypto = require('crypto');
+var pg = require('pg');
 
 var INSERT_METRIC =
   "INSERT INTO vehicle_telemetry_metrics(id, timestamp, speed, odometer, soc, elevation, est_heading, heading, location, power, shift_state, range, est_range) " +
                                 "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);"
 
+var creds = require('./creds/db.js');
+
 exports.handler = function(event, context) {
 
-  // connect to DB
-  var pg = require('pg');
-  var conn_string = "postgres://wrb:" + process.env.DB_PASSWORD + "@tesla.cfwzoyel2syn.us-east-1.rds.amazonaws.com/tesla";
+  var conn_string = "postgres://" + creds.DB_USER + ":" + creds.DB_PASSWORD + "@tesla.cfwzoyel2syn.us-east-1.rds.amazonaws.com/tesla";
+
+  console.log('attempting db conn with conn_string %s', conn_string);
 
   pg.connect(conn_string, function(err, client, done) {
+
+    console.log('got db conn');
 
     if (err) return context.fail(err);
 
