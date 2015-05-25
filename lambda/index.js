@@ -16,8 +16,6 @@ exports.handler = function(event, context) {
 
   pg.connect(conn_string, function(err, client, done) {
 
-    console.log('got db conn');
-
     if (err) return context.fail(err);
 
     event.Records.forEach(function(record) {
