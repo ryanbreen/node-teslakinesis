@@ -12,15 +12,29 @@ exports.handler = function(event, context) {
 
   var conn_string = "postgres://" + creds.DB_USER + ":" + creds.DB_PASSWORD + "@tesla.cfwzoyel2syn.us-east-1.rds.amazonaws.com/tesla";
 
-  console.log('attempting db conn with conn_string %s', conn_string);
-
   pg.connect(conn_string, function(err, client, done) {
 
     if (err) return context.fail(err);
 
+    var countdown = event.Records.length;
+
+    // TODO: Replace this with some simple underscore magic.
+    var process_records = function() {
+      countdown -= 1;
+
+      if (countdown <= 0) {
+        context.succeed();
+      }
+    };
+
     event.Records.forEach(function(record) {
       // Kinesis data is base64 encoded so decode here
       payload = JSON.parse(new Buffer(record.kinesis.data, 'base64').toString('ascii'));
+
+      // Short-circuit if record doesn't look well-formed
+      if (isNaN(parseFloat(payload['odometer']))) return process_records();
+
+      console.log(require('util').inspect(payload));
 
       //["timestamp","speed","odometer","soc","elevation","est_heading","est_lat","est_lng","power","shift_state","range","est_range","heading"]
       console.log(new Date(parseInt(payload['timestamp'])).toISOString());
@@ -46,9 +60,9 @@ exports.handler = function(event, context) {
           now
         ],
       function(err, result) {
-        if (err) return context.fail(err);
-        console.log('wrote to postgres: %s', result);
-        context.succeed();
+        if (err) console.error('Write failed due to %s', err);
+        else console.log('wrote to postgres: %s', result);
+        process_records();
       });
     });
   });

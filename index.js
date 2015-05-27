@@ -119,7 +119,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         var vals = line.split(/[,\n\r]/);
 
         if (vals.length !== (fields.length+1)) {
-            console.log('Invalid line %s.  Skipping.', line);
+            //console.log('Invalid line %s.  Skipping.', line);
             return;
         }
 
@@ -130,7 +130,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
             record[fields[i-1]] = vals[i];
         }
 
-        //console.log('Writing record %s', JSON.stringify(record));
+        console.log('Writing record %s', JSON.stringify(record));
         telemetry_buffer.push(JSON.stringify(record));
 
         if (!reading) {
@@ -146,7 +146,6 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         fs.createReadStream(argv.file).
             pipe(es.split(/[\r]?\n/)).
             pipe(es.mapSync(function(data) {
-            //console.log(data);
                   write_to_kinesis(data);
               }));
 
