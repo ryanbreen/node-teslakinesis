@@ -1,7 +1,7 @@
 class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
   def change
     create_table :vehicle_telemetry_metrics do |t|
-      t.integer :vehicle_id
+      t.string :vehicle_id
       t.timestamp :timestamp
       t.integer :speed
       t.float :odometer
@@ -16,5 +16,8 @@ class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
       t.integer :est_range
       t.timestamps null: false
     end
+
+    add_index :vehicle_telemetry_metrics, :vehicle_id
+    add_index :vehicle_telemetry_metrics, :timestamp
   end
 end

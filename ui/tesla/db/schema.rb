@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20150527132740) do
   enable_extension "postgis"
 
   create_table "vehicle_telemetry_metrics", force: :cascade do |t|
-    t.integer  "vehicle_id"
+    t.string   "vehicle_id"
     t.datetime "timestamp"
     t.integer  "speed"
     t.float    "odometer"
@@ -34,5 +34,8 @@ ActiveRecord::Schema.define(version: 20150527132740) do
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
   end
+
+  add_index "vehicle_telemetry_metrics", ["timestamp"], name: "index_vehicle_telemetry_metrics_on_timestamp", using: :btree
+  add_index "vehicle_telemetry_metrics", ["vehicle_id"], name: "index_vehicle_telemetry_metrics_on_vehicle_id", using: :btree
 
 end
