@@ -4,7 +4,7 @@ class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
       t.integer :vehicle_id
       t.timestamp :timestamp
       t.integer :speed
-      t.integer :odometer
+      t.float :odometer
       t.integer :soc
       t.integer :elevation
       t.integer :est_heading

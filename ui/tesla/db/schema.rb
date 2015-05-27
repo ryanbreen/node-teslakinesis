@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20150527132740) do
     t.integer  "vehicle_id"
     t.datetime "timestamp"
     t.integer  "speed"
-    t.integer  "odometer"
+    t.float    "odometer"
     t.integer  "soc"
     t.integer  "elevation"
     t.integer  "est_heading"
