@@ -1,0 +1,19 @@
+<h1>Car metrics</h1>
+ 
+<table>
+  <tr>
+    <th>Time</th>
+    <th>Speed</th>
+    <th>Location</th>
+  </tr>
+ 
+<% @vehicle_telemetry_metrics.each do |metric| %>
+  <tr>
+    <td><%= metric.timestamp %></td>
+    <td><%= metric.speed %></td>
+    <td><%= metric.location %></td>
+  </tr>
+<% end %>
+</table>
+ 
+<br>

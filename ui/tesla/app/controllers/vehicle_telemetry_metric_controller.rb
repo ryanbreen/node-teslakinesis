@@ -1,3 +1,0 @@
-class VehicleTelemetryMetricController < ApplicationController
-
-end
