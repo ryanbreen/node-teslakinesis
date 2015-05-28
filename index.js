@@ -11,26 +11,6 @@ var teslams = require('teslams');
 var fs = require('fs');
 var util = require('util');
 
-var telemetry_buffer = [];
-
-var Readable = require('stream').Readable;
-
-var TeslaTelemetryStream = function(options) {
-    Readable.call(this, options);
-};
-
-util.inherits(TeslaTelemetryStream, Readable);
-
-TeslaTelemetryStream.prototype._read = function(n) {
-    console.log("Read called")
-    if (telemetry_buffer.length > 0) {
-        tesla_telemetry_stream.push(telemetry_buffer.shift());
-    }
-};
-
-var tesla_telemetry_stream = new TeslaTelemetryStream();
-//tesla_telemetry_stream.pause();
-
 function argchecker( argv ) {
     if (argv.kinesis == true) throw 'MongoDB database name is unspecified. Use -d dbname or --db dbname';
 }
@@ -131,13 +111,10 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         }
 
         console.log('Writing record %s', JSON.stringify(record));
-        telemetry_buffer.push(JSON.stringify(record));
 
-        if (!reading) {
-            // Wire up our readable stream to feed data to the kinesis sink
-            tesla_telemetry_stream.pipe(kinesis_sink);
-            reading = true;
-        }
+        kinesis_sink.write({
+            Data: new Buffer(JSON.stringify(record)).toString('base64')
+        });
     }
 
     // Support loading a file that contains a streaming log.  This gives us a mechanism to test input without a car
@@ -322,15 +299,8 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
                 if (argv.kinesis) {
                 
                     //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
-                    write_to_kinesis(data.toString().trim());
-                    //tesla_telemetry_stream.push(JSON.stringify(record));
-    /**
-                      doc = { 'ts': +vals[0], 'record': record };
-                      collectionS.insert(doc, { 'safe': true }, function(err,docs) {
-                            if(err) util.log(err);
-                      });   
-    **/                  
-                    //}
+                    //write_to_kinesis(data.toString().trim());
+                    tesla_telemetry_stream.push(JSON.stringify(record));
                     
                     lastss = ss; 
                     ss = vals[9]; // TODO: fix hardcoded position for shift_state
