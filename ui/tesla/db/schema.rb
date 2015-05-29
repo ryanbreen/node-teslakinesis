@@ -11,30 +11,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527132740) do
+ActiveRecord::Schema.define(version: 20150528144740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
 
   create_table "vehicle_telemetry_metrics", force: :cascade do |t|
-    t.string   "vehicle_id"
-    t.datetime "timestamp"
-    t.integer  "speed"
-    t.float    "odometer"
-    t.integer  "soc"
-    t.integer  "elevation"
-    t.integer  "est_heading"
-    t.integer  "heading"
-    t.point    "location"
-    t.integer  "power"
-    t.string   "shift_state", limit: 1
-    t.integer  "range"
-    t.integer  "est_range"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.string    "vehicle_id"
+    t.datetime  "timestamp"
+    t.integer   "speed"
+    t.float     "odometer"
+    t.integer   "soc"
+    t.integer   "elevation"
+    t.integer   "est_heading"
+    t.integer   "heading"
+    t.geography "location",    limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.integer   "power"
+    t.string    "shift_state", limit: 1
+    t.integer   "range"
+    t.integer   "est_range"
+    t.datetime  "created_at",                                                           null: false
+    t.datetime  "updated_at",                                                           null: false
   end
 
+  add_index "vehicle_telemetry_metrics", ["location"], name: "index_vehicle_telemetry_metrics_on_location", using: :gist
   add_index "vehicle_telemetry_metrics", ["timestamp"], name: "index_vehicle_telemetry_metrics_on_timestamp", using: :btree
   add_index "vehicle_telemetry_metrics", ["vehicle_id"], name: "index_vehicle_telemetry_metrics_on_vehicle_id", using: :btree
 

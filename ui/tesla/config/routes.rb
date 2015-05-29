@@ -14,7 +14,8 @@ Rails.application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
-  resources :vehicle_telemetry_metrics
+  #resources :vehicle_telemetry_metrics
+  get 'vehicle_telemetry_metrics/:id' => 'vehicle_telemetry_metrics#index'
 
   # Example resource route with options:
   #   resources :products do

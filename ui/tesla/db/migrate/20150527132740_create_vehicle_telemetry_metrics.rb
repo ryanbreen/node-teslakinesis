@@ -9,7 +9,7 @@ class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
       t.integer :elevation
       t.integer :est_heading
       t.integer :heading
-      t.point :location, geographic: true, has_z: true
+      t.st_point :location, geographic: true#, has_z: true
       t.integer :power
       t.string :shift_state, limit: 1
       t.integer :range
@@ -19,5 +19,9 @@ class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
 
     add_index :vehicle_telemetry_metrics, :vehicle_id
     add_index :vehicle_telemetry_metrics, :timestamp
+
+    execute <<-SQL
+      ALTER TABLE spatial_ref_sys OWNER TO wrb
+    SQL
   end
 end

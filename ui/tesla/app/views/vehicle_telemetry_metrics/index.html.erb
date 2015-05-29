@@ -5,6 +5,8 @@
     <th>Time</th>
     <th>Speed</th>
     <th>Location</th>
+    <th>Location</th>
+    <th>Location</th>
   </tr>
  
 <% @vehicle_telemetry_metrics.each do |metric| %>
@@ -12,6 +14,7 @@
     <td><%= metric.timestamp %></td>
     <td><%= metric.speed %></td>
     <td><%= metric.location %></td>
+    <td><%= metric.location.geometry_type.type_name %></td>
   </tr>
 <% end %>
 </table>
