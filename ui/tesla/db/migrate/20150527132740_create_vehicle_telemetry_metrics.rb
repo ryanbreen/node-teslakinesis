@@ -9,7 +9,7 @@ class CreateVehicleTelemetryMetrics < ActiveRecord::Migration
       t.integer :elevation
       t.integer :est_heading
       t.integer :heading
-      t.st_point :location, geographic: true#, has_z: true
+      t.point :location, geographic: true, has_z: true
       t.integer :power
       t.string :shift_state, limit: 1
       t.integer :range
