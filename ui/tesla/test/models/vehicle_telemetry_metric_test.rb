@@ -3,8 +3,6 @@ require 'test_helper'
 class VehicleTelemetryMetricTest < ActiveSupport::TestCase
   test "close metrics" do
 
-#    beans = VehicleTelemetryMetric.create(timestamp: 3, vehicle_id: "1001")
-
     far_point = VehicleTelemetryMetric.create!(
       timestamp:      1,
       vehicle_id:     "1001", 
