@@ -16,6 +16,7 @@ class VehicleTelemetryMetricTest < ActiveSupport::TestCase
       location:       factory.point(-75.990000, 39.010000)
     )
 
+    # This returns a value from the DB but not from here.  Why?
     close_points = VehicleTelemetryMetric.close_to(39.000000, -76.000000).load
 
     puts close_points

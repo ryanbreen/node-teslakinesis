@@ -1,10 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
 
 1000.downto(1) do |i|
 
@@ -16,6 +9,17 @@
   
 end
 
+=begin
+
+insert into vehicle_telemetry_metrics (timestamp, vehicle_id, location, created_at, updated_at) (
+select now() as timestamp, i as vehicle_id, ST_GeographyFromText('SRID=4326;POINT(' || 39 + x.lon || ' ' || x.lat || ')'), now(), now()
+  from (
+    select i, random() * 10 as lat, random() * 10 as lon
+    from generate_series(1,1000000) as i
+  )
+as x);
+
+=end
 
 VehicleTelemetryMetric.create(
   timestamp:      0,
