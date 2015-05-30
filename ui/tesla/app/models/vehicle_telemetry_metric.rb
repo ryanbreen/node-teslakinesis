@@ -8,7 +8,7 @@ class VehicleTelemetryMetric < ActiveRecord::Base
   #  config.register(RGeo::Geographic.spherical_factory(srid: 4326), geo_type: "point")
   #end
 
-  scope :close_to, -> (lat, lng, distance_in_meters = 20000) {
+  scope :close_to, -> (lng, lat, distance_in_meters = 2000) {
     where(%{
       ST_DWithin(
         vehicle_telemetry_metrics.location,
