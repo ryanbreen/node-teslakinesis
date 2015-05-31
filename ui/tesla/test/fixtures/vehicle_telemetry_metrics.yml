@@ -4,8 +4,34 @@
 # model remove the '{}' from the fixture names and add the columns immediately
 # below each fixture, per the syntax in the comments below
 #
-one: {}
-# column: value
-#
-two: {}
-#  column: value
+far:
+  id: 1
+  vehicle_id: far away vehicle
+  timestamp: <%= Time.now %>
+  speed: 30
+  soc: 99
+  odometer: 10002
+  elevation: 40
+  est_heading: 179
+  heading: 179
+  power: 33
+  shift_state: D
+  range: 190
+  est_range: 120
+#  location: <%= RGeo::Geographic.spherical_factory(srid: 4326).point(-77.000000, 40.000000) %>
+
+close:
+  id: 2
+  vehicle_id: close vehicle
+  timestamp: <%= Time.now %>
+  speed: 34
+  soc: 98
+  odometer: 10000
+  elevation: 40
+  est_heading: 179
+  heading: 179
+  power: 40
+  shift_state: D
+  range: 190
+  est_range: 120
+#  location: <%= RGeo::Geographic.spherical_factory(srid: 4326).point(-77.000000, 40.000000) %>
