@@ -18,7 +18,8 @@ far:
   shift_state: D
   range: 190
   est_range: 120
-#  location: <%= RGeo::Geographic.spherical_factory(srid: 4326).point(-77.000000, 40.000000) %>
+#  location: "<%= RGeo::WKRep::WKBGenerator.new(hex_format: true, type_format: :ewkb, emit_ewkb_srid: true).generate(RGeo::Geographic.spherical_factory(srid: 4326).point(-77.000000, 40.000000)) %>"
+  location: "'0020000001000010e6c0534000000000004044000000000000'"
 
 close:
   id: 2
@@ -34,4 +35,3 @@ close:
   shift_state: D
   range: 190
   est_range: 120
-#  location: <%= RGeo::Geographic.spherical_factory(srid: 4326).point(-77.000000, 40.000000) %>
