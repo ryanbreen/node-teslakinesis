@@ -53,7 +53,7 @@ exports.handler = function(event, context) {
           payload['est_heading'],
           payload['heading'],
           //"(" + payload['est_lat'] + ',' + payload['est_lng'] + ")",
-          "POINT(" + payload['est_lat'] + ' ' + payload['est_lng'] + " " + payload['elevation'] + ")",
+          "POINT(" + payload['est_lng'] + ' ' + payload['est_lat'] + " " + payload['elevation'] + ")",
           // "(" + payload['est_lat'] + ',' + payload['est_lng'] + ',' + payload['elevation'] + ")",
           payload['power'],
           (payload['shift_state'] && payload['shift_state'] !== '' ? payload['shift_state'] : 'O'),
