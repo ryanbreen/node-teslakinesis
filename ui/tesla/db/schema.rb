@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20150528144740) do
   enable_extension "postgis"
 
   create_table "vehicle_telemetry_metrics", force: true do |t|
-    t.string   "vehicle_id"
+    t.string   "vehicle_id",  limit: nil
     t.datetime "timestamp"
     t.integer  "speed"
     t.float    "odometer"
@@ -26,13 +26,13 @@ ActiveRecord::Schema.define(version: 20150528144740) do
     t.integer  "elevation"
     t.integer  "est_heading"
     t.integer  "heading"
-    t.spatial  "location",    limit: {:srid=>4326, :type=>"point", :geographic=>true}
+    t.spatial  "location",    limit: {:srid=>4326, :type=>"point", :has_z=>true, :geographic=>true}
     t.integer  "power"
     t.string   "shift_state", limit: 1
     t.integer  "range"
     t.integer  "est_range"
-    t.datetime "created_at",                                                           null: false
-    t.datetime "updated_at",                                                           null: false
+    t.datetime "created_at",                                                                         null: false
+    t.datetime "updated_at",                                                                         null: false
   end
 
   add_index "vehicle_telemetry_metrics", ["location"], :name => "index_vehicle_telemetry_metrics_on_location", :spatial => true
