@@ -25,8 +25,8 @@ handler.buildMap({
     // markers = handler.addMarkers(<%=raw @hash.to_json %>);
     var polyline = <%= raw @hash.to_json %>;
     handler.addPolyline(polyline);
-    handler.bounds.extend(polyline[0]);
-    handler.bounds.extend(polyline[polyline.length-1]);
+    handler.bounds.extend(<%= raw @upper_left.to_json %>);
+    handler.bounds.extend(<%= raw @lower_right.to_json %>);
     handler.fitMapToBounds();
   }
 );
