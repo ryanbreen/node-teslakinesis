@@ -21,6 +21,13 @@ exports.handler = function(event, context) {
 
     // Call context succeed after this function has been called once per record
     var process_records = _.after(event.Records.length, function() {
+
+      try {
+        client.end();
+      } catch(e) {
+        console.error("Failed to close postgres connection due to %s", e);
+      }
+
       context.succeed();
     });
 
