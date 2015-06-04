@@ -10,7 +10,7 @@ var INSERT_METRIC =
 var ADD_TRIP =
   "INSERT INTO trips(id, vehicle_id, start_time, end_time, start_location, end_location, created_at, updated_at) " +
     "VALUES (DEFAULT, $1, $2, NULL, $3, $3, now(), now()) RETURNING id;"
-var CURRENT_TRIP = "SELECT id from trips where vehicle_id = $1 and end_time = NULL;"
+var CURRENT_TRIP = "SELECT id from trips where vehicle_id = $1 and end_time IS NULL;"
 var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, updated_at = now() where id = $3;";
 
 var creds = require('./creds/db.js');
