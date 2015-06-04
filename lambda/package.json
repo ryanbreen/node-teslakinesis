@@ -15,9 +15,11 @@
     "grunt-aws-lambda": "^0.4.0"
   },
   "bundledDependencies": [
-    "pg"
+    "pg",
+    "underscore"
   ],
   "dependencies": {
-    "pg": "^4.3.0"
+    "pg": "^4.3.0",
+    "underscore": "^1.8.3"
   }
 }
