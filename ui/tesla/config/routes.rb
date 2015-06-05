@@ -15,8 +15,10 @@ Rails.application.routes.draw do
   #   resources :products
 
   #resources :vehicle_telemetry_metrics
-  get 'vehicle/:vehicle_id/trips' => 'trips#index'
-  get 'trips/:id' => 'trips#show', :as => :trip
+  resources :vehicles do
+    resources :trips, only: [:index]
+  end
+  resources :trips, only: [:show], :as => :trip
 
   # Example resource route with options:
   #   resources :products do
