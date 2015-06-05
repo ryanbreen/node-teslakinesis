@@ -1,0 +1,20 @@
+
+<h1>Trips</h1>
+ 
+<table>
+  <tr>
+    <th>Start Time</th>
+    <th>End Time</th>
+    <th></th>
+  </tr>
+ 
+<% @trips.each do |trip| %>
+  <tr>
+    <td><%= trip.start_time %></td>
+    <td><%= trip.end_time %></td>
+    <td><%= link_to 'Show', trip_path(trip) %></td>
+  </tr>
+<% end %>
+</table>
+ 
+<br>
