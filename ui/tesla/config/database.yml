@@ -1,7 +1,8 @@
 
 default: &default
   adapter: postgis
-  schema_search_path: public
+  schema_search_path: public,postgis
+  postgis_extension: postgis
   encoding: unicode
   url: <%= ENV['DATABASE_URL'] %>
   pool: 5
