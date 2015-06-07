@@ -1,3 +1,5 @@
+require 'rgeo'
+
 class LocationsController < ApplicationController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
@@ -14,7 +16,11 @@ class LocationsController < ApplicationController
 
   # GET /locations/new
   def new
+    factory = RGeo::Geographic.simple_mercator_factory(:has_z_coordinate => true)
     @location = Location.new
+  
+    @location.vehicle_id = params[:vehicle_id]
+    @location.location = factory.point(params[:lng], params[:lat], params[:z])
   end
 
   # GET /locations/1/edit
@@ -24,6 +30,7 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.json
   def create
+    puts location_params
     @location = Location.new(location_params)
 
     respond_to do |format|

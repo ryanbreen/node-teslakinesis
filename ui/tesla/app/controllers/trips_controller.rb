@@ -1,7 +1,7 @@
 class TripsController < ApplicationController
 
   def index
-    @trips = Trip.where("vehicle_id = ?", params[:vehicle_id])
+    @trips = Trip.where("vehicle_id = ?", params[:vehicle_id]).order("start_time")
   end
 
   def show
