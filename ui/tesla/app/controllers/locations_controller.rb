@@ -77,5 +77,7 @@ class LocationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_params
       params[:location]
+      params[:name]
+      params[:vehicle_id]
     end
 end
