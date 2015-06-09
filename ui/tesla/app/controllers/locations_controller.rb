@@ -30,7 +30,6 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.json
   def create
-    puts location_params
     @location = Location.new(location_params)
 
     respond_to do |format|
@@ -71,6 +70,7 @@ class LocationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_location
+      @vehicle = Vehicles.find(params[:vehicle_id])
       @location = Location.find(params[:id])
     end
 
