@@ -70,6 +70,8 @@ class LocationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_location
+      puts params[:vehicle_id]
+
       @vehicle = Vehicles.find(params[:vehicle_id])
       @location = Location.find(params[:id])
     end
