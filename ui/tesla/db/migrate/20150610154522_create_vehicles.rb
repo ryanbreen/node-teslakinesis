@@ -1,7 +1,7 @@
 class CreateVehicles < ActiveRecord::Migration
   def change
     create_table :vehicles, :id => false do |t|
-      t.string :vehicle_id, :limit => 30, :primary => true
+      t.primary_key :vehicle_id, :string, :limit => 30
       t.string :name
 
       t.timestamps
