@@ -24,7 +24,8 @@
   <div class="actions">
     <%= hidden_field_tag("location[vehicle_id]", @location.vehicle_id) %>
     <%= hidden_field_tag("location[geolocation]", @location.geolocation) %>
-    Name: <%= f.text_field :name %>
+    <%= label_tag :name, "Name" %>
+    <%= f.text_field :name %>
     <br><br>
 
     <div style='width: 800px;'>

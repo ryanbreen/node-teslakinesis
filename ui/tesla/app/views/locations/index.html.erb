@@ -1,4 +1,4 @@
-w<h1>Listing locations</h1>
+<h1>Listing locations</h1>
 
 <table>
   <thead>
@@ -10,9 +10,7 @@ w<h1>Listing locations</h1>
   <tbody>
     <% @locations.each do |location| %>
       <tr>
-        <td><%= link_to 'Show', location %></td>
-        <td><%= link_to 'Edit', edit_vehicle_location_path(location) %></td>
-        <td><%= link_to 'Destroy', location, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to location.name, vehicle_location_path(@vehicle, location) %></td>
       </tr>
     <% end %>
   </tbody>
