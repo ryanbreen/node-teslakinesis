@@ -17,6 +17,7 @@ class LocationsController < ApplicationController
   # GET /locations/new
   def new
     factory = RGeo::Geographic.simple_mercator_factory(:has_z_coordinate => true)
+    @vehicle = Vehicle.find(params[:vehicle_id])
     @location = Location.new
   
     @location.vehicle_id = params[:vehicle_id]
@@ -70,9 +71,7 @@ class LocationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_location
-      puts params[:vehicle_id]
-
-      @vehicle = Vehicles.find(params[:vehicle_id])
+      @vehicle = Vehicle.find(params[:vehicle_id])
       @location = Location.find(params[:id])
     end
 
