@@ -9,7 +9,7 @@
   </tr>
  
 <% @trips.each do |trip| %>
-  <tr
+  <tr>
     <td><%= trip.start_time %></td>
     <td><%= trip.end_time %></td>
     <td><%= link_to 'Show', trip_path(trip) %></td>

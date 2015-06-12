@@ -6,9 +6,6 @@
 <%= javascript_include_tag "gmaps/google" %>
 <%= javascript_include_tag "underscore" %>
 
-<% puts @vehicle %>
-<% puts @location %>
-
 <%= form_for([@vehicle, @location]) do |f| %>
   <% if @location.errors.any? %>
     <div id="error_explanation">
@@ -26,7 +23,7 @@
 
   <div class="actions">
     <%= hidden_field_tag("location[vehicle_id]", @location.vehicle_id) %>
-    <%= hidden_field_tag("location[location]", @location.location) %>
+    <%= hidden_field_tag("location[geolocation]", @location.geolocation) %>
     Name: <%= f.text_field :name %>
     <br><br>
 

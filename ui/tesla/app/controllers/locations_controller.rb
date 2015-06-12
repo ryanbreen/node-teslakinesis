@@ -21,7 +21,7 @@ class LocationsController < ApplicationController
     @location = Location.new
   
     @location.vehicle_id = params[:vehicle_id]
-    @location.location = factory.point(params[:lng], params[:lat], params[:z])
+    @location.geolocation = factory.point(params[:lng], params[:lat], params[:z])
   end
 
   # GET /locations/1/edit
@@ -31,6 +31,7 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.json
   def create
+    puts params
     @location = Location.new(location_params)
 
     respond_to do |format|
@@ -77,7 +78,7 @@ class LocationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_params
-      params[:location]
+      params[:geolocation]
       params[:name]
       params[:vehicle_id]
     end
