@@ -26,8 +26,8 @@ handler.buildMap({
   function(){
     markers = handler.addMarkers([
       {
-        "lat": "<%= params[:lat] %>",
-        "lng": "<%= params[:lng] %>",
+        "lat": "<%= @location.geolocation.latitude %>",
+        "lng": "<%= @location.geolocation.longitude %>",
       }
     ]);
     handler.bounds.extendWith(markers);
