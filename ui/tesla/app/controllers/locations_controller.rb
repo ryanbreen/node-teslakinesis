@@ -33,11 +33,12 @@ class LocationsController < ApplicationController
   # POST /locations.json
   def create
     puts params
+    @vehicle = Vehicle.find(params[:vehicle_id])
     @location = Location.new(location_params)
 
     respond_to do |format|
       if @location.save
-        format.html { redirect_to @location, notice: 'Location was successfully created.' }
+        format.html { redirect_to vehicle_location_path(@vehicle, @location), notice: 'Location was successfully created.' }
         format.json { render :show, status: :created, location: @location }
       else
         format.html { render :new }
@@ -49,9 +50,11 @@ class LocationsController < ApplicationController
   # PATCH/PUT /locations/1
   # PATCH/PUT /locations/1.json
   def update
+
+    @vehicle = Vehicle.find(@location.vehicle_id)
     respond_to do |format|
       if @location.update(location_params)
-        format.html { redirect_to @location, notice: 'Location was successfully updated.' }
+        format.html { redirect_to vehicle_location_path(@vehicle, @location), notice: 'Location was successfully updated.' }
         format.json { render :show, status: :ok, location: @location }
       else
         format.html { render :edit }
@@ -84,8 +87,5 @@ class LocationsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_params
       params.require(:location).permit(:geolocation, :vehicle_id, :name)
-      #params[:geolocation]
-      #params[:name]
-      #params[:vehicle_id]
     end
 end
