@@ -10,11 +10,13 @@
   </thead>
 
   <tbody>
-    <% @locations.each do |location| %>
+    <% @locations.each_with_index {|location, index| %>
       <tr>
-        <td><%= link_to location.name, vehicle_location_path(@vehicle, location) %></td>
+        <td><%= link_to location.name, vehicle_location_path(@vehicle, location) %>
+        <%= render 'map', :index => index, :width => 400, :height => 200, :location => location %>
+        </td>
       </tr>
-    <% end %>
+    <% } %>
   </tbody>
 </table>
 

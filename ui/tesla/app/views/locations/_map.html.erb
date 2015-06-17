@@ -5,8 +5,15 @@
 <%= javascript_include_tag "gmaps/google" %>
 <%= javascript_include_tag "underscore" %>
 
-<div style='width: 800px;'>
-  <div id="map" style='width: 800px; height: 400px;'></div>
+<%
+location = @location if location == nil
+index = 0 if index == nil
+width = 800 if width == nil
+height = 400 if height == nil
+%>
+
+<div style='width: <%= width %>px;'>
+  <div id="map<%= index %>" style='width: <%= width %>px; height: <%= height %>px;'></div>
 </div>
 
 <script>
@@ -17,14 +24,14 @@ handler.buildMap({
       // pass in other Google Maps API options here
     },
     internal: {
-      id: 'map'
+      id: 'map<%=index%>'
     }
   },
   function(){
     markers = handler.addMarkers([
       {
-        "lat": "<%= @location.geolocation.latitude %>",
-        "lng": "<%= @location.geolocation.longitude %>",
+        "lat": "<%= location.geolocation.latitude %>",
+        "lng": "<%= location.geolocation.longitude %>",
       }
     ]);
     handler.bounds.extendWith(markers);
