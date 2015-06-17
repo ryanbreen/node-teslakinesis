@@ -66,9 +66,10 @@ class LocationsController < ApplicationController
   # DELETE /locations/1
   # DELETE /locations/1.json
   def destroy
+    @vehicle = Vehicle.find(@location.vehicle_id)
     @location.destroy
     respond_to do |format|
-      format.html { redirect_to locations_url, notice: 'Location was successfully destroyed.' }
+      format.html { redirect_to vehicle_locations_url(@vehicle), notice: 'Location was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

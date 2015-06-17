@@ -5,4 +5,5 @@
 <%= render 'map' %>
 
 <%= link_to 'Edit', edit_vehicle_location_path(@vehicle, @location) %> |
+<%= link_to 'Delete', vehicle_location_path(@vehicle, @location), method: :delete %> |
 <%= link_to 'Back', vehicle_locations_path %>
