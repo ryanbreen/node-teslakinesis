@@ -3,4 +3,5 @@
 <%= render 'form' %>
 
 <%= link_to 'Show', @location %> |
-<%= link_to 'Back', vehicle_location_path %>
+<%= link_to 'Locations', vehicle_location_path %>
+<%= link_to "Trips", vehicle_trips_path(@vehicle) %>
