@@ -1,12 +1,12 @@
 class TripsController < ApplicationController
 
+  before_action :set_models, only: [:index, :show]
+
   def index
     @trips = Trip.where("vehicle_id = ?", params[:vehicle_id]).order("start_time")
   end
 
   def show
-    @trip = Trip.find_by id: params[:id]
-
     @vehicle_telemetry_metrics =
       VehicleTelemetryMetric.where("vehicle_id = ? and timestamp >= ? and timestamp <= ?",
       @trip[:vehicle_id], @trip[:start_time], @trip[:end_time]).order("timestamp")
@@ -27,5 +27,12 @@ class TripsController < ApplicationController
     @lower_right = { :lat => lowest_lat, :lng => highest_lng }
 
   end
+
+  private
+    def set_models
+      @trip = Trip.find(params[:id]) if params[:id] != nil
+      @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
+      @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
+    end
 
 end
