@@ -13,6 +13,12 @@ class LocationsController < ApplicationController
   # GET /locations/1
   # GET /locations/1.json
   def show
+    # Figure out if this location is near any trip start or end points
+    geolocation = @location[:geolocation]
+
+    ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
+    ActiveRecord::Base.connection.execute("delete from trips where vehicle_id = '#{@location.vehicle_id}' and start_location_id = end_location_id")
+    ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
   end
 
   # GET /locations/new
@@ -32,9 +38,15 @@ class LocationsController < ApplicationController
   # POST /locations
   # POST /locations.json
   def create
-    puts params
     @vehicle = Vehicle.find(params[:vehicle_id])
     @location = Location.new(location_params)
+
+    geolocation = @location[:geolocation]
+
+    # Figure out if this location is near any trip start or end points
+    ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
+    ActiveRecord::Base.connection.execute("delete from trips where vehicle_id = '#{@location.vehicle_id}' and start_location_id = end_location_id")
+    ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
 
     respond_to do |format|
       if @location.save
