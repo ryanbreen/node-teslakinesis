@@ -32,9 +32,12 @@ handler.buildMap({
 );
 </script>
 
-Start location: <%= @trip.origin %>
-<br><br>
-End location: <%= @trip.destination %>
+<% if @trip.origin != nil %>
+Origin: <%= @trip.origin.name %><br><br>
+<% end %>
+<% if @trip.destination != nil %>
+Destination: <%= @trip.destination.name %><br><br>
+<% end %>
 
 <h1>Car metrics</h1>
  
