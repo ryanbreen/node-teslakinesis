@@ -49,14 +49,24 @@ handler.buildMap({
 );
 </script>
 
+Start: <%= @trip.start_time %><br><br>
+
 <% if @trip.origin != nil %>
 Origin: <%= @trip.origin.name %><br><br>
 <% end %>
+
+End: <%= @trip.end_time %><br><br>
+
 <% if @trip.destination != nil %>
 Destination: <%= @trip.destination.name %><br><br>
 <% end %>
 
-<h1>Car metrics</h1>
+Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, include_seconds: true) %><br><br>
+
+<%= link_to "Back to trips", vehicle_trips_path(@vehicle) %>
+<br><br>
+
+<h1>Detailed telemetry</h1>
  
 <table>
   <tr>
@@ -75,7 +85,3 @@ Destination: <%= @trip.destination.name %><br><br>
   </tr>
 <% end %>
 </table>
- 
-<br>
-
-<%= link_to "Back to trips", vehicle_trips_path(@vehicle) %>

@@ -4,14 +4,14 @@
 <table>
   <tr>
     <th>Start Time</th>
-    <th>End Time</th>
+    <th>Duration</th>
     <th></th>
   </tr>
  
 <% @trips.each do |trip| %>
   <tr>
     <td><%= trip.start_time %></td>
-    <td><%= trip.end_time %></td>
+    <td><%= distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
     <td><%= link_to 'Show', trip_path(trip) %></td>
     <% if trip.origin == nil %>
     <td><%= link_to 'Name origin', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, :z => trip[:start_location].z) %></td>

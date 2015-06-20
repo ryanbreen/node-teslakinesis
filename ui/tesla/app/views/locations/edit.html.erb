@@ -2,6 +2,6 @@
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @location %> |
-<%= link_to 'Locations', vehicle_location_path %>
+<%= link_to 'Show', vehicle_location_path(@vehicle, @location) %> |
+<%= link_to 'Locations', vehicle_location_path(@vehicle) %>
 <%= link_to "Trips", vehicle_trips_path(@vehicle) %>
