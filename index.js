@@ -296,30 +296,28 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
             if ( isNaN(vals[0]) || vals[0] < 1340348400000) { //tesla epoch
               ulog('Bad timestamp (' + vals[0] + ')' );
             } else {
-                if (argv.kinesis) {
                 
-                    //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
-                    //write_to_kinesis(data.toString().trim());
-                    tesla_telemetry_stream.push(JSON.stringify(record));
-                    
-                    lastss = ss; 
-                    ss = vals[9]; // TODO: fix hardcoded position for shift_state
-                    // [HJ] this section goes with the code above which allows one last poll
-                    // after entering nap mode. If this turns out to cause other problems
-                    // remove this nap cancel section AND switch back to disabling this
-                    // final poll
-                    if (napmode == true && ss != '') {
-                        //cancel nap mode           
-                        ulog('Info: canceling nap mode because shift_state is now (' + ss + ')'); 
-                        clearTimeout(napTimeoutId);
-                        ncount = 0;
-                        clearInterval(sleepIntervalId);
-                        scount = 0;
-                        napmode = false;
-                        ss = 'abort';
-                        lastss = 'abort';
-                        initstream();
-                    }
+                //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
+                write_to_kinesis(data.toString().trim());
+                //tesla_telemetry_stream.push(JSON.stringify(record));
+                
+                lastss = ss; 
+                ss = vals[9]; // TODO: fix hardcoded position for shift_state
+                // [HJ] this section goes with the code above which allows one last poll
+                // after entering nap mode. If this turns out to cause other problems
+                // remove this nap cancel section AND switch back to disabling this
+                // final poll
+                if (napmode == true && ss != '') {
+                    //cancel nap mode           
+                    ulog('Info: canceling nap mode because shift_state is now (' + ss + ')'); 
+                    clearTimeout(napTimeoutId);
+                    ncount = 0;
+                    clearInterval(sleepIntervalId);
+                    scount = 0;
+                    napmode = false;
+                    ss = 'abort';
+                    lastss = 'abort';
+                    initstream();
                 }
             }
         });     
