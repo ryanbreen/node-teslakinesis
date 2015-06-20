@@ -10,7 +10,7 @@
  
 <% @trips.each do |trip| %>
   <tr>
-    <td><%= trip.start_time %></td>
+    <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long) %></td>
     <td><%= distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
     <td><%= link_to 'Show', trip_path(trip) %></td>
     <% if trip.origin == nil %>
