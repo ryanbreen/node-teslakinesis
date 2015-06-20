@@ -6,4 +6,5 @@
 
 <%= link_to 'Edit', edit_vehicle_location_path(@vehicle, @location) %> |
 <%= link_to 'Delete', vehicle_location_path(@vehicle, @location), method: :delete %> |
-<%= link_to 'Back', vehicle_locations_path %>
+<%= link_to 'Locations', vehicle_locations_path(@vehicle) %> |
+<%= link_to "Trips", vehicle_trips_path(@vehicle) %>
