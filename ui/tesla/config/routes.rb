@@ -5,5 +5,6 @@ Rails.application.routes.draw do
   end
 
   resources :trips, only: [:show], :as => :trip
+  get 'vehicles/:vehicle_id/trips/:from/:to', to: 'trips#between'
 
 end
