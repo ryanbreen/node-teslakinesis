@@ -22,7 +22,24 @@ handler.buildMap({
     }
   },
   function(){
-    // markers = handler.addMarkers(<%=raw @hash.to_json %>);
+    handler.addMarker({
+      "lat": <%= @trip.start_location.latitude %>,
+      "lng": <%= @trip.start_location.longitude %>,
+      "picture": {
+        "url": "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
+        "width": 32,
+        "height": 32
+      }
+    });
+    handler.addMarker({
+      "lat": <%= @trip.end_location.latitude %>,
+      "lng": <%= @trip.end_location.longitude %>,
+      "picture": {
+        "url": "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+        "width": 32,
+        "height": 32
+      }
+    });
     var polyline = <%= raw @hash.to_json %>;
     handler.addPolyline(polyline);
     handler.bounds.extend(<%= raw @upper_left.to_json %>);
