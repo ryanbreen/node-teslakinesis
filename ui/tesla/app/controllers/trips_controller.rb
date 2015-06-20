@@ -33,6 +33,8 @@ class TripsController < ApplicationController
     @upper_left = { :lat => highest_lat, :lng => lowest_lng }
     @lower_right = { :lat => lowest_lat, :lng => highest_lng }
 
+    @vehicle_telemetry_metrics = @vehicle_telemetry_metrics.paginate(:page => params[:page])
+
   end
 
   private
