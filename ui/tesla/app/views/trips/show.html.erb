@@ -40,11 +40,15 @@ handler.buildMap({
         "height": 32
       }
     });
-    var polyline = <%= raw @hash.to_json %>;
-    handler.addPolyline(polyline);
+
+
+    <% @hashes.each { |hash| %>
+    var polyline = <%= raw hash["data"].to_json %>;
+    handler.addPolyline(polyline, { strokeColor: "<%= hash['strokeColor'] %>"});
     handler.bounds.extend(<%= raw @upper_left.to_json %>);
     handler.bounds.extend(<%= raw @lower_right.to_json %>);
     handler.fitMapToBounds();
+    <% } %>
   }
 );
 </script>

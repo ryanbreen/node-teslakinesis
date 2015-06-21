@@ -20,18 +20,28 @@ class TripsController < ApplicationController
 
     lowest_lng, highest_lng, lowest_lat, highest_lat = nil
 
-    @hash = Gmaps4rails.build_markers(@vehicle_telemetry_metrics) do |vehicle, marker|
+    @hashes = []
+    current_hash_speed = nil
+
+    @hashes[0] = {}
+    @hashes[0]["data"] = []
+
+    Gmaps4rails.build_markers(@vehicle_telemetry_metrics) do |vehicle, marker|
       lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
       lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
       highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
       highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
 
-      marker.lat vehicle.location.latitude
-      marker.lng vehicle.location.longitude
+      @hashes[0]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
     end
+
+    @hashes[0]["strokeColor"] = "#ff0000"
 
     @upper_left = { :lat => highest_lat, :lng => lowest_lng }
     @lower_right = { :lat => lowest_lat, :lng => highest_lng }
+
+    puts @upper_left
+    puts @lower_right
 
     @vehicle_telemetry_metrics = @vehicle_telemetry_metrics.paginate(:page => params[:page])
 
