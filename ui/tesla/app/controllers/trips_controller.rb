@@ -2,6 +2,12 @@ class TripsController < ApplicationController
 
   before_action :set_models, only: [:index, :show]
 
+  @@color_scale = [
+    "#000000",
+    "#00cc66",
+    "#ff3300"
+  ]
+
   def index
     @trips = Trip.where("vehicle_id = ?", params[:vehicle_id]).order("start_time")
   end
@@ -23,8 +29,7 @@ class TripsController < ApplicationController
     @hashes = []
     current_hash_speed = nil
 
-    @hashes[0] = {}
-    @hashes[0]["data"] = []
+    index = -1
 
     Gmaps4rails.build_markers(@vehicle_telemetry_metrics) do |vehicle, marker|
       lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
@@ -32,10 +37,26 @@ class TripsController < ApplicationController
       highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
       highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
 
-      @hashes[0]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
-    end
+      case vehicle.speed
+      when 0..25
+        speed = 0
+      when 26..50
+        speed = 1
+      else
+        speed = 2
+      end
 
-    @hashes[0]["strokeColor"] = "#ff0000"
+      # Create a new hash at this speed
+      if current_hash_speed != speed
+        index += 1
+        current_hash_speed = speed
+        @hashes[index] = {}
+        @hashes[index]["data"] = []
+        @hashes[index]["strokeColor"] = @@color_scale[speed]
+      end
+
+      @hashes[index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
+    end
 
     @upper_left = { :lat => highest_lat, :lng => lowest_lng }
     @lower_right = { :lat => lowest_lat, :lng => highest_lng }

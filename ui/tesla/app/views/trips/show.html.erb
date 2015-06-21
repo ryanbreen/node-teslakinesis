@@ -42,13 +42,14 @@ handler.buildMap({
     });
 
 
-    <% @hashes.each { |hash| %>
-    var polyline = <%= raw hash["data"].to_json %>;
-    handler.addPolyline(polyline, { strokeColor: "<%= hash['strokeColor'] %>"});
+    <% @hashes.each_with_index { |hash, index| %>
+    var polyline<%=index%> = <%= raw hash["data"].to_json %>;
+    handler.addPolyline(polyline<%=index%>, { strokeColor: "<%= hash['strokeColor'] %>"});
+    <% } %>
+
     handler.bounds.extend(<%= raw @upper_left.to_json %>);
     handler.bounds.extend(<%= raw @lower_right.to_json %>);
     handler.fitMapToBounds();
-    <% } %>
   }
 );
 </script>
