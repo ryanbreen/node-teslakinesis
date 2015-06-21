@@ -9,7 +9,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.where("vehicle_id = ?", params[:vehicle_id]).order("start_time")
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id]).order("start_time")
   end
 
   def from
@@ -19,9 +19,9 @@ class TripsController < ApplicationController
   end
 
   def between
-    @from = Location.where("vehicle_id = ? and name = ?", params[:vehicle_id], params[:from]).first
-    @to = Location.where("vehicle_id = ? and name = ?", params[:vehicle_id], params[:to]).first
-    @trips = Trip.where("vehicle_id = ? and start_location_id = ? and end_location_id = ?", params[:vehicle_id], @from.id, @to.id).
+    @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
+    @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id, :end_location_id => @to.id).
       order("EXTRACT(EPOCH FROM (end_time - start_time))")
   end
 
