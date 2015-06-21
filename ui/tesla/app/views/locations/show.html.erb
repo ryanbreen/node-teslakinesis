@@ -5,7 +5,7 @@
 <%= render 'map' %>
 
 There are <%= @as_origin_count %> trips <%= link_to 'starting from here', vehicle_trips_from_path(@vehicle, @location.name) %>.<br>
-There are <%= @as_destination_count %> trips ending here.<br>
+There are <%= @as_destination_count %> trips <%= link_to 'ending here', vehicle_trips_to_path(@vehicle, @location.name) %>.<br>
 
 <%= link_to 'Edit', edit_vehicle_location_path(@vehicle, @location) %> |
 <%= link_to 'Delete', vehicle_location_path(@vehicle, @location), method: :delete %> |

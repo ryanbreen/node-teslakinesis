@@ -15,7 +15,13 @@ class TripsController < ApplicationController
   def from
     @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
-      order("start_time")
+      order(:start_time)
+  end
+
+  def to
+    @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id], :end_location_id => @to.id).
+      order(:start_time)
   end
 
   def between
@@ -28,7 +34,7 @@ class TripsController < ApplicationController
   def show
     @vehicle_telemetry_metrics =
       VehicleTelemetryMetric.where("vehicle_id = ? and timestamp >= ? and timestamp <= ?",
-      @trip[:vehicle_id], @trip[:start_time], @trip[:end_time]).order("timestamp")
+      @trip[:vehicle_id], @trip[:start_time], @trip[:end_time]).order(:timestamp)
 
     lowest_lng, highest_lng, lowest_lat, highest_lat = nil
 
