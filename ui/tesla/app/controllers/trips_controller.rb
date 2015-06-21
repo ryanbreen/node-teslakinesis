@@ -12,6 +12,12 @@ class TripsController < ApplicationController
     @trips = Trip.where("vehicle_id = ?", params[:vehicle_id]).order("start_time")
   end
 
+  def from
+    @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
+      order("start_time")
+  end
+
   def between
     @from = Location.where("vehicle_id = ? and name = ?", params[:vehicle_id], params[:from]).first
     @to = Location.where("vehicle_id = ? and name = ?", params[:vehicle_id], params[:to]).first
