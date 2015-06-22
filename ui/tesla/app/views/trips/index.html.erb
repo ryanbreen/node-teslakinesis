@@ -12,7 +12,7 @@
   <tr>
     <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
     <td><%= trip.end_time == nil ? 'ongoing' : distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
-    <td><%= link_to 'Show', trip_path(trip) %></td>
+    <td><%= link_to 'Show', vehicle_trip_path(params[:vehicle_id], trip) %></td>
     <% if trip.origin == nil %>
     <td><%= link_to 'Name origin', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, :z => trip[:start_location].z) %></td>
     <% else %>
