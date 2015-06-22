@@ -4,9 +4,9 @@ Rails.application.routes.draw do
     resources :locations
     resources :trips
 
-    get 'trips/from/:from/to/:to', to: 'trips#between', as: 'vehicle_trips_between'
-    get 'trips/from/:from', to: 'trips#from', as: 'vehicle_trips_from'
-    get 'trips/to/:to', to: 'trips#to', as: 'vehicle_trips_to'
+    get 'trips/from/:from/to/:to', to: 'trips#between', as: 'trips_between'
+    get 'trips/from/:from', to: 'trips#from', as: 'trips_from'
+    get 'trips/to/:to', to: 'trips#to', as: 'trips_to'
   end
 
 end
