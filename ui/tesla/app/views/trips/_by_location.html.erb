@@ -1,27 +1,11 @@
-<table>
-  <tr>
-    <th>Start Time</th>
-    <th>Duration</th>
-    <th></th>
-  </tr>
 
 <% @trips.each do |trip| %>
 
   <tr>
     <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long) %></td>
-    <td><%= trip.end_time == nil ? 'ongoing' : distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
-    <td><%= link_to 'Show', vehicle_trip_path(params[:vehicle_id], trip) %></td>
-    <% if trip.origin == nil %>
-    <td><%= link_to 'Name origin', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, :z => trip[:start_location].z) %></td>
-    <% else %>
-    <td><%= link_to trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin) %></td>
-    <% end %>
-    <% if trip.destination == nil %>
-    <td><%= link_to 'Name destination', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, :z => trip[:end_location].z) %></td>
-    <% else %>
-    <td><%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></td>
-    <% end %>
+    <td><%= distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
+    <td><%= @to == nil ? @from.name : @to.name %></td>
+    <td><%= link_to 'Show all trips for this route', vehicle_trips_between_path(params[:vehicle_id], trip.origin.name, trip.destination.name) %></td>
   </tr>
 
 <% end %>
-</table>
