@@ -15,12 +15,19 @@ class TripsController < ApplicationController
   def from
     @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
+      where.not(:end_location_id => nil).
+      group(:end_location_id).
+      order('count_id desc').
+      count(:id)
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
+      where.not(:end_location_id => nil).
       order(:start_time)
   end
 
   def to
     @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :end_location_id => @to.id).
+      where.not(:start_location_id => nil).
       order(:start_time)
   end
 
