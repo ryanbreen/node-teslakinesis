@@ -4,7 +4,7 @@
   <tr>
     <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long) %></td>
     <td><%= distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
-    <td><%= @to == nil ? @from.name : @to.name %></td>
+    <td><%= @to != nil ? trip.origin.name : trip.destination.name %></td>
     <td><%= link_to 'Show all trips for this route', vehicle_trips_between_path(params[:vehicle_id], trip.origin.name, trip.destination.name) %></td>
   </tr>
 
