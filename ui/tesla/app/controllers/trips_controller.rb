@@ -62,8 +62,6 @@ class TripsController < ApplicationController
 
         hash_index = -1
 
-        metrics_counter = 0
-
         Gmaps4rails.build_markers(trip_detail['vehicle_telemetry_metrics']) do |vehicle|
           lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
           lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
@@ -92,11 +90,7 @@ class TripsController < ApplicationController
             trip_detail['hashes'][hash_index]["strokeColor"] = @@color_scale[speed]
           end
 
-          if @map_type == :detailed ||(metrics_counter % 100 == 0)
-            trip_detail['hashes'][hash_index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
-          end
-
-          metrics_counter += 1
+          trip_detail['hashes'][hash_index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
         end
 
         trip_detail['vehicle_telemetry_metrics'] = trip_detail['vehicle_telemetry_metrics'].paginate(:page => params[:page])
