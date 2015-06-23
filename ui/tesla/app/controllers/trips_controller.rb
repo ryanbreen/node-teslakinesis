@@ -56,7 +56,7 @@ class TripsController < ApplicationController
 
         where_condition = @map_type == :detailed ?
           "vehicle_id = ? and timestamp >= ? and timestamp <= ?" :
-          "vehicle_id = ? and timestamp >= ? and timestamp <= ? and (id % 5 = 0)"
+          "vehicle_id = ? and timestamp >= ? and timestamp <= ? and (id % 16 = 0)"
 
         trip_detail['vehicle_telemetry_metrics'] =
           VehicleTelemetryMetric.where(where_condition,
