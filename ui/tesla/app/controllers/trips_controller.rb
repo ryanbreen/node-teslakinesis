@@ -30,6 +30,7 @@ class TripsController < ApplicationController
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id, :end_location_id => @to.id).
       order("EXTRACT(EPOCH FROM (end_time - start_time))")
     @map_type = :overview
+    collect_trip_data
   end
 
   def show

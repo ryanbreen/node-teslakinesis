@@ -26,7 +26,7 @@ Showing <%= @trips.count %> trips between <%= @from.name %> and <%= @to.name %>
     <td><%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></td>
     <% end %>
     <td>
-        <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip %>
+        <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip, :trip_detail => @trip_detail[index] %>
     </td>
   </tr>
 <% end %>
