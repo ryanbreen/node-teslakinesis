@@ -1,0 +1,16 @@
+{
+    "vehicle_id": "6856198612260671482",
+    "timestamp": "1431732433487",
+    "speed": "",
+    "odometer": "32289.4",
+    "soc": "85",
+    "elevation": "50",
+    "est_heading": "68",
+    "est_lat": "42.479863",
+    "est_lng": "-71.208381",
+    "power": "35",
+    "shift_state": "",
+    "range": "170",
+    "est_range": "132",
+    "heading": "68"
+}
