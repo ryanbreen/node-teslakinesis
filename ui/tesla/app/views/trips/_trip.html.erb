@@ -5,6 +5,7 @@
 
 <%= javascript_include_tag "gmaps/google" %>
 <%= javascript_include_tag "underscore" %>
+<%= yield :javascripts %>
 <% @js_loaded = true %>
 <% end %>
 
