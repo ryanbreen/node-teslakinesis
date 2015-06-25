@@ -30,7 +30,8 @@ handler<%=index%>.buildMap({
       id: 'map<%=index%>'
     }
   },
-  function(){    var start = {
+  function(){
+      var start = {
       "lat": <%= trip.start_location.latitude %>,
       "lng": <%= trip.start_location.longitude %>,
       "picture": {
