@@ -4,13 +4,13 @@
 Start: <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
 
 <% if @trip.origin != nil %>
-Origin: <%= @trip.origin.name %><br><br>
+Origin: <%= link_to @trip.origin.name, vehicle_location_path(@vehicle, @trip.origin) %><br><br>
 <% end %>
 
 End: <%= @trip.end_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
 
 <% if @trip.destination != nil %>
-Destination: <%= @trip.destination.name %><br><br>
+Destination: <%= link_to @trip.destination.name, vehicle_location_path(@vehicle, @trip.destination) %><br><br>
 <% end %>
 
 Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, include_seconds: true) %><br><br>
