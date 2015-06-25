@@ -20,7 +20,7 @@ Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, includ
 
 <h1>Detailed telemetry</h1>
 <br>
-<%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'] %>
+<%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'] %><br>
 
 <table>
   <tr>
