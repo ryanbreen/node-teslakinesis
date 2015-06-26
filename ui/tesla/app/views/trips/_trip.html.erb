@@ -74,10 +74,10 @@ var load_maps = function() {
 
 <script>
 if (!window.js_loaded) {
-  document.write('<script src="//maps.google.com/maps/api/js?v=3.13&amp;sensor=false&amp;libraries=geometry" type="text/javascript"></scr' + 'ipt>');
   document.write('<script src="//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js" type="text/javascript"></scr' + 'ipt>');
   document.write('<script src="/assets/gmaps/google.js"></scr' + 'ipt>');
-  document.write('<script>setTimeout(load_maps, 10);</scr' + 'ipt>');
+  document.write('<script src="//maps.google.com/maps/api/js?v=3.13&amp;sensor=false&amp;libraries=geometry&amp;callback=load_maps" type="text/javascript"></scr' + 'ipt>');
+  //document.write('<script>setTimeout(load_maps, 10);</scr' + 'ipt>');
   window.js_loaded = true;
 }
 </script>
