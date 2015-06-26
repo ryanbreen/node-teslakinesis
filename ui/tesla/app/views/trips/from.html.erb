@@ -11,5 +11,5 @@
  <%= render 'by_location' %>
  </table> 
 
-<br><br><%= link_to "Back to trips", vehicle_trips_path(params[:vehicle_id]) %>
+<br><br><%= link_to "Back to trips", vehicle_trips_path(params[:vehicle_id]) %> | <%= link_to "Back to location", vehicle_location_path(params[:vehicle_id], @from) %>
 <br>
