@@ -17,7 +17,7 @@ class TripsController < ApplicationController
     @trips = Trip.select('*').joins(:destination).
       where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
       where.not(end_location_id: nil).
-      group("trips.id, locations.id")
+      group("locations.id, trips.id")
   end
 
   def to
