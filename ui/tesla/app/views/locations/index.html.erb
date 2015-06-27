@@ -2,7 +2,9 @@
 
 <h1>Listing locations</h1>
 
-<%= will_paginate @locations %>
+<%= will_paginate @locations %><br>
+
+Return to <%= link_to "trips for this vehicle", vehicle_trips_path(@vehicle) %>.
 
 <table>
   <thead>
