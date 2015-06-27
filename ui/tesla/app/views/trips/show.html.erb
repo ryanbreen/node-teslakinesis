@@ -7,15 +7,19 @@ Start: <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:lon
 Origin: <%= link_to @trip.origin.name, vehicle_location_path(@vehicle, @trip.origin) %><br><br>
 <% end %>
 
-<% if @trip.end_time.nil? %>
-Trip is ongoing...
+<% if @trip.end_time == nil %>
+Trip is ongoing...<br><br>
 <% else %>
 End: <%= @trip.end_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
 <% end %>
 
 <% if @trip.destination != nil %>
 Destination: <%= link_to @trip.destination.name, vehicle_location_path(@vehicle, @trip.destination) %><br><br>
+<% end %>
+<% if @trip.end_time != nil %>
 Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, include_seconds: true) %><br><br>
+<% else %>
+Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, include_seconds: true) %><br><br>
 <% end %>
 
 <% if @trip.destination != nil && @trip.origin != nil %>
