@@ -9,7 +9,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.where(:vehicle_id => params[:vehicle_id]).order("start_time desc")
+    @trips = Trip.where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page])
   end
 
   def from
