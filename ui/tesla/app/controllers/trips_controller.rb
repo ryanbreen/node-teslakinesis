@@ -58,13 +58,21 @@ class TripsController < ApplicationController
         trip_detail = {}
         @trip_detail[index] = trip_detail
 
-        where_condition = @map_type == :detailed ?
-          "vehicle_id = ? and timestamp >= ? and timestamp <= ?" :
-          "vehicle_id = ? and timestamp >= ? and timestamp <= ? and (id % 16 = 0)"
+        where_condition = trip[:end_time] == nil ?
+          "vehicle_id = ? and timestamp >= ?" :
+          "vehicle_id = ? and timestamp >= ? and timestamp <= ?"
 
-        trip_detail['vehicle_telemetry_metrics'] =
-          VehicleTelemetryMetric.where(where_condition,
-          trip[:vehicle_id], trip[:start_time], trip[:end_time]).order(:timestamp)
+        where_condition = @map_type == :detailed ?
+          where_condition :
+          where_condition + " and (id % 16 = 0)"
+
+        if trip[:end_time] == nil
+         trip_detail['vehicle_telemetry_metrics'] =
+            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time]).order(:timestamp)
+        else
+         trip_detail['vehicle_telemetry_metrics'] =
+            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time], trip[:end_time]).order(:timestamp)
+        end
 
         trip_detail['hashes'] = []
         current_hash_speed = nil
