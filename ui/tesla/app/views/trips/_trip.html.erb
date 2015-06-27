@@ -53,6 +53,7 @@ map_load_functions.push(function() {
         }
       };
       handler<%=index%>.addMarker(start);
+      <% if trip.end_location != nil %>
       var end = {
         "lat": <%= trip.end_location.latitude %>,
         "lng": <%= trip.end_location.longitude %>,
@@ -63,6 +64,7 @@ map_load_functions.push(function() {
         }
       };
       handler<%=index%>.addMarker(end);
+      <% end %>
 
   <% if trip_detail['hashes'] != nil %>
 
