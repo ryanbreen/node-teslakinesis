@@ -68,10 +68,10 @@ class TripsController < ApplicationController
 
         if trip[:end_time] == nil
          trip_detail['vehicle_telemetry_metrics'] =
-            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time]).order(:timestamp)
+            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time]).order("timestamp desc")
         else
          trip_detail['vehicle_telemetry_metrics'] =
-            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time], trip[:end_time]).order(:timestamp)
+            VehicleTelemetryMetric.where(where_condition, trip[:vehicle_id], trip[:start_time], trip[:end_time]).order("timestamp desc")
         end
 
         trip_detail['hashes'] = []
