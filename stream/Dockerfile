@@ -1,0 +1,9 @@
+FROM node:0.10-onbuild
+
+ENV APP_HOME /tesla
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+ADD . $APP_HOME
+
+RUN $APP_HOME/run.sh

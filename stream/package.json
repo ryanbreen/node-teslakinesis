@@ -1,0 +1,21 @@
+{
+  "name": "nodeteslakinesis-stream",
+  "version": "0.0.0",
+  "description": "Stream tesla data to kinesis",
+  "main": "index.js",
+  "dependencies": {
+    "kinesis": "^1.2.0",
+    "event-stream": "^3.3.1",
+    "teslams": "^1.0.0",
+    "optimist": "^0.6.1",
+    "request": "^2.55.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "true",
+    "start": "run.sh"
+  },
+  "author": "Ryan Breen",
+  "repository": "https://github.com/ryanbreen/node-teslakinesis",
+  "license": "MIT"
+}
