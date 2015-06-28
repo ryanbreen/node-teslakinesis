@@ -6,4 +6,3 @@ WORKDIR $APP_HOME
 
 ADD . $APP_HOME
 
-RUN $APP_HOME/run.sh
