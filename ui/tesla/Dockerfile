@@ -19,5 +19,3 @@ ADD Gemfile* $APP_HOME/
 RUN bundle install
 
 ADD . $APP_HOME
-
-RUN ./run.sh
