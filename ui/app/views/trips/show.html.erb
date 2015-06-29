@@ -22,11 +22,10 @@ Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, includ
 Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, include_seconds: true) %><br><br>
 <% end %>
 
-<% if @trip.destination != nil && @trip.origin != nil %>
-<%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %> | 
-<% end %>
-
 <%= link_to "All trips", vehicle_trips_path(@vehicle) %>
+<% if @trip.destination != nil && @trip.origin != nil %>
+ | <%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %>
+<% end %>
 <br><br>
 
 <h1>Detailed telemetry</h1>
