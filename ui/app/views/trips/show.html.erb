@@ -43,7 +43,7 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
  
 <% @trip_detail[0]['vehicle_telemetry_metrics'].each do |metric| %>
   <tr>
-    <td><%= metric.timestamp %></td>
+    <td><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
     <td><%= metric.speed %></td>
     <td><%= metric.location.latitude %></td>
     <td><%= metric.location.longitude %></td>
