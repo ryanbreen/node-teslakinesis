@@ -14,18 +14,18 @@ class TripsController < ApplicationController
 
   def from
     @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
-    @trips = Trip.select('*').joins(:destination).
+    @endpoints = Trip.select('*').joins(:destination).
       where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id).
       where.not(end_location_id: nil).
-      group("locations.id, trips.id")
+      group("locations.name").count.sort_by {|_key, value| value}.reverse
   end
 
   def to
     @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
-    @trips = Trip.select('*').joins(:origin).
+    @endpoints = Trip.select('*').joins(:origin).
       where(:vehicle_id => params[:vehicle_id], :end_location_id => @to.id).
       where.not(start_location_id: nil).
-      group("trips.id, locations.id")
+      group("locations.name").count.sort_by {|_key, value| value}.reverse
   end
 
   def between

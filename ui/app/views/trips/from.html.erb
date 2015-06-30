@@ -1,15 +1,13 @@
 
 <h1>Trips from <%= @from.name %></h1>
 
- <table>
-  <tr>
-    <th>Start Time</th>
-    <th>Duration</th>
-    <th>Destination</th>
-    <th></th>
-  </tr>
- <%= render 'by_location' %>
- </table> 
+<% @endpoints.each do |endpoint| %>
+
+  <ul>
+    <li><%= endpoint[1] %> trips to <%= link_to endpoint[0], vehicle_trips_between_path(params[:vehicle_id], @from.name, endpoint[0]) %></li>
+  </ul>
+
+<% end %>
 
 <br><%= link_to "Back to trips", vehicle_trips_path(params[:vehicle_id]) %> | <%= link_to "Back to location", vehicle_location_path(params[:vehicle_id], @from) %>
 <br>
