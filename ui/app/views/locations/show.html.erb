@@ -5,10 +5,10 @@
 <%= render 'map' %>
 
 <% if @as_origin_count > 0 %>
-There are <%= @as_origin_count %> trips <%= link_to 'starting from here', vehicle_trips_from_path(@vehicle, @location.name) %>.<br>
+There <%= (@as_origin_count == 1 ? 'is' : 'are') %> <%= pluralize(@as_origin_count, 'trip', 'trips') %> <%= link_to 'starting from here', vehicle_trips_from_path(@vehicle, @location.name) %>.<br>
 <% end %>
 <% if @as_destination_count > 0 %>
-There are <%= @as_destination_count %> trips <%= link_to 'ending here', vehicle_trips_to_path(@vehicle, @location.name) %>.<br>
+There <%= (@as_destination_count == 1 ? 'is' : 'are') %> <%= pluralize(@as_destination_count, 'trip', 'trips') %> <%= link_to 'ending here', vehicle_trips_to_path(@vehicle, @location.name) %>.<br>
 <% end %>
 <br>
 <%= link_to 'Edit', edit_vehicle_location_path(@vehicle, @location) %> |
