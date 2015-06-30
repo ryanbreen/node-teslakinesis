@@ -1,1 +1,1 @@
-Time::DATE_FORMATS[:long_us] = '%B %d, %Y %l:%M%p'
+Time::DATE_FORMATS[:long_us] = '%A %B %d, %Y %l:%M%p'
