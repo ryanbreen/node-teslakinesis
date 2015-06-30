@@ -4,7 +4,7 @@
 <% @endpoints.each do |endpoint| %>
 
   <ul>
-    <li><%= endpoint[1] %> trips to <%= link_to endpoint[0], vehicle_trips_between_path(params[:vehicle_id], @from.name, endpoint[0]) %></li>
+    <li><%= pluralize(endpoint[1], 'trip', 'trips') %> to <%= link_to endpoint[0], vehicle_trips_between_path(params[:vehicle_id], @from.name, endpoint[0]) %></li>
   </ul>
 
 <% end %>
