@@ -32,7 +32,7 @@ class TripsController < ApplicationController
     @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
     @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id, :end_location_id => @to.id).
-      order("EXTRACT(EPOCH FROM (end_time - start_time))")
+      order("EXTRACT(EPOCH FROM (end_time - start_time))").paginate(:page => params[:page], :per_page => 5)
     @map_type = :overview
     collect_trip_data
   end
