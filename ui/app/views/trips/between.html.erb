@@ -1,5 +1,5 @@
 
-<h1><%= @trips.count %> trips from <%= @from.name %> to <%= @to.name %></h1>
+<h1><%= pluralize(@trips.count, 'trip', 'trips') %> from <%= @from.name %> to <%= @to.name %></h1>
  
 <table>
   <tr>
