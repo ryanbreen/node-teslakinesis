@@ -11,14 +11,41 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150528144740) do
+ActiveRecord::Schema.define(version: 20150702222226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
 
+  create_table "locations", force: true do |t|
+    t.string   "vehicle_id"
+    t.string   "name"
+    t.spatial  "geolocation", limit: {:srid=>4326, :type=>"point", :has_z=>true, :geographic=>true}
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["geolocation"], :name => "index_locations_on_geolocation", :spatial => true
+  add_index "locations", ["vehicle_id", "name"], :name => "index_locations_on_vehicle_id_and_name", :unique => true
+  add_index "locations", ["vehicle_id"], :name => "index_locations_on_vehicle_id"
+
+  create_table "trips", force: true do |t|
+    t.string   "vehicle_id"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.spatial  "start_location",    limit: {:srid=>4326, :type=>"point", :has_z=>true, :geographic=>true}
+    t.spatial  "end_location",      limit: {:srid=>4326, :type=>"point", :has_z=>true, :geographic=>true}
+    t.datetime "created_at",                                                                               null: false
+    t.datetime "updated_at",                                                                               null: false
+    t.integer  "start_location_id"
+    t.integer  "end_location_id"
+  end
+
+  add_index "trips", ["end_location"], :name => "index_trips_on_end_location", :spatial => true
+  add_index "trips", ["start_location"], :name => "index_trips_on_start_location", :spatial => true
+
   create_table "vehicle_telemetry_metrics", force: true do |t|
-    t.string   "vehicle_id",  limit: nil
+    t.string   "vehicle_id"
     t.datetime "timestamp"
     t.integer  "speed"
     t.float    "odometer"
@@ -33,10 +60,18 @@ ActiveRecord::Schema.define(version: 20150528144740) do
     t.integer  "est_range"
     t.datetime "created_at",                                                                         null: false
     t.datetime "updated_at",                                                                         null: false
+    t.integer  "trip_id"
   end
 
   add_index "vehicle_telemetry_metrics", ["location"], :name => "index_vehicle_telemetry_metrics_on_location", :spatial => true
   add_index "vehicle_telemetry_metrics", ["timestamp"], :name => "index_vehicle_telemetry_metrics_on_timestamp"
+  add_index "vehicle_telemetry_metrics", ["trip_id"], :name => "index_vehicle_telemetry_metrics_on_trip_id"
   add_index "vehicle_telemetry_metrics", ["vehicle_id"], :name => "index_vehicle_telemetry_metrics_on_vehicle_id"
+
+  create_table "vehicles", primary_key: "vehicle_id", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
