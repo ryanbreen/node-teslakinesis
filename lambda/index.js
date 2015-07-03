@@ -5,8 +5,8 @@ var _ = require('underscore');
 
 var INSERT_METRIC =
   "INSERT INTO vehicle_telemetry_metrics(id, vehicle_id, timestamp, speed, odometer, soc, elevation, " +
-    "est_heading, heading, location, power, shift_state, range, est_range, created_at, updated_at) " +
-    "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, now(), now());"
+    "est_heading, heading, location, power, shift_state, range, est_range, trip_id, created_at, updated_at) " +
+    "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, now(), now());"
 var ADD_TRIP =
   "INSERT INTO trips(id, vehicle_id, start_time, end_time, start_location, start_location_id, end_location, created_at, updated_at) " +
     "VALUES (DEFAULT, $1, $2, NULL, $3, " +
@@ -165,7 +165,8 @@ exports.handler = function(event, context) {
               payload['power'],
               shift_state,
               payload['range'],
-              payload['est_range']
+              payload['est_range'],
+              current_trip
             ],
           function(err, result) {
             if (err) console.error('Write failed due to %s', err);
