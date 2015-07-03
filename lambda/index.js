@@ -8,14 +8,18 @@ var INSERT_METRIC =
     "est_heading, heading, location, power, shift_state, range, est_range, created_at, updated_at) " +
     "VALUES (DEFAULT, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, now(), now());"
 var ADD_TRIP =
-  "INSERT INTO trips(id, vehicle_id, start_time, end_time, start_location, end_location, created_at, updated_at) " +
-    "VALUES (DEFAULT, $1, $2, NULL, $3, NULL, now(), now()) RETURNING id;"
+  "INSERT INTO trips(id, vehicle_id, start_time, end_time, start_location, start_location_id, end_location, created_at, updated_at) " +
+    "VALUES (DEFAULT, $1, $2, NULL, $3, " +
+      "(select id from locations where ST_DWithin($3, geolocation, 200))," +
+    " NULL, now(), now()) RETURNING id;";
 var CURRENT_TRIP = "SELECT id from trips where vehicle_id = $1 and end_time IS NULL;"
-var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, updated_at = now() where id = $3;";
+var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, end_location_id = " +
+  "(select id from locations where ST_DWithin($2, geolocation, 200))," +
+  "updated_at = now() where id = $3;";
 
 var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWithin(start_location, end_location, 200) and " + 
   "(EXTRACT(EPOCH FROM (end_time - start_time)) < 60)";
-// TODO: CLOSE_TRIP should set start_location_id and end_location_id if applicable.
+// TODO: CLOSE_TRIP should set end_location_id if applicable.
 
 var creds = require('./creds/db.js');
 
@@ -105,6 +109,7 @@ exports.handler = function(event, context) {
           } else if (trip_op.type === 'close') {
             console.log("Closing trip %s", current_trip);
             // Find current trip.  If none and car is in gear, create a new trip.
+            console.log('Invoking CLOSE_TRIPE (%s) with parameters %s, %s, %s', CLOSE_TRIP, trip_op['time'], point, current_trip);
             client.query(CLOSE_TRIP, [trip_op['time'], point, current_trip], function(err, result) {
               if (err) return context.fail("Failed to close trip due to " + err);
 
