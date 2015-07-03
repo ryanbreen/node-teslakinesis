@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
 
-  before_action :set_models, only: [:index, :show]
+  before_action :set_models, only: [:index, :show, :destroy]
 
   @@color_scale = [
     "#000000",
@@ -41,6 +41,14 @@ class TripsController < ApplicationController
     @map_type = :detailed
 
     collect_trip_data
+  end
+
+  def destroy
+    @trip.destroy
+    respond_to do |format|
+      format.html { redirect_to vehicle_trips_url(@vehicle), notice: 'Trip was successfully destroyed.' }
+      format.json { head :no_content }
+    end
   end
 
   private
