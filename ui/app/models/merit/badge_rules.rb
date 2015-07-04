@@ -26,6 +26,10 @@ module Merit
       # Find badge by badge_id, badge_id takes presidence over badge
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
 
+      grant_on 'trips#show', badge: 'speed-demon', to: :itself, model_name: 'Trip' do |trip|
+        trip.vehicle_telemetry_metrics.any?{|telemetry| telemetry.speed >= 90 }
+      end
+
       # If it has 10 comments, grant commenter-10 badge
       # grant_on 'comments#create', badge: 'commenter', level: 10 do |comment|
       #   comment.user.comments.count == 10

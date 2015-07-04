@@ -28,6 +28,14 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
 <% end %>
 <br><br>
 
+<h1>Badges</h1>
+<br>
+<ul>
+<% @trip.badges.each do |badge| %>
+  <li><%= badge.name %></li>
+<% end %>
+</ul>
+
 <h1>Detailed telemetry</h1>
 <br>
 <%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'] %><br>

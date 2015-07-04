@@ -51,6 +51,11 @@ class TripsController < ApplicationController
     end
   end
 
+  # TODO: Hack needed to make merit happy.  Fix this.  It shouldn't be necessary.
+  def current_trip
+    @trip
+  end
+
   private
 
     def collect_trip_data

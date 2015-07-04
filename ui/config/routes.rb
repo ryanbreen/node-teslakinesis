@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :vehicles do
-    resources :trips, only: [:index]
     resources :locations
     resources :trips
 
