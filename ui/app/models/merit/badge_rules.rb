@@ -27,7 +27,7 @@ module Merit
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
 
       grant_on 'trips#show', badge: 'speed-demon', to: :itself, model_name: 'Trip' do |trip|
-        trip.vehicle_telemetry_metrics.any?{|telemetry| telemetry.speed >= 90 }
+        VehicleTelemetryMetric.where("trip_id = ? and speed > 89", trip.id).take
       end
 
       # If it has 10 comments, grant commenter-10 badge
