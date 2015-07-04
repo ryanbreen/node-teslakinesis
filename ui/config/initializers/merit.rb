@@ -26,6 +26,13 @@ Merit::Badge.create!(
   custom_fields: { icon: 'shout' }
 )
 
+Merit::Badge.create!(
+  id: 2,
+  name: "awesome-power",
+  description: "You floored it.  Stop racing.",
+  custom_fields: { icon: 'bolt' }
+)
+
 ## Badge Ideas
 # Farthest north
 # Farthest west
