@@ -26,7 +26,7 @@ module Merit
       # Find badge by badge_id, badge_id takes presidence over badge
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
 
-      grant_on 'trips#show', badge: 'speed-demon', to: :itself, model_name: 'Trip' do |trip|
+      grant_on 'trips#show', badge: 'speed-demon', to: :self, model_name: 'Trip' do |trip|
         VehicleTelemetryMetric.where("trip_id = ? and speed > 89", trip.id).take
       end
 

@@ -22,8 +22,22 @@ end
 Merit::Badge.create!(
   id: 1,
   name: "speed-demon",
-  description: "You drove more than 90mph on this trip.  Slow the fuck down!"
+  description: "You drove more than 90mph on this trip.  Slow the fuck down!",
+  custom_fields: { icon: 'shout' }
 )
+
+## Badge Ideas
+# Farthest north
+# Farthest west
+# Farthest east
+# Farthest south
+# Fastest (overall speed)
+# Fastest 1-3 on any given route
+# High energy consumption
+# High energy regen
+# Soc below 20%
+# Longest distance traveled
+# Traveled over N miles with energy consumption below Y%
 
 # Create application badges (uses https://github.com/norman/ambry)
 # badge_id = 0

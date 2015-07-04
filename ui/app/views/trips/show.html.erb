@@ -28,12 +28,12 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
 <% end %>
 <br><br>
 
+<% if @trip.badges.length > 0 %>
 <h1>Badges</h1>
-<ul>
-<% @trip.badges.each do |badge| %>
-  <li><%= badge.name %></li>
+  <% @trip.badges.each do |badge| %>
+    <img src="<%= image_url(badge.custom_fields[:icon] + '.png') %>" alt="<%= badge.description %>" title="<%= badge.description %>" >
+  <% end %>
 <% end %>
-</ul>
 
 <h1>Detailed telemetry</h1>
 <br>
