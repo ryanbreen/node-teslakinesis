@@ -27,11 +27,27 @@ module Merit
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
 
       grant_on 'trips#show', badge: 'speed-demon', to: :itself, model_name: 'Trip' do |trip|
-        VehicleTelemetryMetric.where("trip_id = ? and speed > 89", trip.id).take
+        VehicleTelemetryMetric.where(["vehicle_id = ? and trip_id = ? and speed > 89", trip.vehicle_id, trip.id]).take
       end
 
       grant_on 'trips#show', badge: 'awesome-power', to: :itself, model_name: 'Trip' do |trip|
-        VehicleTelemetryMetric.where("trip_id = ? and power > 220", trip.id).take
+        VehicleTelemetryMetric.where(["vehicle_id = ? and trip_id = ? and power > 220", trip.vehicle_id, trip.id]).take
+      end
+
+      grant_on 'trips#show', badge: 'go-west-young-man', to: :itself, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ?", trip.vehicle_id]).order("ST_X(location::geometry)").first[:trip_id] == trip.id
+      end
+
+      grant_on 'trips#show', badge: 'to-the-sea', to: :itself, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ?", trip.vehicle_id]).order("ST_X(location::geometry) desc").first[:trip_id] == trip.id
+      end
+
+      grant_on 'trips#show', badge: 'the-great-white-north', to: :itself, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ?", trip.vehicle_id]).order("ST_Y(location::geometry) desc").first[:trip_id] == trip.id
+      end
+
+      grant_on 'trips#show', badge: 'southern-living', to: :itself, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ?", trip.vehicle_id]).order("ST_Y(location::geometry)").first[:trip_id] == trip.id
       end
 
       # If it has 10 comments, grant commenter-10 badge

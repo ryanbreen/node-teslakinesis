@@ -33,6 +33,34 @@ Merit::Badge.create!(
   custom_fields: { icon: 'bolt' }
 )
 
+Merit::Badge.create!(
+  id: 3,
+  name: "go-west-young-man",
+  description: "This is the farthest west you've been.",
+  custom_fields: { icon: 'place' }
+)
+
+Merit::Badge.create!(
+  id: 4,
+  name: "to-the-sea",
+  description: "Stop before you hit the water.",
+  custom_fields: { icon: 'place' }
+)
+
+Merit::Badge.create!(
+  id: 5,
+  name: "the-great-white-north",
+  description: "You going to Canada?",
+  custom_fields: { icon: 'place' }
+)
+
+Merit::Badge.create!(
+  id: 6,
+  name: "southern-living",
+  description: "The south is full of bugs.",
+  custom_fields: { icon: 'place' }
+)
+
 ## Badge Ideas
 # Farthest north
 # Farthest west
