@@ -1,6 +1,6 @@
 class TripsController < ApplicationController
 
-  before_action :set_models, only: [:index, :show, :destroy]
+  before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
   @@color_scale = [
     "#000000",
@@ -49,6 +49,10 @@ class TripsController < ApplicationController
       format.html { redirect_to vehicle_trips_url(@vehicle), notice: 'Trip was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def calculate_badges
+
   end
 
   # TODO: Hack needed to make merit happy.  Fix this.  It shouldn't be necessary.

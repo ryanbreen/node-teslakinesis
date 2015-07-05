@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get 'trips/from/:from/to/:to', to: 'trips#between', as: 'trips_between', :constraints => { :from => /[^\/]+/, :to => /[^\/]+/ }
     get 'trips/from/:from', to: 'trips#from', as: 'trips_from', :constraints => { :from => /[^\/]+/ }
     get 'trips/to/:to', to: 'trips#to', as: 'trips_to', :constraints => { :to => /[^\/]+/ }
+    get 'trips/calculate_badges/:id', to: 'trips#calculate_badges'
   end
 
 end
