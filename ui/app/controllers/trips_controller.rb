@@ -10,6 +10,11 @@ class TripsController < ApplicationController
 
   def index
     @trips = Trip.where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page])
+
+    respond_to do |format|
+      format.html
+      format.json { render json: @trips }
+    end
   end
 
   def from
