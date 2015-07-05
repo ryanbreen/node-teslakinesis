@@ -2,6 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.badges-small img {
-  height: 20%;
+img.badge-small {
+  max-width: 6%;
+  width: 6%;
+  max-height: 6%;
+  height: 6%;
 }
