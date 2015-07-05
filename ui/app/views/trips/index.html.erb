@@ -25,6 +25,11 @@
     <% else %>
     <td><%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></td>
     <% end %>
+    <td>
+    <% trip.badges.each do |badge| %>
+      <img src="<%= image_url(badge.custom_fields[:icon] + '.png') %>" alt="<%= badge.description %>" title="<%= badge.description %>" >
+    <% end %>
+    </td>
    <!-- <td><%= link_to 'Delete', vehicle_trip_path(trip.vehicle_id, trip), method: :delete, data: { confirm: 'Are you certain you want to delete this?' } %></td> -->
   </tr>
 <% end %>
