@@ -26,6 +26,7 @@
       <% else %>
       to <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %>.
       <% end %>
+     <!-- <%= link_to 'Delete', vehicle_trip_path(trip.vehicle_id, trip), method: :delete, data: { confirm: 'Are you certain you want to delete this?' } %>< -->
     </div>
     <div class='col-md-3'>
       <% if trip.badges.length > 0 %>
@@ -36,7 +37,6 @@
         &nbsp;
       <% end %>
     </div>
-   <!-- <td><%= link_to 'Delete', vehicle_trip_path(trip.vehicle_id, trip), method: :delete, data: { confirm: 'Are you certain you want to delete this?' } %></td> -->
   </div>
 <% end %>
 <br>
