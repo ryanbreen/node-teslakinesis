@@ -10,11 +10,11 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  */
-@import "bootstrap.min.css";
-@import "font-awesome.css";
-@import "ace-fonts.css";
 
-@import "ace.css";
-@import "ace-part2.css";
+ @import "bootstrap.min.css";
+ @import "font-awesome.min.css";
+ @import "ace-fonts.min.css";
+ @import "ace.min.css";
+ @import "ace-part2.min.css";
+ @import "ace-ie.min.css";
