@@ -1,7 +1,9 @@
 
-<%= render 'trip', :width => 800, :height => 400, :trip => @trip, :trip_detail => @trip_detail[0] %>
+ <div class="widget-box">
+ <!--
+   <div class="widget-header">
 
-Start: <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
+   <!--Start: <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
 
 <% if @trip.origin != nil %>
 Origin: <%= link_to @trip.origin.name, vehicle_location_path(@vehicle, @trip.origin) %><br><br>
@@ -20,7 +22,18 @@ Destination: <%= link_to @trip.destination.name, vehicle_location_path(@vehicle,
 Duration: <%= distance_of_time_in_words(@trip.start_time, @trip.end_time, include_seconds: true) %><br><br>
 <% else %>
 Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, include_seconds: true) %><br><br>
-<% end %>
+<% end %><
+
+   </div>
+-->
+   <div class="widget-body">
+      <div class="widget-main">
+      <center>
+      <%= render 'trip', :width => 800, :height => 400, :trip => @trip, :trip_detail => @trip_detail[0] %>
+      </center>
+      </div>
+   </div>
+ </div>
 
 <%= link_to "All trips", vehicle_trips_path(@vehicle) %>
 <% if @trip.destination != nil && @trip.origin != nil %>

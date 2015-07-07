@@ -6,8 +6,111 @@
   </div>
  
 <% @trips.each do |trip, index| %>
-  <div class='row'>
-    <div class='col-xs-4'><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %> 
+  <div class="row"><div class="col-xs-12 col-sm-10 col-sm-offset-1">
+    <div class="timeline-container">
+
+      <div class="timeline-label">
+         <span class="label label-primary arrowed-in-right label-lg">
+           <% if trip.start_time.in_time_zone('America/New_York').to_date == Date.today %>
+           <b>Today</b>
+           <% elsif trip.start_time.in_time_zone('America/New_York').to_date == Date.yesterday %>
+           <b>Yesterday</b>
+           <% else %>
+           <b><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us) %></b>
+           <% end %>
+         </span>
+      </div>
+      <div class="timeline-items">
+
+        <!-- Populate Destination, if any -->
+        <div class="timeline-item clearfix">
+           <div class="timeline-info">
+             <i class="timeline-indicator ace-icon fa fa-certificate btn btn-success no-hover"></i>
+           </div>
+
+           <div class="widget-box transparent">
+             <div class="widget-header widget-header-small">
+              <% if trip.end_time == nil %>
+              <h5 class="widget-title smaller">Trip ongoing</h5>
+                <% trip.end_time = Time.now %>
+              <% elsif trip.destination == nil %>
+              <h5 class="widget-title smaller">Arrived at an unknown location (<%=
+                    link_to 'name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+                      :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, 
+                      :z => trip[:end_location].z) %>)</h5>
+              <% else %>
+              <h5 class="widget-title smaller">Arrived at <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></h5>
+              <% end %>
+              <span class="widget-toolbar no-border">
+                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+              </span>
+              <span class="widget-toolbar">
+                <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+              </span>
+            </div>
+            <div class="widget-body"><div class="widget-main">
+              Show map
+            </div></div>
+          </div>
+        </div>
+
+        <% if trip.badges.length > 0 %>
+
+          <div class="timeline-item clearfix">
+             <div class="timeline-info">
+               <i class="timeline-indicator ace-icon fa fa-certificate btn btn-success no-hover"></i>
+             </div>
+
+             <div class="widget-box transparent">
+               <div class="widget-header widget-header-small">
+                <h5 class="widget-title smaller">Badges Earned!</h5>
+                <span class="widget-toolbar no-border">
+                  <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                  <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+                </span>
+                <span class="widget-toolbar">
+                  <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+                </span>
+              </div>
+              <div class="widget-body"><div class="widget-main">
+                <% trip.badges.each do |badge| %>
+                  <i class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type]%> no-hover' ></i>
+                <% end %>
+              </div></div>
+            </div>
+          </div>
+
+        <% end %> <!-- if badges -->
+
+        <!-- Populate Origin, if any -->
+        <div class="timeline-item clearfix">
+           <div class="timeline-info">
+             <i class="timeline-indicator ace-icon fa fa-certificate btn btn-success no-hover"></i>
+           </div>
+
+           <div class="widget-box transparent">
+             <div class="widget-body"><div class="widget-main">
+              <% if trip.origin == nil %>
+              Departed from an unknown location (<%=
+                      link_to 'name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+                      :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, 
+                      :z => trip[:start_location].z) %>)</h5>
+              <% else %>
+              Departed <%= link_to trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin) %>
+              <% end %>
+              <div class="pull-right">
+                <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+              </div>
+            </div></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div></div>
+  <!--
     <%= trip.end_time == nil ? 'ongoing' : 'for ' + distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %>
     </div>
     <div class='col-xs-4'>
@@ -17,14 +120,8 @@
       <% else %>
       <%= link_to trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin) %>
       <% end %>
-      <% if trip[:end_location] == nil %>
-      is currently ongoing.
-      <% elsif trip.destination == nil %>
-      to an unknown destination (<%= link_to 'name it', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, :z => trip[:end_location].z) %>).
-      <% else %>
-      to <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %>.
-      <% end %>
-     <!-- <%= link_to 'Delete', vehicle_trip_path(trip.vehicle_id, trip), method: :delete, data: { confirm: 'Are you certain you want to delete this?' } %>< -->
+
+      <%= link_to 'Delete', vehicle_trip_path(trip.vehicle_id, trip), method: :delete, data: { confirm: 'Are you certain you want to delete this?' } %>< 
     </div>
     <div class='col-xs-3'>
       <% if trip.badges.length > 0 %>
@@ -36,6 +133,7 @@
       <% end %>
     </div>
   </div>
+-->
 <% end %>
 <br>
 

@@ -23,52 +23,47 @@ Merit::Badge.create!(
   id: 1,
   name: "speed-demon",
   description: "You drove more than 90mph on this trip.  Slow the fuck down!",
-  custom_fields: { icon: 'shout' }
+  custom_fields: { icon: 'rocket', type: 'danger' }
 )
 
 Merit::Badge.create!(
   id: 2,
   name: "awesome-power",
   description: "You floored it.  Stop racing.",
-  custom_fields: { icon: 'bolt' }
+  custom_fields: { icon: 'tachometer', type: 'danger' }
 )
 
 Merit::Badge.create!(
   id: 3,
   name: "go-west-young-man",
   description: "This is the farthest west you've been.",
-  custom_fields: { icon: 'place' }
+  custom_fields: { icon: 'arrow-left', type: 'success' }
 )
 
 Merit::Badge.create!(
   id: 4,
   name: "to-the-sea",
   description: "Stop before you hit the water.",
-  custom_fields: { icon: 'place' }
+  custom_fields: { icon: 'arrow-right', type: 'success' }
 )
 
 Merit::Badge.create!(
   id: 5,
   name: "the-great-white-north",
   description: "You going to Canada?",
-  custom_fields: { icon: 'place' }
+  custom_fields: { icon: 'arrow-up', type: 'success' }
 )
 
 Merit::Badge.create!(
   id: 6,
   name: "southern-living",
   description: "The south is full of bugs.",
-  custom_fields: { icon: 'place' }
+  custom_fields: { icon: 'arrow-down', type: 'success' }
 )
 
 ## Badge Ideas
-# Farthest north
-# Farthest west
-# Farthest east
-# Farthest south
 # Fastest (overall speed)
 # Fastest 1-3 on any given route
-# High energy consumption
 # High energy regen
 # Soc below 20%
 # Longest distance traveled
