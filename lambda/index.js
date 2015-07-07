@@ -14,7 +14,7 @@ var ADD_TRIP =
     " NULL, now(), now()) RETURNING id;";
 var CURRENT_TRIP = "SELECT id from trips where vehicle_id = $1 and end_time IS NULL;"
 var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, end_location_id = " +
-  "(select id from locations where ST_DWithin($2, geolocation, 200))," +
+  "(select id from locations where ST_DWithin($2, geolocation, 200) limit 1)," +
   "updated_at = now() where id = $3;";
 
 var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWithin(start_location, end_location, 200) and " + 
