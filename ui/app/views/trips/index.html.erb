@@ -5,7 +5,7 @@
    </h1>
   </div>
  
-<% @trips.each do |trip, index| %>
+<% @trips.each_with_index do |trip, index| %>
   <div class="row"><div class="col-xs-12 col-sm-10 col-sm-offset-1">
     <div class="timeline-container">
 
@@ -50,7 +50,7 @@
               </span>
             </div>
             <div class="widget-body"><div class="widget-main">
-              Show map
+              <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip, :trip_detail => @trip_detail[index] %>
             </div></div>
           </div>
         </div>
@@ -110,6 +110,7 @@
       </div>
     </div>
   </div></div>
+  <div class="space-6"></div>
 <% end %>
 <br>
 
