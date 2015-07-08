@@ -18,3 +18,50 @@
  @import "ace.min.css";
  @import "ace-part2.min.css";
  @import "ace-ie.min.css";
+
+ .trip_pagination {
+  background: white;
+  cursor: default;
+  /* self-clearing method: */ }
+  .trip_pagination a, .trip_pagination span, .trip_pagination em {
+    padding: 0.2em 0.5em;
+    display: block;
+    float: left;
+    margin-right: 1px; }
+  .trip_pagination .disabled {
+    color: #999999;
+    border: 1px solid #dddddd; }
+  .trip_pagination .current {
+    font-style: normal;
+    font-weight: bold;
+    background: #2e6ab1;
+    color: white;
+    border: 1px solid #2e6ab1; }
+  .trip_pagination a {
+    text-decoration: none;
+    color: #105cb6;
+    border: 1px solid #9aafe5; }
+    .trip_pagination a:hover, .trip_pagination a:focus {
+      color: #000033;
+      border-color: #000033; }
+  .trip_pagination .page_info {
+    background: #2e6ab1;
+    color: white;
+    padding: 0.4em 0.6em;
+    width: 22em;
+    margin-bottom: 0.3em;
+    text-align: center; }
+    .trip_pagination .page_info b {
+      color: #000033;
+      background: #6aa6ed;
+      padding: 0.1em 0.25em; }
+  .trip_pagination:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden; }
+  * html .trip_pagination {
+    height: 1%; }
+  *:first-child + html .trip_pagination {
+    overflow: hidden; }
