@@ -45,7 +45,7 @@
                   <% end %>
                   <span class="widget-toolbar no-border">
                     <i class="ace-icon fa fa-clock-o bigger-110"></i>
-                    <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+                    <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>, duration <%= @trip_detail[index]['pretty_duration'] %>
                   </span>
                   <span class="widget-toolbar">
                     <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>

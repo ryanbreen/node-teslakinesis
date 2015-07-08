@@ -1,3 +1,7 @@
+require 'action_view'
+require 'action_view/helpers'
+include ActionView::Helpers::DateHelper
+
 class TripsController < ApplicationController
 
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
@@ -70,7 +74,8 @@ class TripsController < ApplicationController
 
     def collect_trip_data
 
-      current_date = Time.zone.now.in_time_zone('America/New_York').to_date
+      now = Time.zone.now.in_time_zone('America/New_York')
+      current_date = now.to_date
 
       @trips = [ @trip ] if @trips == nil
 
@@ -87,7 +92,13 @@ class TripsController < ApplicationController
 
         trip_detail['pretty_start_date'] = (current_date == trip_date) ? "Today" : 
           (current_date.yesterday == trip_date) ? "Yesterday" :
-            trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us)                          
+            trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us)
+
+        if trip.end_time != nil
+          trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true)
+        else
+          trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, DateTime.now, include_seconds: true)
+        end               
 
         where_condition = @map_type == :detailed ?
           "trip_id = ?" :
