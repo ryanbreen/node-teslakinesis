@@ -50,7 +50,10 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
 
 <h1>Detailed telemetry</h1>
 <br>
+
+<div class="trip_pagination">
 <%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'] %><br>
+</div>
 
 <table>
   <tr>

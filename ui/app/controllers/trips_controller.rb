@@ -7,9 +7,9 @@ class TripsController < ApplicationController
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
   @@color_scale = [
-    "#000000",
-    "#00cc66",
-    "#ff3300"
+    "#74AD6A",
+    "#FFAA38",
+    "#C44537"
   ]
 
   def index
