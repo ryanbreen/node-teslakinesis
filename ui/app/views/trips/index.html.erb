@@ -18,13 +18,7 @@
         <div class="timeline-container">
           <div class="timeline-label">
              <span class="label label-primary arrowed-in-right label-lg">
-               <% if trip.start_time.in_time_zone('America/New_York').to_date == Date.today %>
-               <b>Today</b>
-               <% elsif trip.start_time.in_time_zone('America/New_York').to_date == Date.yesterday %>
-               <b>Yesterday</b>
-               <% else %>
-               <b><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us) %></b>
-               <% end %>
+               <b><%= @trip_detail[index]['pretty_start_date'] %></b>
              </span>
           </div>
           <div class="timeline-items">
@@ -44,7 +38,8 @@
                   <h5 class="widget-title smaller">Arrived at an unknown location (<%=
                         link_to 'name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
                           :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, 
-                          :z => trip[:end_location].z) %>)</h5>
+                          :z => trip[:end_location].z) %>)
+                          </h5>
                   <% else %>
                   <h5 class="widget-title smaller">Arrived at <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></h5>
                   <% end %>

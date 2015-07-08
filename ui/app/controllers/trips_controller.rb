@@ -70,6 +70,8 @@ class TripsController < ApplicationController
 
     def collect_trip_data
 
+      current_date = Time.zone.now.in_time_zone('America/New_York').to_date
+
       @trips = [ @trip ] if @trips == nil
 
       lowest_lng, highest_lng, lowest_lat, highest_lat = nil
@@ -78,8 +80,14 @@ class TripsController < ApplicationController
 
       @trips.each_with_index do |trip, index|
 
+        trip_date = trip.start_time.in_time_zone('America/New_York').to_date
+
         trip_detail = {}
         @trip_detail[index] = trip_detail
+
+        trip_detail['pretty_start_date'] = (current_date == trip_date) ? "Today" : 
+          (current_date.yesterday == trip_date) ? "Yesterday" :
+            trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us)                          
 
         where_condition = @map_type == :detailed ?
           "trip_id = ?" :
