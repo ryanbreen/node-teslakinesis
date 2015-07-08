@@ -15,9 +15,9 @@ ENV APP_HOME /tesla
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
+EXPOSE 3000
+
 ADD Gemfile* $APP_HOME/
 RUN bundle install
 
 ADD . $APP_HOME
-
-EXPOSE 3000
