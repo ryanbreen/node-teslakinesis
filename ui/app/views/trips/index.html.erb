@@ -81,8 +81,11 @@
                     </span>
                   </div>
                   <div class="widget-body"><div class="widget-main">
-                    <% trip.badges.each do |badge| %>
-                      <i class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type]%> no-hover' ></i>
+                    <% trip.badges.each_with_index do |badge, i| %>
+                      <button class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default badge-<%=trip.id%>-<%=index%> no-hover' title="<%= badge.description %>" ></button>
+                      <script>
+                        $('.badge-<%=trip.id%>-<%=index%>').tooltip();
+                      </script>
                     <% end %>
                   </div></div>
                 </div>
