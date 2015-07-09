@@ -29,7 +29,7 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
    <div class="widget-body">
       <div class="widget-main">
       <center>
-      <%= render 'trip', :width => 800, :height => 400, :trip => @trip, :trip_detail => @trip_detail[0] %>
+      <%= render 'trip', :trip => @trip, :trip_detail => @trip_detail[0] %>
       </center>
       </div>
    </div>

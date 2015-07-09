@@ -2,8 +2,6 @@
 <%
 trip = @trip if trip == nil
 index = 0 if index == nil
-width = 800 if width == nil
-height = 400 if height == nil
 %>
 
 <% if (@js_loaded == nil) %>
@@ -25,9 +23,10 @@ function load_maps() {
 <% @js_loaded = true %>
 <% end %>
 
-<div style='width: <%= width %>px;'>
-  <div id="map<%= index %>" style='width: <%= width %>px; height: <%= height %>px;'></div>
+<div class="map_container">
+  <div id="map<%= index %>" class="map_canvas"></div>
 </div>
+
 
 <script>
 map_load_functions.push(function() {

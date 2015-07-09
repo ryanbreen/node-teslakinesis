@@ -35,7 +35,7 @@
             <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
             <td><%= trip.end_time == nil ? 'ongoing' : distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
             <td><a href="<%= vehicle_trip_path(params[:vehicle_id], trip) %>">
-                    <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip, :trip_detail => @trip_detail[index] %>
+                    <%= render 'trip', :index => index, :trip => trip, :trip_detail => @trip_detail[index] %>
                 </a>
             </td>
           </tr>
