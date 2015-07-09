@@ -24,8 +24,8 @@ width = 800 if width == nil
 height = 400 if height == nil
 %>
 
-<div style='width: <%= width %>px;'>
-  <div id="map<%= index %>" style='width: <%= width %>px; height: <%= height %>px;'></div>
+<div class="map_container">
+  <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
 <script>
