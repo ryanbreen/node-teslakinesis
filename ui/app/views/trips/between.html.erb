@@ -1,35 +1,42 @@
 
-<h1><%= pluralize(@trips.count, 'trip', 'trips') %> from <%= @from.name %> to <%= @to.name %></h1>
- 
-<table>
-  <tr>
-    <th>Start Time</th>
-    <th>Duration</th>
-    <th></th>
-  </tr>
- 
+
+<div class="page-header">
+  <h1>
+   <%= pluralize(@trips.count, 'trip', 'trips') %> from <%= @from.name %> to <%= @to.name %>
+   <small><i class="ace-icon fa fa-angle-double-right"></i> sorted by duration</small>
+ </h1>
+</div>
+
+<div class="row"><div class="col-xs-12">
+  <table id="simple-table" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Start time</th>
+        <th>Duration</th>
+        <th>Route</th>
+      </tr>
+    </thead>
+
+    <tbody>
 <% @trips.each_with_index do |trip, index| %>
-  <tr>
-    <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
-    <td><%= trip.end_time == nil ? 'ongoing' : distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
-    <td><%= link_to 'Show', vehicle_trip_path(params[:vehicle_id], trip) %></td>
-    <% if trip.origin == nil %>
-    <td><%= link_to 'Name origin', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, :z => trip[:start_location].z) %></td>
-    <% else %>
-    <td><%= link_to trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin) %></td>
-    <% end %>
-    <% if trip.destination == nil %>
-    <td><%= link_to 'Name destination', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, :z => trip[:end_location].z) %></td>
-    <% else %>
-    <td><%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></td>
-    <% end %>
-    <td>
-        <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip, :trip_detail => @trip_detail[index] %>
-    </td>
-  </tr>
+
+      <tr>
+        <td><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
+        <td><%= trip.end_time == nil ? 'ongoing' : distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true) %></td>
+        <td><a href="<%= vehicle_trip_path(params[:vehicle_id], trip) %>">
+                <%= render 'trip', :index => index, :width => 400, :height => 200, :trip => trip, :trip_detail => @trip_detail[index] %>
+            </a>
+        </td>
+      </tr>
+
 <% end %>
-</table>
-<br><br>
-<%= will_paginate @trips %>
-<br><br><%= link_to "Back to trips", vehicle_trips_path(params[:vehicle_id]) %>
-<br><br>
+
+    </tbody>
+  </table>
+  
+<div class="trip_pagination">
+<%= will_paginate @trips, :container => false %>
+</div>
+
+</div></div>
+
