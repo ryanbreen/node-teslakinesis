@@ -40,7 +40,7 @@
           <div class="widget-body">
             <div class="widget-main">
               <%= link_to vehicle_location_path(@vehicle, location1) do %>
-              <% render 'map', :index => actual_index, :width => 400, :height => 200, :location => location1 %>
+              <% render 'map', :index => actual_index, :location => location1 %>
               <% end %>
             </div>
           </div>
@@ -66,7 +66,7 @@
             <div class="widget-body">
               <div class="widget-main">
                 <%= link_to vehicle_location_path(@vehicle, location2) do %>
-                <% render 'map', :index => actual_index+1, :width => 400, :height => 200, :location => location2 %>
+                <% render 'map', :index => actual_index+1, :location => location2 %>
                 <% end %>
               </div>
             </div>
