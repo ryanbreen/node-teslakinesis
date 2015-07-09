@@ -18,26 +18,64 @@
 
   <div class="row"><div class="col-xs-12">
 
-    <table id="simple-table" class="table table-striped table-bordered table-hover">
+    <% @locations.each_slice(2).with_index {|(location1, location2), index|
+      actual_index = index * 2 %>
+    <div class="row">
+      <div class="col-xs-6 widget-container-col ui-sortable">
+        <div class="widget-box ui-sortable-handle">
+          <div class="widget-header">
+            <h5 class="widget-title"><%= location1.name %></h5>
+            <div class="widget-toolbar">
+              <a href="#" data-action="collapse">
+                <i class="ace-icon fa fa-chevron-up"></i>
+              </a>
+              <%= link_to vehicle_location_path(@vehicle, location1), class: "ace-icon fa fa-search" do %>
+              <% end %>
+              <%= link_to edit_vehicle_location_path(@vehicle, location1), class: "ace-icon fa fa-pencil orange2" do %>
+              <% end %>
+              <%= link_to vehicle_location_path(@vehicle, location1), method: :delete, class: "ace-icon fa fa-trash-o red" do %>
+              <% end %>
+            </div>
+          </div>
+          <div class="widget-body">
+            <div class="widget-main">
+              <%= link_to vehicle_location_path(@vehicle, location1) do %>
+              <% render 'map', :index => actual_index, :width => 400, :height => 200, :location => location1 %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% if location2 != nil %>
+        <div class="col-xs-6 widget-container-col">
+          <div class="widget-box ui-sortable-handle">
+            <div class="widget-header">
+              <h5 class="widget-title"><%= location2.name %></h5>
+              <div class="widget-toolbar">
+                <a href="#" data-action="collapse">
+                  <i class="ace-icon fa fa-chevron-up"></i>
+                </a>
+                <%= link_to vehicle_location_path(@vehicle, location2), class: "ace-icon fa fa-search" do %>
+                <% end %>
+                <%= link_to edit_vehicle_location_path(@vehicle, location2), class: "ace-icon fa fa-pencil orange2" do %>
+                <% end %>
+                <%= link_to vehicle_location_path(@vehicle, location2), method: :delete, class: "ace-icon fa fa-trash-o red" do %>
+                <% end %>
+              </div>
+            </div>
+            <div class="widget-body">
+              <div class="widget-main">
+                <%= link_to vehicle_location_path(@vehicle, location2) do %>
+                <% render 'map', :index => actual_index+1, :width => 400, :height => 200, :location => location2 %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% end %>
+  <% } %>
 
-      <tbody>
-      <% @locations.each_slice(2).with_index {|(location1, location2), index|
-        actual_index = index * 2 %>
-        <tr>
-          <td><%= link_to location1.name, vehicle_location_path(@vehicle, location1) %>
-          <%= render 'map', :index => actual_index, :width => 400, :height => 200, :location => location1 %>
-          </td>
-          <td>
-          <% if location2 != nil %>
-            <%= link_to location2.name, vehicle_location_path(@vehicle, location2) %>
-            <%= render 'map', :index => actual_index + 1, :width => 400, :height => 200, :location => location2 %>
-          <% end %>
-          </td>
-        </tr>
-    <% } %>
-
-      </tbody>
-    </table>
 
     <div class="trip_pagination">
     <%= will_paginate @trips, :container => false %>
