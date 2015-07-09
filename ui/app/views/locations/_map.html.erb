@@ -33,8 +33,11 @@ map_load_functions.push(function() {
   handler<%=index%> = Gmaps.build('Google');
   handler<%=index%>.buildMap({
       provider: {
-        disableDefaultUI: true
-        // pass in other Google Maps API options here
+        disableDefaultUI: true,
+        // pass in other Google Maps API options here    
+        draggable: false,
+        scrollwheel: false,
+        panControl: false
       },
       internal: {
         id: 'map<%=index%>'

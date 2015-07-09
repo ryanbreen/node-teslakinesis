@@ -1,31 +1,48 @@
-<p id="notice"><%= notice %></p>
+<div id="breadcrumbs" class="breadcrumbs">
+ <ul class="breadcrumb">
+   <li><i class="fa fa-home home-icon"></i> <a href="<%= vehicle_path(params[:vehicle_id]) %>">Vehicles</a></li>
+   <li>Locations</li>
+ </ul><!-- /.breadcrumb -->
 
-<h1>Listing locations</h1>
+ <!-- searchbox -->
+</div>
 
-<%= will_paginate @locations %><br>
+<div class="page-content">
 
-Return to <%= link_to "trips for this vehicle", vehicle_trips_path(@vehicle) %>.
+  <div class="page-header">
+    <h1>
+     Locations
+     <small><i class="ace-icon fa fa-angle-double-right"></i> sorted by order added</small>
+   </h1>
+  </div>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+  <div class="row"><div class="col-xs-12">
 
-  <tbody>
-    <% @locations.each_with_index {|location, index| %>
-      <tr>
-        <td><%= link_to location.name, vehicle_location_path(@vehicle, location) %>
-        <%= render 'map', :index => index, :width => 400, :height => 200, :location => location %>
-        </td>
-      </tr>
+    <table id="simple-table" class="table table-striped table-bordered table-hover">
+
+      <tbody>
+      <% @locations.each_slice(2).with_index {|(location1, location2), index|
+        actual_index = index * 2 %>
+        <tr>
+          <td><%= link_to location1.name, vehicle_location_path(@vehicle, location1) %>
+          <%= render 'map', :index => actual_index, :width => 400, :height => 200, :location => location1 %>
+          </td>
+          <td>
+          <% if location2 != nil %>
+            <%= link_to location2.name, vehicle_location_path(@vehicle, location2) %>
+            <%= render 'map', :index => actual_index + 1, :width => 400, :height => 200, :location => location2 %>
+          <% end %>
+          </td>
+        </tr>
     <% } %>
-  </tbody>
-</table>
 
-<%= will_paginate @locations %>
+      </tbody>
+    </table>
 
-<br>
+    <div class="trip_pagination">
+    <%= will_paginate @trips, :container => false %>
+    </div>
 
-Return to <%= link_to "trips for this vehicle", vehicle_trips_path(@vehicle) %>.
+  </div></div>
+
+</div><!-- /.page-content -->
