@@ -1,6 +1,32 @@
 
- <div class="widget-box">
+<div id="breadcrumbs" class="breadcrumbs">
+ <ul class="breadcrumb">
+   <li><i class="fa fa-car home-icon"></i> <a href="<%= vehicle_path(params[:vehicle_id]) %>">Vehicles</a></li>
+   <li><a href="<%= vehicle_trips_path(params[:vehicle_id])%>">Trips</a></li>
+   <li><%= @from_short %> to <%= @to_short %> on <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></li>
+ </ul><!-- /.breadcrumb -->
+
+ <!-- searchbox -->
+</div>
+
+<div class="page-content">
+
+    <div class="page-header">
+      <h1>
+       Trip from <%= @from %> to <%= @to %>
+       <small><i class="ace-icon fa fa-angle-double-right"></i> sorted by duration</small>
+     </h1>
+    </div>
+
+    <div class="row"><div class="col-xs-12">
+      
+    </div></div>
+
+</div>
+
+
  <!--
+ <div class="widget-box">
    <div class="widget-header">
 
    <!--Start: <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %><br><br>
@@ -25,7 +51,6 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
 <% end %><
 
    </div>
--->
    <div class="widget-body">
       <div class="widget-main">
       <center>
@@ -72,3 +97,4 @@ Duration so far: <%= distance_of_time_in_words(@trip.start_time, DateTime.now, i
   </tr>
 <% end %>
 </table>
+-->

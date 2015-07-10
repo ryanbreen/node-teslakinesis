@@ -49,7 +49,16 @@ class TripsController < ApplicationController
 
   def show
     @map_type = :detailed
-
+    @from_short = @trip.origin != nil ? @trip.origin.name : "unknown origin"
+    @from = @trip.origin != nil ? @trip.origin.name : "unknown origin (" + 
+      link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:start_location].longitude, :lat => trip[:start_location].latitude, 
+        :z => trip[:start_location].z)) + ")"
+    @to_short = @trip.origin != nil ? @trip.destination.name : "unknown destination"
+    @to = @trip.origin != nil ? @trip.destination.name : "unknown destination (" + 
+      link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:end_location].longitude, :lat => trip[:end_location].latitude, 
+        :z => trip[:end_location].z)) + ")"
     collect_trip_data
   end
 
