@@ -15,52 +15,28 @@
 
 <div class="page-content">
 
-    <div class="page-header">
-      <h1>
-       Trip from <%= @from %> to <%= @to %>
-       <small><i class="ace-icon fa fa-angle-double-right"></i> on <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us) %> at <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
-       </small>
-     </h1>
-    </div>
+  <div class="page-header">
+    <h1>
+     Trip from <%= @from %> to <%= @to %>
+     <small><i class="ace-icon fa fa-angle-double-right"></i> on <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us) %> at <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+     </small>
+   </h1>
+  </div>
 
-    <div class="row">
-      <div class="col-xs-10">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="row">
         <%= render 'trip', :trip => @trip, :trip_detail => @trip_detail[0] %>
       </div>
-      <div class="col-xs-2">
-        <div class="legend">
-          <div style="position: absolute; width: 90px; height: 110px; top: 15px; right: -30px; opacity: 0.85; background-color: rgb(255, 255, 255);"></div>
-          <table style="position:absolute;top:15px;right:-30px;;font-size:smaller;color:#545454">
-            <tbody>
-              <tr>
-                <td class="legendColorBox">
-                  <div style="border:1px solid null;padding:1px">
-                    <div style="width:4px;height:0;border:5px solid #68BC31;overflow:hidden"></div>
-                  </div>
-                </td>
-                <td class="legendLabel">0-25MPH</td>
-              </tr>
-              <tr>
-                <td class="legendColorBox">
-                  <div style="border:1px solid null;padding:1px">
-                    <div style="width:4px;height:0;border:5px solid #2091CF;overflow:hidden"></div>
-                  </div>
-                </td>
-                <td class="legendLabel">25-50MPH</td>
-              </tr>
-              <tr>
-                <td class="legendColorBox">
-                  <div style="border:1px solid null;padding:1px">
-                    <div style="width:4px;height:0;border:5px solid #AF4E96;overflow:hidden"></div>
-                  </div>
-                </td>
-                <td class="legendLabel">50+ MPH</td>
-              </tr>
-            </tbody>
-          </table>
+      <div class="row">
+        <div class="btn-group btn-overlap">
+          <div class="btn btn-success">0-25MPH</div>
+          <div class="btn btn-warning">25-50MPH</div>
+          <div class="btn btn-danger">50MPH+</div>
         </div>
       </div>
     </div>
+  </div>
 
 </div>
 
