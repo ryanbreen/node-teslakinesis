@@ -23,9 +23,22 @@
      </h1>
     </div>
 
-    <div class="row"><div class="col-xs-12">
-      <%= render 'trip', :trip => @trip, :trip_detail => @trip_detail[0] %>
-    </div></div>
+    <div class="row">
+      <div class="col-xs-10">
+        <%= render 'trip', :trip => @trip, :trip_detail => @trip_detail[0] %>
+      </div>
+      <div class="col-xs-2">
+        <div class="row">
+          <span class="btn btn-success btn-sm">0-25MPH</span>
+        </div>
+        <div class="row">
+          <span class="btn btn-warning btn-sm">25-50MPH</span>
+        </div>
+        <div class="row">
+          <span class="btn btn-danger btn-sm">50MPH+</span>
+        </div>
+      </div>
+    </div>
 
 </div>
 
