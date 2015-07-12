@@ -17,7 +17,7 @@
 
   <div class="page-header">
     <h1>
-     Trip from <%= @from %> to <%= @to %>
+     Trip from <%= @from.html_safe %> to <%= @to.html_safe %>
      <small><i class="ace-icon fa fa-angle-double-right"></i> on <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us) %> at <%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
      </small>
    </h1>
