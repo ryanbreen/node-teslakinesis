@@ -16,6 +16,8 @@ class LocationsController < ApplicationController
     # Figure out if this location is near any trip start or end points
     geolocation = @location[:geolocation]
 
+    @type = :show_only
+
     ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
     ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
   

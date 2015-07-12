@@ -1,0 +1,89 @@
+
+<div id="breadcrumbs" class="breadcrumbs">
+ <ul class="breadcrumb">
+   <li><i class="fa fa-car home-icon"></i> <a href="<%= vehicle_path(params[:vehicle_id]) %>">Vehicles</a></li>
+   <li><a href="<%= vehicle_locations_path(params[:vehicle_id])%>">Locations</a></li>
+   <li><%= @location.name %></li>
+ </ul><!-- /.breadcrumb -->
+
+ <!-- searchbox -->
+</div>
+
+<div class="page-content">
+
+  <div class="page-header">
+    <h1>
+      <% if @location.name %>
+       <%= @location.name %>
+      <% else %>
+       New Location
+      <% end %>
+     <small><i class="ace-icon fa fa-angle-double-right"></i> a place with a name and a meaning
+     </small>
+   </h1>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="row">
+        <%= render 'map' %>
+      </div>
+      <div class="row">
+        <% if @type != :show_only %>
+            <div class="col-xs-6 widget-container-col ui-sortable">
+              <div class="widget-box">
+                <div class="widget-header">
+                  <h5 class="widget-title">Edit Location</h5>
+                </div>
+                <div class="widget-body">
+                  <div class="widget-main">
+                    <%= form_for([@vehicle, @location]) do |f| %>
+                      <% if @location.errors.any? %>
+                        <div id="error_explanation">
+                          <h2><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h2>
+
+                          <ul>
+                          <% @location.errors.full_messages.each do |message| %>
+                            <li><%= message %></li>
+                          <% end %>
+                          </ul>
+                        </div>
+                      <% end %>
+                      <%= hidden_field_tag("location[vehicle_id]", @location.vehicle_id) %>
+                      <%= hidden_field_tag("location[geolocation]", @location.geolocation) %>
+                      <%= label_tag "name" %>
+                      <%= f.text_field :name, class: "form-control" %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <%= f.submit 'Save', class: "form-control btn-info btn" %>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+        <% end %>
+        <% if (@as_origin_count != nil && @as_origin_count > 0) || (@destination_count != nil && @destination_count > 0) %>
+          <div class="row">
+            <table id="simple-table" class="table table-striped table-bordered table-hover">
+              <tbody>
+                <% if @as_origin_count > 0 %>
+                <tr>
+                  <td>There <%= (@as_origin_count == 1 ? 'is' : 'are') %> <%= pluralize(@as_origin_count, 'trip', 'trips') %> <%= link_to 'starting from here', vehicle_trips_from_path(@vehicle, @location.name) %>.</td>
+                </tr>
+                <% end %>
+                <% if @as_destination_count > 0 %>
+                <tr>
+                  <td>There <%= (@as_destination_count == 1 ? 'is' : 'are') %> <%= pluralize(@as_destination_count, 'trip', 'trips') %> <%= link_to 'ending here', vehicle_trips_to_path(@vehicle, @location.name) %>.</td>
+                </tr>
+                <% end %>
+              </tbody>
+          </table>
+        </div>
+      <%end%>
+    </div>
+    </div>
+  </div>
+
+</div
