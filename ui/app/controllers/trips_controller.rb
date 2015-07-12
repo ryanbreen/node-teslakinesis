@@ -58,7 +58,7 @@ class TripsController < ApplicationController
     @to = @trip.destination != nil ? @trip.destination.name : "unknown destination (" + 
       view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
         :lng => @trip[:end_location].longitude, :lat => @trip[:end_location].latitude, 
-        :z => @trip[:end_location].z)) + ")"
+        :z => @trip[:end_location].z)) + ")" unless @trip[:end_location] == nil
     collect_trip_data
   end
 
