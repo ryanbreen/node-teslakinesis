@@ -64,6 +64,7 @@ class VehiclesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
+      params[:vehicle_id] = params[:id]
       @vehicle = Vehicle.find(params[:vehicle_id])
     end
 
