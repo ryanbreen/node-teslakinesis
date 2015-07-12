@@ -28,41 +28,30 @@
       <div class="row">
         <%= render 'map' %>
       </div>
-      <div class="row">
-        <% if @type != :show_only %>
-            <div class="col-xs-6 widget-container-col ui-sortable">
-              <div class="widget-box">
-                <div class="widget-header">
-                  <h5 class="widget-title">Edit Location</h5>
-                </div>
-                <div class="widget-body">
-                  <div class="widget-main">
-                    <%= form_for([@vehicle, @location]) do |f| %>
-                      <% if @location.errors.any? %>
-                        <div id="error_explanation">
-                          <h2><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h2>
+      <div class="space-4"></div>
+      <% if @type != :show_only %>
+        <%= form_for([@vehicle, @location], :html => { :class => "form-horizontal" }) do |f| %>
+          <div class="form-group">
+            <% if @location.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(@location.errors.count, "error") %> prohibited this location from being saved:</h2>
 
-                          <ul>
-                          <% @location.errors.full_messages.each do |message| %>
-                            <li><%= message %></li>
-                          <% end %>
-                          </ul>
-                        </div>
-                      <% end %>
-                      <%= hidden_field_tag("location[vehicle_id]", @location.vehicle_id) %>
-                      <%= hidden_field_tag("location[geolocation]", @location.geolocation) %>
-                      <%= label_tag "name" %>
-                      <%= f.text_field :name, class: "form-control" %>
-                      <div class="row">
-                        <div class="col-md-4">
-                          <%= f.submit 'Save', class: "form-control btn-info btn" %>
-                        </div>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
+                <ul>
+                <% @location.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+                </ul>
               </div>
+            <% end %>
+            <%= hidden_field_tag("location[vehicle_id]", @location.vehicle_id) %>
+            <%= hidden_field_tag("location[geolocation]", @location.geolocation) %>
+            <%= label_tag "name", nil, class: "col-sm-3 control-label no-padding-right" %>
+            <div class="col-sm-9">
+              <%= f.text_field :name, class: "form-control col-xs-10 col-sm-5" %>
             </div>
+          </div>
+          <%= f.submit 'Save', class: "form-control btn-info btn col-sm-3 no-padding-right" %>
+          <% end %>
         <% end %>
         <% if (@as_origin_count != nil && @as_origin_count > 0) || (@destination_count != nil && @destination_count > 0) %>
           <div class="row">
