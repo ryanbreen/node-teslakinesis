@@ -51,14 +51,14 @@ class TripsController < ApplicationController
     @map_type = :detailed
     @from_short = @trip.origin != nil ? @trip.origin.name : "unknown origin"
     @from = @trip.origin != nil ? @trip.origin.name : "unknown origin (" + 
-      link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
-        :lng => @trip[:start_location].longitude, :lat => trip[:start_location].latitude, 
-        :z => trip[:start_location].z)) + ")"
+      view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:start_location].longitude, :lat => @trip[:start_location].latitude, 
+        :z => @trip[:start_location].z)) + ")"
     @to_short = @trip.origin != nil ? @trip.destination.name : "unknown destination"
     @to = @trip.origin != nil ? @trip.destination.name : "unknown destination (" + 
-      link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
-        :lng => @trip[:end_location].longitude, :lat => trip[:end_location].latitude, 
-        :z => trip[:end_location].z)) + ")"
+      view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:end_location].longitude, :lat => @trip[:end_location].latitude, 
+        :z => @trip[:end_location].z)) + ")"
     collect_trip_data
   end
 
@@ -88,11 +88,11 @@ class TripsController < ApplicationController
 
       @trips = [ @trip ] if @trips == nil
 
-      lowest_lng, highest_lng, lowest_lat, highest_lat = nil
-
       @trip_detail = []
 
       @trips.each_with_index do |trip, index|
+
+        lowest_lng, highest_lng, lowest_lat, highest_lat = nil
 
         trip_date = trip.start_time.in_time_zone('America/New_York').to_date
 

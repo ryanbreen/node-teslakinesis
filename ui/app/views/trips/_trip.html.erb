@@ -27,7 +27,6 @@ function load_maps() {
   <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
-
 <script>
 map_load_functions.push(function() {
 
@@ -66,6 +65,7 @@ map_load_functions.push(function() {
         }
       };
       handler<%=index%>.addMarker(end);
+
       <% end %>
 
   <% if trip_detail['hashes'] != nil %>
