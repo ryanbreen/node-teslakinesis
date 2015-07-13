@@ -8,7 +8,10 @@ index = 0 if index == nil
 <script>
 var map_load_functions = [];
 
+var load_called = false;
 function load_maps() {
+  if (load_called) return;
+  load_called = true;
   map_load_functions.forEach(function(fn) {
     fn();
   });
