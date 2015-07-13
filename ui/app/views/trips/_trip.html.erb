@@ -30,6 +30,52 @@ function load_maps() {
   <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
+<% if @map_type == :detailed %>
+<div style="display: none">
+  <div id="legend">
+    <div class="widget-box">
+       <div class="widget-header widget-header-small">
+        <h5 class="widget-title">Legend&nbsp;</h5>
+        <span class="widget-toolbar">
+          <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+        </span>
+      </div>
+      <div class="widget-body"><div class="widget-main no-padding">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td class="hidden-480">
+                <span class='ace-icon btn btn-success no-hover'></span>
+              </td>
+
+              <td class="hidden-480" style="vertical-align: middle">0-25 MPH</td>
+            </tr>
+            <tr>
+              <td class="hidden-480">
+                <span class='ace-icon btn btn-warning no-hover' ></span>
+              </td>
+
+              <td class="hidden-480" style="vertical-align: middle">
+                25-50 MPH
+              </td>
+            </tr>
+            <tr>
+              <td class="hidden-480">
+                <span class='ace-icon btn btn-danger no-hover' ></span>
+              </td>
+
+              <td class="hidden-480" style="vertical-align: middle">
+                50+ MPH
+              </td>
+            </tr>
+          </tbody>
+          </table>
+      </div></div>
+    </div>
+  </div>
+</div>
+<% end %>
+
 <script>
 map_load_functions.push(function() {
 
@@ -70,6 +116,19 @@ map_load_functions.push(function() {
       handler<%=index%>.addMarker(end);
 
       <% end %>
+
+  <% if @map_type == :detailed %>
+    var legend = document.getElementById('legend');
+        //legend.id = 'legend';
+        //var content = [];
+        //content.push('<h3>Speed Ranges</h3>');
+        //content.push('<p><div class="color green"></div>0-25 MPH</p>');
+        //content.push('<p><div class="color yellow"></div>25-50 MPH</p>');
+        //content.push('<p><div class="color red"></div>50+ MPH</p>');
+        //legend.innerHTML = content.join('');
+        legend.index = 1;
+        handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+  <% end %>
 
   <% if trip_detail['hashes'] != nil %>
 
