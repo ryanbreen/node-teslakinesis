@@ -7,6 +7,12 @@
  <!-- searchbox -->
 </div>
 
+<script>
+$(document).ready(function() {
+  $('.tesla-tooltip').tooltip();
+});
+</script>
+
 <div class="page-content">
 
   <div class="page-header">
@@ -54,18 +60,17 @@
                   <% end %>
                   <span class="widget-toolbar no-border">
                     <% if trip.origin != nil && trip.destination != nil %>
-                      <%= link_to vehicle_trips_between_path(@vehicle, trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h" do %>
+                      <%= link_to vehicle_trips_between_path(@vehicle, trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h tesla-tooltip", title: "Show more like this..." do %>
                       <% end %>
                     <% end %>
-                    <%= link_to vehicle_trip_path(@vehicle, trip), method: :delete, class: "ace-icon fa fa-trash-o red", id: "trip_" + trip.id.to_s + "_delete_link" do %>
+                    <%= link_to vehicle_trip_path(@vehicle, trip), method: :delete, class: "ace-icon fa fa-trash-o red tesla-tooltip", id: "trip_" + trip.id.to_s + "_delete_link", title: 'Delete this trip' do %>
                     <% end %>
                     <script>
                       $('#trip_<%= trip.id %>_delete_link').on('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        bootbox.confirm('Are you sure?', function(result) {
+                        bootbox.confirm('Are you sure you want to delete this trip?  This is irreversible.', function(result) {
                           if(result) {
-                            console.log(result);
                             $('#trip_<%= trip.id %>_delete_link').off('click');
                             $('#trip_<%= trip.id %>_delete_link').trigger('click');
                           }
@@ -104,10 +109,7 @@
                   </div>
                   <div class="widget-body"><div class="widget-main">
                     <% trip.badges.each_with_index do |badge, i| %>
-                      <span class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default badge-<%=trip.id%>-<%=index%> no-hover' title="<%= badge.description %>" ></span>
-                      <script>
-                        $('.badge-<%=trip.id%>-<%=index%>').tooltip();
-                      </script>
+                      <span class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default tesla-tooltip no-hover' title="<%= badge.description %>" ></span>
                     <% end %>
                   </div></div>
                 </div>
