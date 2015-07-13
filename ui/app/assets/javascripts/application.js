@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap.min
+//= require bootbox.min
 //= require ace-elements.min
 //= require ace.min
 //= require turbolinks

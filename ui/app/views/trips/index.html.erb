@@ -54,9 +54,24 @@
                   <% end %>
                   <span class="widget-toolbar no-border">
                     <% if trip.origin != nil && trip.destination != nil %>
-                      <i class="ace-icon fa fa-plus bigger-110"></i>
-                      <%= link_to 'More like this', vehicle_trips_between_path(trip.vehicle_id, trip.origin.name, trip.destination.name) %>
+                      <%= link_to vehicle_trips_between_path(@vehicle, trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h" do %>
+                      <% end %>
                     <% end %>
+                    <%= link_to vehicle_trip_path(@vehicle, trip), method: :delete, class: "ace-icon fa fa-trash-o red", id: "trip_" + trip.id.to_s + "_delete_link" do %>
+                    <% end %>
+                    <script>
+                      $('#trip_<%= trip.id %>_delete_link').on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        bootbox.confirm('Are you sure?', function(result) {
+                          if(result) {
+                            console.log(result);
+                            $('#trip_<%= trip.id %>_delete_link').off('click');
+                            $('#trip_<%= trip.id %>_delete_link').trigger('click');
+                          }
+                        })
+                      })
+                    </script>
                     <span class="label label-warning"><%= @trip_detail[index]['pretty_duration'] %></span>
                     <i class="ace-icon fa fa-clock-o bigger-110"></i>
                     <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
