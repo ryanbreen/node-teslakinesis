@@ -59,6 +59,8 @@ $(document).ready(function() {
                   <h5 class="widget-title smaller">Arrived at <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></h5>
                   <% end %>
                   <span class="widget-toolbar no-border">
+                    <%= link_to vehicle_trip_path(@vehicle, trip), class: "ace-icon fa fa-search" do %>
+                    <% end %>
                     <% if trip.origin != nil && trip.destination != nil %>
                       <%= link_to vehicle_trips_between_path(@vehicle, trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h tesla-tooltip", title: "Show more like this..." do %>
                       <% end %>
