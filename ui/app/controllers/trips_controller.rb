@@ -105,8 +105,10 @@ class TripsController < ApplicationController
 
         if trip.end_time != nil
           trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true)
+          trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, trip.end_time)
         else
           trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, DateTime.now, include_seconds: true)
+          trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, DateTime.now)
         end               
 
         where_condition = @map_type == :detailed ?
