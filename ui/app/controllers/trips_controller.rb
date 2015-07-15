@@ -54,8 +54,19 @@ class TripsController < ApplicationController
       view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
         :lng => @trip[:start_location].longitude, :lat => @trip[:start_location].latitude, 
         :z => @trip[:start_location].z)) + ")"
+    @from_linked = @trip.origin != nil ? 
+      view_context.link_to(@trip.origin.name, vehicle_location_path(@trip.vehicle_id, @trip.origin)) :
+      "unknown origin (" + view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:start_location].longitude, :lat => @trip[:start_location].latitude, 
+        :z => @trip[:start_location].z)) + ")"
     @to_short = @trip.destination != nil ? @trip.destination.name : "unknown destination"
     @to = @trip.destination != nil ? @trip.destination.name : "unknown destination (" + 
+      view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
+        :lng => @trip[:end_location].longitude, :lat => @trip[:end_location].latitude, 
+        :z => @trip[:end_location].z)) + ")" unless @trip[:end_location] == nil
+    @to_linked = @trip.destination != nil ?
+      view_context.link_to(@trip.destination.name, vehicle_location_path(@trip.vehicle_id, @trip.destination)) :
+      "unknown destination (" + 
       view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
         :lng => @trip[:end_location].longitude, :lat => @trip[:end_location].latitude, 
         :z => @trip[:end_location].z)) + ")" unless @trip[:end_location] == nil
