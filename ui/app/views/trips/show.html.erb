@@ -59,6 +59,10 @@
                         <dd><%= @from_linked.html_safe %></dd>
                         <dt>Destination</dt>
                         <dd><%= @to_linked.html_safe %></dd>
+                        <% if @trip.destination != nil && @trip.origin != nil %>
+                        <dt>Links</dt>
+                        <dd><%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %></dd>
+                        <% end %>
                       </dl>
 
                       <div class="row">
@@ -83,8 +87,12 @@
                       </span>
                     </div>
                     <div class="widget-body"><div class="widget-main">
-                      
-
+                      <dl class="dl-horizontal">
+                        <% @trip_detail[0]['vehicle_telemetry_metrics'].each do |metric| %>
+                          <dt><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:time_precise_us) %></dt>
+                          <dd><%= (metric.shift_state == 'R' ? '-' : '') %><%= metric.speed %>MPH</dt>
+                        <% end %>
+                      </dl>
                     </div></div>
                   </div>
             </div>
@@ -95,48 +103,3 @@
   </div>
 
 </div>
-
-
- <!--
-   </div>
-   
- </div>
-
-<%= link_to "All trips", vehicle_trips_path(@vehicle) %>
-<% if @trip.destination != nil && @trip.origin != nil %>
- | <%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %>
-<% end %>
-<br><br>
-
-<% if @trip.badges.length > 0 %>
-<h1>Badges</h1>
-  <% @trip.badges.each do |badge| %>
-    <img src="<%= image_url(badge.custom_fields[:icon] + '.png') %>" alt="<%= badge.description %>" title="<%= badge.description %>" >
-  <% end %>
-<% end %>
-
-<h1>Detailed telemetry</h1>
-<br>
-
-<div class="trip_pagination">
-<%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'] %><br>
-</div>
-
-<table>
-  <tr>
-    <th>Time</th>
-    <th>Speed</th>
-    <th>Lat</th>
-    <th>Lng</th>
-  </tr>
- 
-<% @trip_detail[0]['vehicle_telemetry_metrics'].each do |metric| %>
-  <tr>
-    <td><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
-    <td><%= (metric.shift_state == 'R' ? '-' : '') %><%= metric.speed %></td>
-    <td><%= metric.location.latitude %></td>
-    <td><%= metric.location.longitude %></td>
-  </tr>
-<% end %>
-</table>
--->
