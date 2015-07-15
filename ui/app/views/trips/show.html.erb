@@ -35,31 +35,43 @@
     </div>
   </div>
 
+  <div class="space-4"></div>
+
   <div class="row">
     <div class="col-xs-12">
       <div class="row">
           <div class="col-xs-6">
                   <div class="widget-box transparent">
                      <div class="widget-header widget-header-small">
-                      <h5 class="widget-title smaller">Trip details</h5>
+                      <h3 class="widget-title smaller">Trip details</h3>
                       <span class="widget-toolbar">
                         <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
                       </span>
                     </div>
                     <div class="widget-body"><div class="widget-main">
-
+                      <div class="row">
+                        <% if @trip.badges.length > 0 %>
+                        <h5 class="header smaller lighter blue">Badges</h5>
+                        <div class="btn-group">
+                          <% @trip.badges.each do |badge| %>
+                            <span class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default tesla-tooltip no-hover' title="<%= badge.description %>" ></span>
+                          <% end %>
+                        <% end %>
+                        </div>
+                      </div>
                     </div></div>
                   </div>
           </div>
           <div class="col-xs-6">
                   <div class="widget-box transparent collapsed">
                      <div class="widget-header widget-header-small">
-                      <h5 class="widget-title smaller">Detailed vehicle telemetry</h5>
+                      <h3 class="widget-title smaller">Detailed vehicle telemetry</h3>
                       <span class="widget-toolbar">
                         <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
                       </span>
                     </div>
                     <div class="widget-body"><div class="widget-main">
+                      
 
                     </div></div>
                   </div>
