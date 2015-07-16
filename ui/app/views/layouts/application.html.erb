@@ -52,13 +52,13 @@
 
         <div class="sidebar-shortcuts" id="sidebar-shortcuts">
             <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-              <button class="btn btn-info"><i class="ace-icon fa fa-car"></i></button>
-              <button class="btn btn-success"><i class="ace-icon fa fa-suitcase"></i></button>
-              <button class="btn btn-danger"><i class="ace-icon fa fa-map-marker"></i></button>
+              <%= link_to vehicle_trips_path(@vehicle), class: "ace-icon fa fa-suitcase btn btn-success no-hover" do %>
+              <% end %>
+              <%= link_to vehicle_locations_path(@vehicle), class: "ace-icon fa fa-map-marker btn btn-danger no-hover" do %>
+              <% end %>
             </div>
 
             <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-              <span class="btn btn-info"></span>
               <span class="btn btn-success"></span>
               <span class="btn btn-danger"></span>
             </div>
