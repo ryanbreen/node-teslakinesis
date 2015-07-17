@@ -52,9 +52,9 @@
 
         <div class="sidebar-shortcuts" id="sidebar-shortcuts">
             <div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
-              <%= link_to vehicle_trips_path(@vehicle), class: "ace-icon fa fa-suitcase btn btn-success no-hover" do %>
+              <%= link_to vehicle_trips_path(params[:vehicle_id]), class: "ace-icon fa fa-suitcase btn btn-success no-hover" do %>
               <% end %>
-              <%= link_to vehicle_locations_path(@vehicle), class: "ace-icon fa fa-map-marker btn btn-danger no-hover" do %>
+              <%= link_to vehicle_locations_path(params[:vehicle_id]), class: "ace-icon fa fa-map-marker btn btn-danger no-hover" do %>
               <% end %>
             </div>
 
