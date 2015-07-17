@@ -59,20 +59,14 @@
             </div>
 
             <div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
-              <span class="btn btn-success"></span>
-              <span class="btn btn-danger"></span>
+              <%= link_to vehicle_trips_path(params[:vehicle_id]), class: "ace-icon fa fa-suitcase btn btn-success no-hover" do %>
+              <% end %>
+              <%= link_to vehicle_locations_path(params[:vehicle_id]), class: "ace-icon fa fa-map-marker btn btn-danger no-hover" do %>
+              <% end %> 
             </div>
          </div>
          
          <ul class="nav nav-list">
-           <li>
-            <a href="/vehicles/<%=params[:vehicle_id]%>/">
-              <i class="menu-icon fa fa-car"></i>
-              <span class="menu-text">
-                Vehicles
-              </span>
-            </a>
-          </li>
           <li>
             <a href="/vehicles/<%=params[:vehicle_id]%>/trips">
               <i class="menu-icon fa fa-suitcase"></i>
