@@ -68,20 +68,20 @@
          
          <ul class="nav nav-list">
           <li>
-            <a href="/vehicles/<%=params[:vehicle_id]%>/trips">
+            <%= link_to vehicle_trips_path(params[:vehicle_id]) do %>
               <i class="menu-icon fa fa-suitcase"></i>
-              <span class="menu-text">
-                Trips
-              </span>
-            </a>
+                <span class="menu-text">
+                  Trips
+                </span>
+            <% end %>
           </li>
           <li>
-            <a href="/vehicles/<%=params[:vehicle_id]%>/locations">
+            <%= link_to vehicle_locations_path(params[:vehicle_id]) do %>
               <i class="menu-icon fa fa-map-marker"></i>
-              <span class="menu-text">
-                Locations
-              </span>
-            </a>
+                <span class="menu-text">
+                  Locations
+                </span>
+            <% end %>
           </li>
             
          </ul>
