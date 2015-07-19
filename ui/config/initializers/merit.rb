@@ -75,6 +75,13 @@ Merit::Badge.create!(
   custom_fields: { icon: 'power-off', type: 'success' }
 )
 
+Merit::Badge.create!(
+  id: 9,
+  name: "range-surfer",
+  description: "Less than 20% charge.  Range anxiety?",
+  custom_fields: { icon: 'exclamation-triangle', type: 'warning' }
+)
+
 ## Badge Ideas
 # Fastest 1-3 on any given route
 # High energy regen

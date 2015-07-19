@@ -56,6 +56,10 @@ module Merit
         VehicleTelemetryMetric.where(["vehicle_id = ? and trip_id = ? and power < -60", trip.vehicle_id, trip.id]).take
       end
 
+      grant_on 'trips#calculate_badges', badge: 'range-surfer', to: :itself, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ? and trip_id = ? and soc < 20", trip.vehicle_id, trip.id]).take
+      end
+
       # If it has 10 comments, grant commenter-10 badge
       # grant_on 'comments#create', badge: 'commenter', level: 10 do |comment|
       #   comment.user.comments.count == 10
