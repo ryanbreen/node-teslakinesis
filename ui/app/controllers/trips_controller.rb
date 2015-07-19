@@ -165,7 +165,8 @@ class TripsController < ApplicationController
           trip_detail['hashes'][hash_index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
         end
 
-        trip_detail['vehicle_telemetry_metrics'] = trip_detail['vehicle_telemetry_metrics'].paginate(:page => params[:page])
+        trip_detail['vehicle_telemetry_metrics'] =
+          trip_detail['vehicle_telemetry_metrics'].paginate(:page => params[:page], :per_page => 1000)
 
         trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
         trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
