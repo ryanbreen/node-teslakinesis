@@ -61,6 +61,13 @@ Merit::Badge.create!(
   custom_fields: { icon: 'arrow-down', type: 'success' }
 )
 
+Merit::Badge.create!(
+  id: 7,
+  name: "top-speed",
+  description: "This is the fastest you've gone on record.  Are you proud?",
+  custom_fields: { icon: 'trophy', type: 'danger' }
+)
+
 ## Badge Ideas
 # Fastest (overall speed)
 # Fastest 1-3 on any given route

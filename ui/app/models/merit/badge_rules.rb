@@ -21,10 +21,12 @@ module Merit
     include Merit::BadgeRulesMethods
 
     def initialize
-      # If it creates user, grant badge
-      # Should be "current_user" after registration for badge to be granted.
       # Find badge by badge_id, badge_id takes presidence over badge
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
+
+      grant_on 'trips#calculate_badges', badge: 'top-speed', to: :itself, temporary: true, model_name: 'Trip' do |trip|
+        VehicleTelemetryMetric.where(["vehicle_id = ?", trip.vehicle_id]).order("speed desc").first[:trip_id] == trip.id
+      end
 
       grant_on 'trips#calculate_badges', badge: 'speed-demon', to: :itself, model_name: 'Trip' do |trip|
         VehicleTelemetryMetric.where(["vehicle_id = ? and trip_id = ? and speed > 89", trip.vehicle_id, trip.id]).take
