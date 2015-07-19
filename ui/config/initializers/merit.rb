@@ -68,8 +68,14 @@ Merit::Badge.create!(
   custom_fields: { icon: 'trophy', type: 'danger' }
 )
 
+Merit::Badge.create!(
+  id: 8,
+  name: "coming-down-the-mountain",
+  description: "You picked up a lot of energy regen.  Great work!",
+  custom_fields: { icon: 'power-off', type: 'success' }
+)
+
 ## Badge Ideas
-# Fastest (overall speed)
 # Fastest 1-3 on any given route
 # High energy regen
 # Soc below 20%
