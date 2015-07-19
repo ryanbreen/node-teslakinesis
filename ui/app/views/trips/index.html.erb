@@ -73,7 +73,7 @@
                         })
                       })
                     </script>
-                    <span class="label label-warning"><%= @trip_detail[index]['pretty_duration'] %></span>
+                    <span class="label label-warning tesla-tooltip" title="<%= @trip_detail[index]['pretty_precise_duration'] %>"><%= @trip_detail[index]['pretty_duration'] %></span>
                     <i class="ace-icon fa fa-clock-o bigger-110"></i>
                     <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
                   </span>
