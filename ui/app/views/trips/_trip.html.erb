@@ -8,14 +8,17 @@ index = 0 if index == nil
 <script>
 var map_load_functions = [];
 
-var load_called = false;
+var load_me = 2;
 function load_maps() {
-  if (load_called) return;
+  load_me--;
+  if (load_me !== 0) return;
   load_called = true;
   map_load_functions.forEach(function(fn) {
     fn();
   });
 }
+
+window.onload = load_maps;
 </script>
 
 <%= javascript_include_tag "underscore" %>
