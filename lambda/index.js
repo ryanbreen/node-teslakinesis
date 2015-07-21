@@ -27,7 +27,7 @@ exports.handler = function(event, context) {
 
   if (event.Records.length === 0) return context.succeed();
 
-  var conn_string = "postgres://" + creds.DB_USER + ":" + creds.DB_PASSWORD + "@tesla.cfwzoyel2syn.us-east-1.rds.amazonaws.com/tesla";
+  var conn_string = "postgres://" + creds.DB_USER + ":" + creds.DB_PASSWORD + "@teslaprime.cfwzoyel2syn.us-east-1.rds.amazonaws.com/tesla";
   pg.connect(conn_string, function(err, client, done) {
 
     try {
