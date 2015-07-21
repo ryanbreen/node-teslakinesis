@@ -91,10 +91,6 @@
                 </span>
               </div>
               <div class="widget-body"><div class="widget-main">
-                <div class="trip_pagination">
-                    <%= will_paginate @trip_detail[0]['vehicle_telemetry_metrics'], :container => false %>
-                </div>
-
                 <table id="simple-table" class="table table-striped table-bordered table-hover">
                   <thead>
                     <tr>
@@ -105,7 +101,7 @@
                   </thead>
 
                   <tbody>
-                  <% @trip_detail[0]['vehicle_telemetry_metrics'].each do |metric| %>
+                  <% @trip.vehicle_telemetry_metrics.each do |metric| %>
                     <tr>
                       <td><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:time_precise_us) %></td>
                       <td><%= (metric.shift_state == 'R' ? '-' : '') %><%= metric.speed %> MPH</td>

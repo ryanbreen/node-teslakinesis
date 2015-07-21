@@ -13,7 +13,8 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
+    @trips = Trip.includes(:vehicle_telemetry_metrics).
+      where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 
     respond_to do |format|
@@ -42,7 +43,7 @@ class TripsController < ApplicationController
     @from = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:from]).first
     @to = Location.where(:vehicle_id => params[:vehicle_id], :name => params[:to]).first
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id, :end_location_id => @to.id).
-      order("EXTRACT(EPOCH FROM (end_time - start_time))").paginate(:page => params[:page], :per_page => 5)
+      order("EXTRACT(EPOCH FROM (end_time - start_time))").paginate(:page => params[:page], :per_page => 10)
     @map_type = :overview
     collect_trip_data
   end
@@ -122,19 +123,17 @@ class TripsController < ApplicationController
           trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, Time.now)
         end               
 
-        where_condition = @map_type == :detailed ?
-          "trip_id = ?" :
-          "trip_id = ? and (id % 16 = 0)"
-
-        trip_detail['vehicle_telemetry_metrics'] =
-          VehicleTelemetryMetric.where(where_condition, trip[:id]).order("timestamp desc")
+        detailed_map = @map_type == :detailed
 
         trip_detail['hashes'] = []
         current_hash_speed = nil
 
         hash_index = -1
 
-        Gmaps4rails.build_markers(trip_detail['vehicle_telemetry_metrics']) do |vehicle|
+        Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
+
+          next unless detailed_map || (vehicle.id % 16 == 0)
+
           lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
           lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
           highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
@@ -165,8 +164,8 @@ class TripsController < ApplicationController
           trip_detail['hashes'][hash_index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
         end
 
-        trip_detail['vehicle_telemetry_metrics'] =
-          trip_detail['vehicle_telemetry_metrics'].paginate(:page => params[:page], :per_page => 1000)
+        #trip.vehicle_telemetry_metrics =
+        #  trip.vehicle_telemetry_metrics.paginate(:page => params[:page], :per_page => 1000)
 
         trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
         trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
@@ -174,7 +173,7 @@ class TripsController < ApplicationController
     end
 
     def set_models
-      @trip = Trip.find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:vehicle_telemetry_metrics).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
