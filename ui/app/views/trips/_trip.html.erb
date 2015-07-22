@@ -8,11 +8,7 @@ index = 0 if index == nil
 <script>
 var map_load_functions = [];
 
-var load_me = 1;
 function load_maps() {
-  load_me--;
-  if (load_me !== 0) return;
-  load_called = true;
   map_load_functions.forEach(function(fn) {
     fn();
   });
@@ -118,15 +114,7 @@ map_load_functions.push(function() {
       <% end %>
 
   <% if @map_type == :detailed %>
-    var legend = document.getElementById('legend');
-        //legend.id = 'legend';
-        //var content = [];
-        //content.push('<h3>Speed Ranges</h3>');
-        //content.push('<p><div class="color green"></div>0-25 MPH</p>');
-        //content.push('<p><div class="color yellow"></div>25-50 MPH</p>');
-        //content.push('<p><div class="color red"></div>50+ MPH</p>');
-        //legend.innerHTML = content.join('');
-        legend.index = 1;
+    var legend = document.getElementById('legend');        legend.index = 1;
         handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
   <% end %>
 
