@@ -156,11 +156,13 @@ class TripsController < ApplicationController
           # Create a new hash at this speed
           if current_hash_speed != speed
             current_hash_speed = speed
-            js_buffer << "polylines.push([ "
-            js_buffer << (current_hash.to_json)
-            js_buffer << ", \'"
-            js_buffer << @@color_scale[speed]
-            js_buffer << " \']);\n"
+            if current_hash.length > 0
+              js_buffer << "polylines.push([ "
+              js_buffer << (current_hash.to_json.html_safe)
+              js_buffer << ", \'"
+              js_buffer << @@color_scale[speed]
+              js_buffer << " \']);\n"
+            end
             current_hash = []
           end
 
@@ -171,10 +173,12 @@ class TripsController < ApplicationController
           trip.create_trip_detail
         end
 
-        trip.trip_detail.detailed_route = js_buffer.to_s
+        trip.trip_detail.detailed_route = js_buffer.to_s.html_safe
 
-        trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
-        trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
+        trip.trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
+        trip.trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
+
+        trip.update_trip_detail
       end
     end
 
