@@ -6,17 +6,10 @@ class TripsController < ApplicationController
 
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
-=begin
   @@color_scale = [
     "#74AD6A",
     "#FFAA38",
     "#C44537"
-  ]
-=end
-  @@color_scale = [
-    "#000000",
-    "#000000",
-    "#000000"
   ]
 
   def index
@@ -128,44 +121,42 @@ class TripsController < ApplicationController
         else
           trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, DateTime.now, include_seconds: true)
           trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, Time.now)
-        end               
+        end
 
-        detailed_map = @map_type == :detailed
-
-        if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil
+        if trip.trip_detail == nil
 
           current_hash = []
           current_hash_speed = nil
 
           js_buffer = StringIO.new
-          js_buffer = "var polylines = [];\n"
+          js_buffer << "var polylines = [];\n"
           js_buffer << "polylines.push([ ["
 
           detailed_js_buffer = StringIO.new
-          detailed_js_buffer = "var polylines = [];\n"
+          detailed_js_buffer << "var polylines = [];\n"
 
           first_line = true
 
           Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
 
-            next unless detailed_map || (vehicle.id % 16 == 0)
+            if vehicle.id % 16 == 0
+              js_buffer << ',' unless first_line
+              js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
+              first_line = false
+            end
 
             lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
             lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
             highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
             highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
 
-            if @map_type == :detailed
-              case vehicle.speed
-              when 0..25
-                speed = 0
-              when 26..50
-                speed = 1
-              else
-                speed = 2
-              end
-            else
+            case vehicle.speed
+            when 0..25
               speed = 0
+            when 26..50
+              speed = 1
+            else
+              speed = 2
             end
 
             # Create a new hash at this speed
@@ -182,9 +173,6 @@ class TripsController < ApplicationController
             end
 
             current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
-            js_buffer << ',' unless first_line
-            js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
-            first_line = false
           end
 
           js_buffer << "], \'"
@@ -196,13 +184,13 @@ class TripsController < ApplicationController
             trip.trip_detail.vehicle_id = params[:vehicle_id]
           end
 
-          trip.trip_detail.detailed_route = detailed_js_buffer.to_s.html_safe
-          trip.trip_detail.summary_route = js_buffer.to_s.html_safe
+          trip.trip_detail.detailed_route = detailed_js_buffer.string.html_safe
+          trip.trip_detail.summary_route = js_buffer.string.html_safe
 
           trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
           trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
 
-          trip.trip_detail.save
+          trip.trip_detail.save unless trip.end_time == nil
         end
       end
     end
