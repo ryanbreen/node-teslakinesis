@@ -21,7 +21,7 @@ class TripsController < ApplicationController
 
   def index
     @trips = Trip.includes(:trip_detail).
-      where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 5)
+      where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 
     respond_to do |format|
