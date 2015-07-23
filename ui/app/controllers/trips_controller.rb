@@ -161,14 +161,14 @@ class TripsController < ApplicationController
 
             # Create a new hash at this speed
             if current_hash_speed != speed
-              current_hash_speed = speed
               if current_hash.length > 0
                 detailed_js_buffer << "polylines.push([ "
                 detailed_js_buffer << (current_hash.to_json.html_safe)
                 detailed_js_buffer << ", \'"
-                detailed_js_buffer << @@color_scale[speed]
+                detailed_js_buffer << @@color_scale[current_hash_speed]
                 detailed_js_buffer << "\']);\n"
               end
+              current_hash_speed = speed
               current_hash = []
             end
 
