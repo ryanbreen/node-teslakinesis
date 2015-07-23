@@ -6,15 +6,22 @@ class TripsController < ApplicationController
 
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
+=begin
   @@color_scale = [
     "#74AD6A",
     "#FFAA38",
     "#C44537"
   ]
+=end
+  @@color_scale = [
+    "#000000",
+    "#000000",
+    "#000000"
+  ]
 
   def index
-    @trips = Trip.includes(:vehicle_telemetry_metrics).
-      where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 5)
+    @trips = Trip.includes(:trip_detail).
+      where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 
     respond_to do |format|
@@ -125,66 +132,83 @@ class TripsController < ApplicationController
 
         detailed_map = @map_type == :detailed
 
-        current_hash = []
-        current_hash_speed = nil
+        if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil
 
-        js_buffer = StringIO.new
-        js_buffer = "var polylines = [];\n"
+          current_hash = []
+          current_hash_speed = nil
 
-        Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
+          js_buffer = StringIO.new
+          js_buffer = "var polylines = [];\n"
+          js_buffer << "polylines.push([ ["
 
-          next unless detailed_map || (vehicle.id % 16 == 0)
+          detailed_js_buffer = StringIO.new
+          detailed_js_buffer = "var polylines = [];\n"
 
-          lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
-          lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
-          highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
-          highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
+          first_line = true
 
-          if @map_type == :detailed
-            case vehicle.speed
-            when 0..25
-              speed = 0
-            when 26..50
-              speed = 1
+          Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
+
+            next unless detailed_map || (vehicle.id % 16 == 0)
+
+            lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
+            lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
+            highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
+            highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
+
+            if @map_type == :detailed
+              case vehicle.speed
+              when 0..25
+                speed = 0
+              when 26..50
+                speed = 1
+              else
+                speed = 2
+              end
             else
-              speed = 2
+              speed = 0
             end
-          else
-            speed = 0
+
+            # Create a new hash at this speed
+            if current_hash_speed != speed
+              current_hash_speed = speed
+              if current_hash.length > 0
+                detailed_js_buffer << "polylines.push([ "
+                detailed_js_buffer << (current_hash.to_json.html_safe)
+                detailed_js_buffer << ", \'"
+                detailed_js_buffer << @@color_scale[speed]
+                detailed_js_buffer << "\']);\n"
+              end
+              current_hash = []
+            end
+
+            current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
+            js_buffer << ',' unless first_line
+            js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
+            first_line = false
           end
 
-          # Create a new hash at this speed
-          if current_hash_speed != speed
-            current_hash_speed = speed
-            if current_hash.length > 0
-              js_buffer << "polylines.push([ "
-              js_buffer << (current_hash.to_json.html_safe)
-              js_buffer << ", \'"
-              js_buffer << @@color_scale[speed]
-              js_buffer << " \']);\n"
-            end
-            current_hash = []
+          js_buffer << "], \'"
+          js_buffer << @@color_scale[0]
+          js_buffer << "\']);\n"
+
+          if trip.trip_detail == nil
+            trip.create_trip_detail
+            trip.trip_detail.vehicle_id = params[:vehicle_id]
           end
 
-          current_hash.push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
+          trip.trip_detail.detailed_route = detailed_js_buffer.to_s.html_safe
+          trip.trip_detail.summary_route = js_buffer.to_s.html_safe
+
+          trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
+          trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
+
+          trip.trip_detail.save
         end
-
-        if trip.trip_detail == nil
-          trip.create_trip_detail
-          trip.trip_detail.vehicle_id = params[:vehicle_id]
-        end
-
-        trip.trip_detail.detailed_route = js_buffer.to_s.html_safe
-
-        trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
-        trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
-
-        trip.trip_detail.save
       end
     end
 
     def set_models
-      @trip = Trip.includes(:vehicle_telemetry_metrics).includes(:trip_detail).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
