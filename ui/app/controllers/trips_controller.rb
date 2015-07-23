@@ -157,7 +157,7 @@ class TripsController < ApplicationController
           if current_hash_speed != speed
             current_hash_speed = speed
             js_buffer << "polylines.push([ "
-            js_buffer << (raw current_hash.to_json)
+            js_buffer << (current_hash.to_json)
             js_buffer << ", \'"
             js_buffer << @@color_scale[speed]
             js_buffer << " \']);\n"
@@ -167,7 +167,11 @@ class TripsController < ApplicationController
           current_hash.push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
         end
 
-        trip.trip_detail.detailed_route = js_buffer.string
+        if trip.trip_detail == nil
+          trip.create_trip_detail
+        end
+
+        trip.trip_detail.detailed_route = js_buffer.to_s
 
         trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
         trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
@@ -175,7 +179,7 @@ class TripsController < ApplicationController
     end
 
     def set_models
-      @trip = Trip.includes(:vehicle_telemetry_metrics).includes(:trip_details).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:vehicle_telemetry_metrics).includes(:trip_detail).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end

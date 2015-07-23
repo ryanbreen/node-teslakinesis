@@ -83,6 +83,8 @@ ActiveRecord::Schema.define(version: 20150723014633) do
     t.integer  "trip_id"
     t.text     "detailed_route"
     t.text     "summary_route"
+    t.text     "upper_left"
+    t.text     "lower_right"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
