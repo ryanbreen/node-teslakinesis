@@ -125,10 +125,11 @@ class TripsController < ApplicationController
 
         detailed_map = @map_type == :detailed
 
-        trip_detail['hashes'] = []
+        current_hash = []
         current_hash_speed = nil
 
-        hash_index = -1
+        js_buffer = StringIO.new
+        js_buffer = "var polylines = [];\n"
 
         Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
 
@@ -154,18 +155,19 @@ class TripsController < ApplicationController
 
           # Create a new hash at this speed
           if current_hash_speed != speed
-            hash_index += 1
             current_hash_speed = speed
-            trip_detail['hashes'][hash_index] = {}
-            trip_detail['hashes'][hash_index]["data"] = []
-            trip_detail['hashes'][hash_index]["strokeColor"] = @@color_scale[speed]
+            js_buffer << "polylines.push([ "
+            js_buffer << (raw current_hash.to_json)
+            js_buffer << ", \'"
+            js_buffer << @@color_scale[speed]
+            js_buffer << " \']);\n"
+            current_hash = []
           end
 
-          trip_detail['hashes'][hash_index]["data"].push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
+          current_hash.push(:lat => vehicle.location.latitude, :lng => vehicle.location.longitude)
         end
 
-        #trip.vehicle_telemetry_metrics =
-        #  trip.vehicle_telemetry_metrics.paginate(:page => params[:page], :per_page => 1000)
+        trip.trip_detail.detailed_route = js_buffer.string
 
         trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
         trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
@@ -173,7 +175,7 @@ class TripsController < ApplicationController
     end
 
     def set_models
-      @trip = Trip.includes(:vehicle_telemetry_metrics).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:vehicle_telemetry_metrics).includes(:trip_details).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end

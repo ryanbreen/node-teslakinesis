@@ -118,15 +118,15 @@ map_load_functions.push(function() {
         handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
   <% end %>
 
-  <% if trip_detail['hashes'] != nil %>
+  <% if trip.trip_detail != nil %>
 
-      <% trip_detail['hashes'].each_with_index { |hash, hash_index| %>
-      var polyline<%=hash_index%> = <%= raw hash["data"].to_json %>;
-      handler<%=index%>.addPolyline(polyline<%=hash_index%>, { strokeColor: "<%= hash['strokeColor'] %>"});
-      <% } %>
+      <%= trip.trip_detail.detailed_route %>
 
-      handler<%=index%>.bounds.extend(<%= raw trip_detail['upper_left'].to_json %>);
-      handler<%=index%>.bounds.extend(<%= raw trip_detail['lower_right'].to_json %>);
+      for (var i=0; i<polylines.length; ++i) {
+        handler<%=index%>.addPolyline(polylines[i][0], { strokeColor: polylines[i][1]});
+      }
+
+      handler<%=index%>.bounds.extend(start);<%= trip.trip_detail.upper_left %>
 
   <% else %>
 
