@@ -126,7 +126,8 @@ map_load_functions.push(function() {
         handler<%=index%>.addPolyline(polylines[i][0], { strokeColor: polylines[i][1]});
       }
 
-      handler<%=index%>.bounds.extend(start);<%= trip.trip_detail.upper_left %>
+      handler<%=index%>.bounds.extend(<%= trip.trip_detail.upper_left %>);
+      handler<%=index%>.bounds.extend(<%= trip.trip_detail.lower_right %>);
 
   <% else %>
 

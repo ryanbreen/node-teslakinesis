@@ -171,14 +171,15 @@ class TripsController < ApplicationController
 
         if trip.trip_detail == nil
           trip.create_trip_detail
+          trip.trip_detail.vehicle_id = params[:vehicle_id]
         end
 
         trip.trip_detail.detailed_route = js_buffer.to_s.html_safe
 
-        trip.trip_detail['upper_left'] = { :lat => highest_lat, :lng => lowest_lng }
-        trip.trip_detail['lower_right'] = { :lat => lowest_lat, :lng => highest_lng }
+        trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
+        trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
 
-        trip.update_trip_detail
+        trip.trip_detail.save
       end
     end
 
