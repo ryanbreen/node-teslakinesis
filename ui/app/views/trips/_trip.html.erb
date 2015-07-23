@@ -120,7 +120,7 @@ map_load_functions.push(function() {
 
   <% if trip.trip_detail != nil %>
 
-      <%= raw trip.trip_detail.detailed_route %>
+      <%= raw (@map_type == :detailed ? trip.trip_detail.detailed_route : trip.trip_detail.summary_route) %>
 
       for (var i=0; i<polylines.length; ++i) {
         console.log('Adding a polyline of length ' + polylines[i][0].length + ' with color ' + polylines[i][1]);

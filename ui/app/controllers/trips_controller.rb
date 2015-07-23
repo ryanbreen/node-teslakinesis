@@ -20,7 +20,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.
+    @trips = Trip.includes(:trip_detail).
       where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 5)
     collect_trip_data
 
@@ -139,6 +139,12 @@ class TripsController < ApplicationController
 
           js_buffer = StringIO.new
           js_buffer = "var polylines = [];\n"
+          js_buffer << "polylines.push([ ["
+
+          detailed_js_buffer = StringIO.new
+          detailed_js_buffer = "var polylines = [];\n"
+
+          first_line = true
 
           Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
 
@@ -166,24 +172,32 @@ class TripsController < ApplicationController
             if current_hash_speed != speed
               current_hash_speed = speed
               if current_hash.length > 0
-                js_buffer << "polylines.push([ "
-                js_buffer << (current_hash.to_json.html_safe)
-                js_buffer << ", \'"
-                js_buffer << @@color_scale[speed]
-                js_buffer << "\']);\n"
+                detailed_js_buffer << "polylines.push([ "
+                detailed_js_buffer << (current_hash.to_json.html_safe)
+                detailed_js_buffer << ", \'"
+                detailed_js_buffer << @@color_scale[speed]
+                detailed_js_buffer << "\']);\n"
               end
               current_hash = []
             end
 
             current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
+            js_buffer << ',' unless first_line
+            js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
+            first_line = false
           end
+
+          js_buffer << "], \'"
+          js_buffer << @@color_scale[0]
+          js_buffer << "\']);\n"
 
           if trip.trip_detail == nil
             trip.create_trip_detail
             trip.trip_detail.vehicle_id = params[:vehicle_id]
           end
 
-          trip.trip_detail.detailed_route = js_buffer.to_s.html_safe
+          trip.trip_detail.detailed_route = detailed_js_buffer.to_s.html_safe
+          trip.trip_detail.summary_route = js_buffer.to_s.html_safe
 
           trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
           trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
