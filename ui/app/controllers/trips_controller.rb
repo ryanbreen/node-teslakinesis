@@ -1,5 +1,7 @@
 require 'action_view'
 require 'action_view/helpers'
+require 'base64'
+require "zlib"
 include ActionView::Helpers::DateHelper
 
 class TripsController < ApplicationController
@@ -184,8 +186,8 @@ class TripsController < ApplicationController
             trip.trip_detail.vehicle_id = params[:vehicle_id]
           end
 
-          trip.trip_detail.detailed_route = detailed_js_buffer.string.html_safe
-          trip.trip_detail.summary_route = js_buffer.string.html_safe
+          trip.trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
+          trip.trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(js_buffer.string.html_safe))
 
           trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
           trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
