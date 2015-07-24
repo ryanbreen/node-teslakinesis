@@ -125,7 +125,7 @@ class TripsController < ApplicationController
           trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, Time.now)
         end
 
-        if trip.trip_detail == nil
+        if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil || trip.trip_detail.summary_route == nil
 
           current_hash = []
           current_hash_speed = nil
