@@ -5,18 +5,6 @@ index = 0 if index == nil
 %>
 
 <% if (@js_loaded == nil) %>
-<script>
-var map_load_functions = [];
-
-function load_maps() {
-  map_load_functions.forEach(function(fn) {
-    fn();
-  });
-}
-
-window.onload = load_maps;
-</script>
-
 <%= javascript_include_tag "underscore" %>
 <%= javascript_include_tag "gmaps/google" %>
 <% @js_loaded = true %>
