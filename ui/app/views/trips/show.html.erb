@@ -58,7 +58,7 @@
                         <dt>Origin</dt>
                         <dd><%= @from_linked.html_safe %></dd>
                         <dt>Destination</dt>
-                        <dd><%= @to_linked.html_safe %></dd>
+                        <dd><%= (@to_linked == nil ? 'ongoing' : @to_linked.html_safe) %></dd>
                         <% if @trip.destination != nil && @trip.origin != nil %>
                         <dt>Links</dt>
                         <dd><%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %></dd>
