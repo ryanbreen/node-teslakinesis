@@ -13,7 +13,7 @@ index = 0 if index == nil
   <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
-<script>
+<script data-turbolinks-eval=always>
 map_load_functions.push(function() {
   handler<%=index%> = Gmaps.build('Google');
   handler<%=index%>.buildMap({

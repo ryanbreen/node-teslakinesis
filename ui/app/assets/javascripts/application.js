@@ -17,3 +17,4 @@
 //= require ace-elements.min
 //= require ace.min
 //= require turbolinks
+//= require jquery.turbolinks
