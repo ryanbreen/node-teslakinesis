@@ -66,7 +66,7 @@
                       </dl>
 
                       <div class="row">
-                        <% if @trip.badges.length > 0 %>
+                        <% if @trip.start_location_id == -1 %>
                         <h5 class="header smaller lighter blue">Badges</h5>
                         <div>
                           <div class="btn-group">
@@ -101,12 +101,14 @@
                   </thead>
 
                   <tbody>
+                  <% if @trip.start_location_id == -1 %>
                   <% @trip.vehicle_telemetry_metrics.each do |metric| %>
                     <tr>
                       <td><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:time_precise_us) %></td>
                       <td><%= (metric.shift_state == 'R' ? '-' : '') %><%= metric.speed %> MPH</td>
                       <td><%= metric.power %> kW</td>
                     </tr>
+                  <% end %>
                   <% end %>
                   </tbody>
               </div></div>

@@ -30,7 +30,6 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    ambry (0.3.1)
     arel (5.0.1.20140414130214)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -63,8 +62,6 @@ GEM
     le (2.6.2)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
-    merit (2.3.2)
-      ambry (~> 0.3.0)
     mime-types (2.6.1)
     minitest (5.7.0)
     multi_json (1.11.0)
@@ -140,7 +137,6 @@ DEPENDENCIES
   jquery-rails
   jquery-turbolinks
   le
-  merit
   pg
   rails (= 4.1.10)
   sass-rails (~> 5.0)

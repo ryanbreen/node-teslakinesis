@@ -15,7 +15,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.includes(:trip_detail).includes(:sash).includes(:origin).includes(:destination).
+    @trips = Trip.includes(:trip_detail).includes(:origin).includes(:destination).
       where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 

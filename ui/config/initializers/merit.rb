@@ -50,7 +50,7 @@ Merit::Badge.create!(
 Merit::Badge.create!(
   id: 5,
   name: "the-great-white-north",
-  description: "You going to Canada?",
+  description: "You going to Canada, eh?",
   custom_fields: { icon: 'arrow-up', type: 'success' }
 )
 
