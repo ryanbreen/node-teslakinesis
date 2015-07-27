@@ -66,12 +66,12 @@
                       </dl>
 
                       <div class="row">
-                        <% if @trip.start_location_id == -1 %>
+                        <% if @trip.badges.length > 0 %>
                         <h5 class="header smaller lighter blue">Badges</h5>
                         <div>
                           <div class="btn-group">
                           <% @trip.badges.each do |badge| %>
-                            <span class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default tesla-tooltip no-hover' title="<%= badge.description %>" ></span>
+                            <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>" ></span>
                           <% end %>
                           </div>
                         </div>
