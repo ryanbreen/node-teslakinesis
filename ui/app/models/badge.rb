@@ -1,4 +1,4 @@
 class Badge < ActiveRecord::Base
-  has_one :vehicle_telemetry_metric
-  has_one :badge_type, :foreign_key => "id"
+  belongs_to :vehicle_telemetry_metric
+  belongs_to :badge_type
 end
