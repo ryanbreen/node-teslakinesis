@@ -84,11 +84,6 @@ class TripsController < ApplicationController
     end
   end
 
-  # TODO: Hack needed to make merit happy.  Fix this.  It shouldn't be necessary.
-  def current_trip
-    @trip
-  end
-
   private
 
     def collect_trip_data
@@ -194,7 +189,7 @@ class TripsController < ApplicationController
     end
 
     def set_models
-      @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:trip_detail).includes(:badges).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
