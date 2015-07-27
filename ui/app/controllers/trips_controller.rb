@@ -15,7 +15,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.includes(:trip_detail).includes(:sash).includes(:origin).includes(:destination).
+    @trips = Trip.includes(:trip_detail).includes(:badges).includes(:origin).includes(:destination).
       where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 
@@ -84,15 +84,6 @@ class TripsController < ApplicationController
     end
   end
 
-  def calculate_badges
-
-  end
-
-  # TODO: Hack needed to make merit happy.  Fix this.  It shouldn't be necessary.
-  def current_trip
-    @trip
-  end
-
   private
 
     def collect_trip_data
@@ -127,6 +118,14 @@ class TripsController < ApplicationController
 
         if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil || trip.trip_detail.summary_route == nil
 
+          if trip.trip_detail == nil
+            trip.create_trip_detail
+            trip.trip_detail.vehicle_id = params[:vehicle_id]
+            trip.trip_detail.trip_id = trip.id
+          end
+
+          badge_engine = BadgeEngine.new(trip.trip_detail)
+
           current_hash = []
           current_hash_speed = nil
 
@@ -146,6 +145,9 @@ class TripsController < ApplicationController
               js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
               first_line = false
             end
+
+            # Process this vehicle metric for the badge
+            badge_engine.process_metric(vehicle)
 
             lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
             lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
@@ -181,24 +183,19 @@ class TripsController < ApplicationController
           js_buffer << @@color_scale[0]
           js_buffer << "\']);\n"
 
-          if trip.trip_detail == nil
-            trip.create_trip_detail
-            trip.trip_detail.vehicle_id = params[:vehicle_id]
-          end
-
           trip.trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
           trip.trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(js_buffer.string.html_safe))
 
           trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
           trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
 
-          trip.trip_detail.save unless trip.end_time == nil
+          #trip.trip_detail.save unless trip.end_time == nil
         end
       end
     end
 
     def set_models
-      @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:trip_detail).includes(:badges).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
