@@ -18,8 +18,10 @@ ActiveRecord::Schema.define(version: 20150727025731) do
   enable_extension "postgis"
 
   create_table "badge_types", force: true do |t|
+    t.string   "name"
     t.string   "description"
-    t.string   "type"
+    t.string   "icon"
+    t.string   "flavor"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
