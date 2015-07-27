@@ -11,11 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150727002846) do
+ActiveRecord::Schema.define(version: 20150727025731) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "postgis"
+
+  create_table "badge_types", force: true do |t|
+    t.string   "description"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "badges", force: true do |t|
+    t.integer  "trip_id"
+    t.integer  "trip_detail_id"
+    t.integer  "vehicle_telemetry_metric_id"
+    t.integer  "badge_type_id"
+    t.string   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "badges", ["badge_type_id"], :name => "index_badges_on_badge_type_id"
+  add_index "badges", ["trip_detail_id"], :name => "index_badges_on_trip_detail_id"
+  add_index "badges", ["trip_id"], :name => "index_badges_on_trip_id"
 
   create_table "locations", force: true do |t|
     t.string   "vehicle_id"

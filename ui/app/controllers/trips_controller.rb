@@ -84,10 +84,6 @@ class TripsController < ApplicationController
     end
   end
 
-  def calculate_badges
-
-  end
-
   # TODO: Hack needed to make merit happy.  Fix this.  It shouldn't be necessary.
   def current_trip
     @trip
