@@ -4,6 +4,8 @@ gem 'le'
 
 gem 'activerecord-postgis-adapter'
 
+gem 'merit'
+
 gem 'gmaps4rails'
 
 gem 'will_paginate', '~> 3.0.6'
