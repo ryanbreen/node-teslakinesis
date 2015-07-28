@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20150727025731) do
   end
 
   create_table "badges", force: true do |t|
+    t.string   "vehicle_id"
     t.integer  "trip_id"
     t.integer  "trip_detail_id"
     t.integer  "vehicle_telemetry_metric_id"
@@ -39,6 +40,7 @@ ActiveRecord::Schema.define(version: 20150727025731) do
   add_index "badges", ["badge_type_id"], :name => "index_badges_on_badge_type_id"
   add_index "badges", ["trip_detail_id"], :name => "index_badges_on_trip_detail_id"
   add_index "badges", ["trip_id"], :name => "index_badges_on_trip_id"
+  add_index "badges", ["vehicle_id"], :name => "index_badges_on_vehicle_id"
 
   create_table "locations", force: true do |t|
     t.string   "vehicle_id"

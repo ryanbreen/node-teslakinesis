@@ -16,6 +16,7 @@ class BadgeProcessor
 
   def finalize(metric)
     Badge.create(
+      :vehicle_id => @trip_detail.vehicle_id,
       :trip_id => @trip_detail.trip_id,
       :trip_detail_id => @trip_detail.id,
       :vehicle_telemetry_metric_id => metric.id,

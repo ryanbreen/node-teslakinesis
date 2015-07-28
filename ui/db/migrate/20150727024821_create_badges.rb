@@ -1,6 +1,7 @@
 class CreateBadges < ActiveRecord::Migration
   def change
     create_table :badges do |t|
+      t.string :vehicle_id
       t.integer :trip_id
       t.integer :trip_detail_id
       t.integer :vehicle_telemetry_metric_id
@@ -10,6 +11,7 @@ class CreateBadges < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :badges, :vehicle_id
     add_index :badges, :trip_id
     add_index :badges, :trip_detail_id
     add_index :badges, :badge_type_id
