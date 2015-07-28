@@ -1,11 +1,5 @@
 class SpeedDemonBadgeProcessor < BadgeProcessor
 
-  def initialize(trip_detail)
-    @trip_detail = trip_detail
-    puts "Trip detail is #{@trip_detail}"
-    puts "Trip detail id is #{@trip_detail.trip_id}"
-  end
-
   def process_metric(metric)
     return if @finalized
 

@@ -15,7 +15,7 @@ class TripsController < ApplicationController
   ]
 
   def index
-    @trips = Trip.includes(:trip_detail).includes(:badges).includes(:origin).includes(:destination).
+    @trips = Trip.includes(:trip_detail).includes(:origin).includes(:destination).
       where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
     collect_trip_data
 
@@ -195,7 +195,7 @@ class TripsController < ApplicationController
     end
 
     def set_models
-      @trip = Trip.includes(:trip_detail).includes(:badges).find(params[:id]) if params[:id] != nil
+      @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil
       @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
       @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
