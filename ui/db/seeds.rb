@@ -90,7 +90,7 @@ if BadgeType.count == 0
   BadgeType.create(
     id: 9,
     name: "range-surfer",
-    description: "Less than 20% charge.  Range anxiety?",
+    description: "Less than 25% charge.  Range anxiety?",
     icon: 'exclamation-triangle',
     flavor: 'warning'
   )

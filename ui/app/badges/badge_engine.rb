@@ -22,4 +22,10 @@ class BadgeEngine
     end
   end
 
+  def metrics_complete()
+    @badge_processors.each do |bp|
+      bp.metrics_complete
+    end
+  end
+
 end

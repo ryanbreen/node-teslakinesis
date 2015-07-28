@@ -179,6 +179,8 @@ class TripsController < ApplicationController
             current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
           end
 
+          badge_engine.metrics_complete
+
           js_buffer << "], \'"
           js_buffer << @@color_scale[0]
           js_buffer << "\']);\n"

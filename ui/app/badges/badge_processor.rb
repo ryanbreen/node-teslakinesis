@@ -23,4 +23,12 @@ class BadgeProcessor
     )
     @finalized = true
   end
+
+  def process_metric(metric)
+
+  end
+
+  def metrics_complete()
+
+  end
 end
