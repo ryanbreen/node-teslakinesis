@@ -2,7 +2,9 @@ class BadgeEngine
 
   @@badge_processor_classes = [
     'SpeedDemonBadgeProcessor',
-    'AwesomePowerBadgeProcessor'
+    'AwesomePowerBadgeProcessor',
+    'ComingDownTheMountainBadgeProcessor',
+    'RangeSurferBadgeProcessor'
   ]
 
   def initialize(trip_detail)
