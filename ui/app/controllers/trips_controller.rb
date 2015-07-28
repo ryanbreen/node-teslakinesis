@@ -191,7 +191,7 @@ class TripsController < ApplicationController
           trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
           trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
 
-          #trip.trip_detail.save unless trip.end_time == nil
+          trip.trip_detail.save unless trip.end_time == nil
         end
       end
     end
