@@ -94,7 +94,7 @@
               <% trip.badges.each_with_index do |badge, i| %>
                 <div class="timeline-item clearfix">
                    <div class="timeline-info">
-                     <i class="timeline-indicator ace-icon fa fa-certificate btn btn-warning no-hover"></i>
+                     <i class="timeline-indicator ace-icon fa fa-certificate btn btn-<%= badge.badge_type.flavor %> no-hover"></i>
                    </div>
 
                    <div class="widget-box transparent">
