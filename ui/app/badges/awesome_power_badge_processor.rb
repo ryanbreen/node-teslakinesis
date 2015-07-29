@@ -1,6 +1,8 @@
 class AwesomePowerBadgeProcessor < BadgeProcessor
 
-  self.badge_type_id = 2
+  def initialize(trip_detail)
+    super 2, trip_detail
+  end
 
   def process_metric(metric)
     return if @finalized
