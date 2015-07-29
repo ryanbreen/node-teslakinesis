@@ -15,6 +15,7 @@ class BadgeProcessor
   end
 
   def finalize(metric)
+    return if metric == nil
     Badge.create(
       :vehicle_id => @trip_detail.vehicle_id,
       :trip_id => @trip_detail.trip_id,

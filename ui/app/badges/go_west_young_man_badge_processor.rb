@@ -17,12 +17,11 @@ class GoWestYoungManBadgeProcessor < BadgeProcessor
   end
 
   def metrics_complete()
-    # if this is smaller than the current globally smallest, delete the current
+    # if this is farther west than the current globally farthest west, delete the current
     # badge and add a new one
     badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: 3
     if badge != nil
       if @current_most_westerly < badge.vehicle_telemetry_metric.location.x
-        puts "Destroying #{badge.id}"
         badge.destroy
         finalize @current_metric
       end 
