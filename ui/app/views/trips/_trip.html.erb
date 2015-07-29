@@ -114,8 +114,9 @@ map_load_functions.push(function() {
       <% end %>
 
   <% if @map_type == :detailed %>
-    var legend = document.getElementById('legend');        legend.index = 1;
-        handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+    var legend = document.getElementById('legend');
+    legend.index = 1;
+    handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
   <% end %>
 
   <% if trip.trip_detail != nil %>
