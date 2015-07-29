@@ -101,6 +101,18 @@ map_load_functions.push(function() {
 
       <% end %>
 
+      <% if trip.badges.length > 0 %>
+        <%  trip.badges.each do |badge| %>
+            markers = handler<%=index%>.addMarkers([
+              {
+                "lat": "<%= badge.vehicle_telemetry_metric.location.y %>",
+                "lng": "<%= badge.vehicle_telemetry_metric.location.x %>",
+                "infowindow": "<%= badge.badge_type.description %>"
+              }
+            ]);
+        <% end %>
+      <% end %>
+
   <% if @map_type == :detailed %>
     var legend = document.getElementById('legend');        legend.index = 1;
         handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
