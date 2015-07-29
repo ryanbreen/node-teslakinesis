@@ -6,6 +6,7 @@ class BadgeEngine
     'GoWestYoungManBadgeProcessor',
     'ToTheSeaBadgeProcessor',
     'TheGreatWhiteNorthBadgeProcessor',
+    'SouthernLivingBadgeProcessor',
     'ComingDownTheMountainBadgeProcessor',
     'RangeSurferBadgeProcessor'
   ]
