@@ -89,7 +89,7 @@
               </div>
             </div>
 
-            <% if trip.start_location_id == -1 %>
+            <% if trip.badges.length > 0 %>
 
               <div class="timeline-item clearfix">
                  <div class="timeline-info">
@@ -105,7 +105,7 @@
                   </div>
                   <div class="widget-body"><div class="widget-main">
                     <% trip.badges.each_with_index do |badge, i| %>
-                      <span class='ace-icon fa fa-<%= badge.custom_fields[:icon] %> btn btn-<%= badge.custom_fields[:type] %> btn-default tesla-tooltip no-hover' title="<%= badge.description %>" ></span>
+                      <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>: earned at <%= badge.vehicle_telemetry_metric.timestamp %>" ></span>
                     <% end %>
                   </div></div>
                 </div>
