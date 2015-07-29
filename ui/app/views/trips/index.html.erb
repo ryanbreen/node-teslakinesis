@@ -91,25 +91,27 @@
 
             <% if trip.badges.length > 0 %>
 
-              <div class="timeline-item clearfix">
-                 <div class="timeline-info">
-                   <i class="timeline-indicator ace-icon fa fa-certificate btn btn-warning no-hover"></i>
-                 </div>
+              <% trip.badges.each_with_index do |badge, i| %>
+                <div class="timeline-item clearfix">
+                   <div class="timeline-info">
+                     <i class="timeline-indicator ace-icon fa fa-certificate btn btn-warning no-hover"></i>
+                   </div>
 
-                 <div class="widget-box transparent">
-                   <div class="widget-header widget-header-small">
-                    <h5 class="widget-title smaller">Badges Earned!</h5>
-                    <span class="widget-toolbar">
-                      <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
-                    </span>
+                   <div class="widget-box transparent">
+                     <div class="widget-header widget-header-small">
+                      <h5 class="widget-title smaller">Earned a badge!</h5>
+                      <span class="widget-toolbar">
+                        <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                        <%= badge.vehicle_telemetry_metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
+                      </span>
+                    </div>
+                    <div class="widget-body"><div class="widget-main">
+                        <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>: earned at <%= badge.vehicle_telemetry_metric.timestamp %>" ></span>
+                    </div></div>
                   </div>
-                  <div class="widget-body"><div class="widget-main">
-                    <% trip.badges.each_with_index do |badge, i| %>
-                      <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>: earned at <%= badge.vehicle_telemetry_metric.timestamp %>" ></span>
-                    <% end %>
-                  </div></div>
                 </div>
-              </div>
+              <% end %>
 
             <% end %> <!-- if badges -->
 
