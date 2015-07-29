@@ -3,6 +3,7 @@ class BadgeEngine
   @@badge_processor_classes = [
     'SpeedDemonBadgeProcessor',
     'AwesomePowerBadgeProcessor',
+    'GoWestYoungManBadgeProcessor',
     'ComingDownTheMountainBadgeProcessor',
     'RangeSurferBadgeProcessor'
   ]
