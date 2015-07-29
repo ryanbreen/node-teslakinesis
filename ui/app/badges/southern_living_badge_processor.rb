@@ -1,7 +1,9 @@
 class SouthernLivingBadgeProcessor < BadgeProcessor
 
+  self.badge_type_id = 6
+
   def initialize(trip_detail)
-    super 6, trip_detail
+    super trip_detail
     @current_most_southerly = 90.0
   end
 

@@ -1,8 +1,6 @@
 class SpeedDemonBadgeProcessor < BadgeProcessor
 
-  def initialize(trip_detail)
-    super 1, trip_detail
-  end
+  self.badge_type_id = 1
 
   def process_metric(metric)
     return if @finalized

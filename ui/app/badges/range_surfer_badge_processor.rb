@@ -1,11 +1,10 @@
 class RangeSurferBadgeProcessor < BadgeProcessor
 
-  def initialize(trip_detail)
-    super 9, trip_detail  
-    @current_lowest_soc
-    @current_metric
-  end
+  self.badge_type_id = 9
 
+  @current_lowest_soc
+  @current_metric
+  
   def process_metric(metric)
     return if @finalized
 

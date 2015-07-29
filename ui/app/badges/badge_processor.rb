@@ -2,11 +2,10 @@ class BadgeProcessor
   @badge_type_id = 0
   @finalized = false
 
-  def initialize(badge_type_id, trip_detail)
-    @badge_type_id = badge_type_id
+  def initialize(trip_detail)
     @trip_detail = trip_detail
 
-    @finalized = ((Badge.find_by trip_id: @trip_detail.id, badge_type_id: @badge_type_id) != nil)
+    @finalized = ((Badge.find_by trip_id: @trip_detail.id, badge_type_id: self.class.badge_type_id) != nil)
   end
 
   def self.badge_type_id
@@ -24,7 +23,7 @@ class BadgeProcessor
       :trip_id => @trip_detail.trip_id,
       :trip_detail_id => @trip_detail.id,
       :vehicle_telemetry_metric_id => metric.id,
-      :badge_type_id => @badge_type_id
+      :badge_type_id => self.class.badge_type_id
     )
     @finalized = true
   end

@@ -1,7 +1,9 @@
 class TheGreatWhiteNorthBadgeProcessor < BadgeProcessor
 
+  self.badge_type_id = 5
+
   def initialize(trip_detail)
-    super 5, trip_detail
+    super trip_detail
     @current_most_northerly = -90.0
   end
 

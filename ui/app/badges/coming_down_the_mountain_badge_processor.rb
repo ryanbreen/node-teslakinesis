@@ -1,8 +1,6 @@
 class ComingDownTheMountainBadgeProcessor < BadgeProcessor
 
-  def initialize(trip_detail)
-    super 8, trip_detail
-  end
+  self.badge_type_id = 8
 
   def process_metric(metric)
     return if @finalized

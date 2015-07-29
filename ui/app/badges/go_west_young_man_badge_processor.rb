@@ -1,7 +1,9 @@
 class GoWestYoungManBadgeProcessor < BadgeProcessor
 
+  self.badge_type_id = 3
+
   def initialize(trip_detail)
-    super 3, trip_detail
+    super trip_detail
     @current_most_westerly = 180.0
   end
 

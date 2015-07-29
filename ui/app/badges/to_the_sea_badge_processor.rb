@@ -1,7 +1,9 @@
 class ToTheSeaBadgeProcessor < BadgeProcessor
 
+  self.badge_type_id = 4
+
   def initialize(trip_detail)
-    super 4, trip_detail
+    super trip_detail
     @current_most_easterly = -180.0
   end
 
