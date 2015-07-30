@@ -7,6 +7,13 @@ index = 0 if index == nil
 <% if (@js_loaded == nil) %>
 <%= javascript_include_tag "underscore" %>
 <%= javascript_include_tag "gmaps/google" %>
+<script>
+var color_scale = {
+  'success': "#74AD6A",
+  'warning': "#FFAA38",
+  'danger' : "#C44537"
+};
+</script>
 <% @js_loaded = true %>
 <% end %>
 
@@ -77,39 +84,63 @@ map_load_functions.push(function() {
       }
     },
     function(){
-        var start = {
-        "lat": <%= trip.start_location.latitude %>,
-        "lng": <%= trip.start_location.longitude %>,
-        "picture": {
-          "url": "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
-          "width": 32,
-          "height": 32
-        }
-      };
-      handler<%=index%>.addMarker(start);
+
+      var start = new google.maps.LatLng(
+            "<%= trip.start_location.latitude %>",
+            "<%= trip.start_location.longitude %>");
+      new google.maps.Marker({
+          map: handler<%=index%>.map.serviceObject,
+          icon: {
+              path: fontawesome.markers.PLAY,
+              scale: .4,
+              strokeWeight: 0.3,
+              strokeColor: 'black',
+              strokeOpacity: 1,
+              fillColor: color_scale['success'],
+              fillOpacity: 1
+          },
+          clickable: false,
+          position: start
+      });
       <% if trip.end_location != nil %>
-      var end = {
-        "lat": <%= trip.end_location.latitude %>,
-        "lng": <%= trip.end_location.longitude %>,
-        "picture": {
-          "url": "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-          "width": 32,
-          "height": 32
-        }
-      };
-      handler<%=index%>.addMarker(end);
+      var end = new google.maps.LatLng(
+            "<%= trip.end_location.latitude %>",
+            "<%= trip.end_location.longitude %>");
+      new google.maps.Marker({
+          map: handler<%=index%>.map.serviceObject,
+          icon: {
+              path: fontawesome.markers.STOP,
+              scale: .4,
+              strokeWeight: 0.3,
+              strokeColor: 'black',
+              strokeOpacity: 1,
+              fillColor: color_scale['danger'],
+              fillOpacity: 1
+          },
+          clickable: false,
+          position: end
+      });
 
       <% end %>
 
       <% if trip.badges.length > 0 %>
         <%  trip.badges.each do |badge| %>
-            markers = handler<%=index%>.addMarkers([
-              {
-                "lat": "<%= badge.vehicle_telemetry_metric.location.y %>",
-                "lng": "<%= badge.vehicle_telemetry_metric.location.x %>",
-                "infowindow": "<%= badge.badge_type.description %>"
-              }
-            ]);
+            new google.maps.Marker({
+                map: handler<%=index%>.map.serviceObject,
+                icon: {
+                    path: fontawesome.markers.<%= badge.badge_type.icon.upcase.gsub('-', '_') %>,
+                    scale: .4,
+                    strokeWeight: 0.3,
+                    strokeColor: 'black',
+                    strokeOpacity: 1,
+                    fillColor: color_scale['<%= badge.badge_type.flavor %>'],
+                    fillOpacity: 1
+                },
+                clickable: false,
+                position: new google.maps.LatLng(
+                  "<%= badge.vehicle_telemetry_metric.location.y %>",
+                  "<%= badge.vehicle_telemetry_metric.location.x %>")
+            });
         <% end %>
       <% end %>
 

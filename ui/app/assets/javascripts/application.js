@@ -18,3 +18,4 @@
 //= require ace.min
 //= require turbolinks
 //= require jquery.turbolinks
+//= require fontawesome-markers.min
