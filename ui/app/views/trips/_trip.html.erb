@@ -30,7 +30,10 @@ div.custom_marker {
 
 <div id="overlay_bag_<%= index %>" style="display: none">
   <div id="start_icon_<%=index%>" class="custom_marker">
-    <span class='ace-icon btn btn-success fa fa-play no-hover' ></span>
+    <span class='ace-icon btn btn-xs btn-success fa fa-play no-hover tesla-tooltip' title="Departed at <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
+  </div>
+  <div id="stop_icon_<%=index%>" class="custom_marker">
+    <span class='ace-icon btn btn-xs btn-danger fa fa-stop no-hover tesla-tooltip' title="Arrived at <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
 </div>
 
@@ -111,20 +114,12 @@ map_load_functions.push(function() {
       var end = new google.maps.LatLng(
             "<%= trip.end_location.latitude %>",
             "<%= trip.end_location.longitude %>");
-      new google.maps.Marker({
-          map: handler<%=index%>.map.serviceObject,
-          icon: {
-              path: fontawesome.markers.STOP,
-              scale: .4,
-              strokeWeight: 0.3,
-              strokeColor: 'black',
-              strokeOpacity: 1,
-              fillColor: color_scale['danger'],
-              fillOpacity: 1
-          },
-          clickable: false,
-          position: end
-      });
+      cm = new CustomMarker(
+        end,
+        handler<%=index%>.map.serviceObject
+      );
+      cm.div = document.getElementById('stop_icon_<%=index%>');
+      cm.div.title = "Arrived at <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_precise_us) %>"
 
       <% end %>
 

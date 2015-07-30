@@ -42,8 +42,8 @@ CustomMarker.prototype.draw = function() {
 	if (point) {
 		div.style.position = 'absolute';
 		div.style.cursor = 'pointer';
-		div.style.left = (point.x - 10) + 'px';
-		div.style.top = (point.y - 20) + 'px';
+		div.style.left = (point.x - 5) + 'px';
+		div.style.top = (point.y - 6) + 'px';
 	}
 };
 
