@@ -137,6 +137,7 @@ map_load_functions.push(function() {
                     fillOpacity: 1
                 },
                 clickable: false,
+                title: "<%= badge.badge_type.description %>",
                 position: new google.maps.LatLng(
                   "<%= badge.vehicle_telemetry_metric.location.y %>",
                   "<%= badge.vehicle_telemetry_metric.location.x %>")
