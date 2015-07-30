@@ -19,3 +19,4 @@
 //= require turbolinks
 //= require jquery.turbolinks
 //= require fontawesome-markers.min
+//= require custom-google-map-marker

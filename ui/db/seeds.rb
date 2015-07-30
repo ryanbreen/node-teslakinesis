@@ -98,7 +98,5 @@ end
 
 ## Badge Ideas
 # Fastest 1-3 on any given route
-# High energy regen
-# Soc below 20%
 # Longest distance traveled
 # Traveled over N miles with energy consumption below Y%

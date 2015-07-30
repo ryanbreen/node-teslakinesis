@@ -21,6 +21,12 @@ var color_scale = {
   <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
+<div style="display: none">
+  <div id="start_icon">
+    <span class='ace-icon btn btn-success fa-start' ></span>
+  </div>
+</div>
+
 <% if @map_type == :detailed %>
 <div style="display: none">
   <div id="legend">
@@ -88,20 +94,12 @@ map_load_functions.push(function() {
       var start = new google.maps.LatLng(
             "<%= trip.start_location.latitude %>",
             "<%= trip.start_location.longitude %>");
-      new google.maps.Marker({
-          map: handler<%=index%>.map.serviceObject,
-          icon: {
-              path: fontawesome.markers.PLAY,
-              scale: .4,
-              strokeWeight: 0.3,
-              strokeColor: 'black',
-              strokeOpacity: 1,
-              fillColor: color_scale['success'],
-              fillOpacity: 1
-          },
-          clickable: false,
-          position: start
-      });
+      cm = new CustomMarker(
+        start,
+        handler<%=index%>.map.serviceObject
+      );
+      cm.div = document.getElementById('start_icon');
+
       <% if trip.end_location != nil %>
       var end = new google.maps.LatLng(
             "<%= trip.end_location.latitude %>",
