@@ -8,8 +8,6 @@ class ToTheSeaBadgeProcessor < BadgeProcessor
   end
 
   def process_metric(metric)
-    return if @finalized
-
     if metric.location.x > @current_most_easterly
       @current_most_easterly = metric.location.x
       @current_metric = metric
@@ -23,11 +21,11 @@ class ToTheSeaBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_most_easterly > badge.vehicle_telemetry_metric.location.x
         badge.destroy
-        finalize @current_metric
+        create_badge @current_metric
       end 
     elsif
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      finalize @current_metric
+      create_badge @current_metric
     end
   end
 

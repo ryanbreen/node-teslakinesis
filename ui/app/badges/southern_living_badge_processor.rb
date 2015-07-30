@@ -8,8 +8,6 @@ class SouthernLivingBadgeProcessor < BadgeProcessor
   end
 
   def process_metric(metric)
-    return if @finalized
-
     if metric.location.y < @current_most_southerly
       @current_most_southerly = metric.location.y
       @current_metric = metric
@@ -23,11 +21,11 @@ class SouthernLivingBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_most_southerly < badge.vehicle_telemetry_metric.location.y
         badge.destroy
-        finalize @current_metric
+        create_badge @current_metric
       end 
     else
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      finalize @current_metric
+      create_badge @current_metric
     end
   end
 

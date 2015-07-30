@@ -2,20 +2,20 @@ class RangeSurferBadgeProcessor < BadgeProcessor
 
   self.badge_type_id = 9
 
-  @current_lowest_soc
-  @current_metric
+  def initialize(trip_detail)
+    super trip_detail
+    @current_lowest_soc = 180.0
+  end
   
   def process_metric(metric)
-    return if @finalized
-
-    if metric.soc < 25
+    if metric.soc < 25 and metric.soc < @current_lowest_soc
       @current_lowest_soc = metric.soc
       @current_metric = metric
     end
   end
 
   def metrics_complete()
-    finalize @current_metric
+    create_badge @current_metric
   end
 
 end

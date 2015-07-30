@@ -22,22 +22,20 @@ var color_scale = {
 </div>
 
 <div id="overlay_bag_<%= index %>" style="display: none">
-  <div id="start_icon_<%=index%>" class="custom_marker">
-    <span class='ace-icon btn btn-xs btn-success fa fa-play no-hover tesla-tooltip' title="Departed at <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
+  <div id="start_icon_<%=index%>" class="row">
+    <span class='ace-icon btn btn-xs btn-default btn-success fa fa-play no-hover tesla-tooltip' title="Departed at <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
-  <div id="stop_icon_<%=index%>" class="custom_marker">
-    <span class='ace-icon btn btn-xs btn-danger fa fa-stop no-hover tesla-tooltip' title="Arrived at <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
+  <div id="stop_icon_<%=index%>" class="row">
+    <span class='ace-icon btn btn-xs btn-default btn-danger fa fa-stop no-hover tesla-tooltip' title="Arrived at <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
 
   <% if trip.badges.length > 0 %>
     <%  trip.badges.each_with_index do |badge, i| %>
-      <div id="badge_icon_<%=index%>_<%=i%>" class="custom_marker">
-        <span class='ace-icon btn btn-xs btn-<%= badge.badge_type.flavor %> fa fa-<%= badge.badge_type.icon %> no-hover tesla-tooltip' title="<%= badge.badge_type.description %>" ></span>
+      <div id="badge_icon_<%=index%>_<%=i%>" class="row">
+        <span class='ace-icon btn btn-xs btn-default btn-<%= badge.badge_type.flavor %> fa fa-<%= badge.badge_type.icon %> no-hover tesla-tooltip' title="<%= badge.badge_type.description %>" ></span>
       </div>
     <% end %>
   <% end %>
-
-
 </div>
 
 <% if @map_type == :detailed %>
