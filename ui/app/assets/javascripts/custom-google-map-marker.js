@@ -40,6 +40,8 @@ CustomMarker.prototype.draw = function() {
 	var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
 	
 	if (point) {
+		div.style.position = 'absolute';
+		div.style.cursor = 'pointer';
 		div.style.left = (point.x - 10) + 'px';
 		div.style.top = (point.y - 20) + 'px';
 	}

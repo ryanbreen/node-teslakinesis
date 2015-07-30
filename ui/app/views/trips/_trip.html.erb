@@ -21,11 +21,16 @@ var color_scale = {
   <div id="map<%= index %>" class="map_canvas"></div>
 </div>
 
-<div style="display: none">
-  <div id="start_icon">
+<style>
+div.custom_marker {
+  position: absolute;
+  cursor: pointer;
+}
+</style>
+
+  <div id="start_icon" class="custom_marker">
     <span class='ace-icon btn btn-success fa-start' ></span>
   </div>
-</div>
 
 <% if @map_type == :detailed %>
 <div style="display: none">
