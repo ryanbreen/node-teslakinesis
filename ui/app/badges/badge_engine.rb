@@ -8,7 +8,8 @@ class BadgeEngine
     'TheGreatWhiteNorthBadgeProcessor',
     'SouthernLivingBadgeProcessor',
     'ComingDownTheMountainBadgeProcessor',
-    'RangeSurferBadgeProcessor'
+    'RangeSurferBadgeProcessor',
+    'TopSpeedBadgeProcessor'
   ]
 
   def initialize(trip_detail)
