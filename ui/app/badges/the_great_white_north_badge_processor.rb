@@ -21,11 +21,11 @@ class TheGreatWhiteNorthBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_most_northerly > badge.vehicle_telemetry_metric.location.y
         badge.destroy
-        create_badge @current_metric
+        create_badge @current_metric, @current_most_northerly
       end 
     else
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      create_badge @current_metric
+      create_badge @current_metric, @current_most_northerly
     end
   end
 

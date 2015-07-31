@@ -21,11 +21,11 @@ class GoWestYoungManBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_most_westerly < badge.vehicle_telemetry_metric.location.x
         badge.destroy
-        create_badge @current_metric
+        create_badge @current_metric, @current_most_westerly
       end 
     else
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      create_badge @current_metric
+      create_badge @current_metric, @current_most_westerly
     end
   end
 

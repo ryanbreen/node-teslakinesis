@@ -4,7 +4,7 @@ class ComingDownTheMountainBadgeProcessor < BadgeProcessor
 
   def process_metric(metric)
     if metric.power < -60
-      create_badge metric
+      create_badge metric, metric.power
     end
   end
 

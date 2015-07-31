@@ -4,7 +4,7 @@ class SpeedDemonBadgeProcessor < BadgeProcessor
 
   def process_metric(metric)
     if metric.speed > 90
-      create_badge metric
+      create_badge metric, metric.speed
     end
   end
 

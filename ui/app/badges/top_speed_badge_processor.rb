@@ -21,11 +21,11 @@ class TopSpeedBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_top_speed > badge.vehicle_telemetry_metric.speed
         badge.destroy
-        create_badge @current_metric
+        create_badge @current_metric, @current_top_speed
       end 
     else
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      create_badge @current_metric
+      create_badge @current_metric, @current_top_speed
     end
   end
 

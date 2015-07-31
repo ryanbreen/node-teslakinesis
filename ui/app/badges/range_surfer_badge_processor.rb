@@ -15,7 +15,7 @@ class RangeSurferBadgeProcessor < BadgeProcessor
   end
 
   def metrics_complete()
-    create_badge @current_metric
+    create_badge @current_metric, @current_metric.soc if @current_metric != nil
   end
 
 end

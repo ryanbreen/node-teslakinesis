@@ -21,11 +21,11 @@ class ToTheSeaBadgeProcessor < BadgeProcessor
     if badge != nil
       if @current_most_easterly > badge.vehicle_telemetry_metric.location.x
         badge.destroy
-        create_badge @current_metric
+        create_badge @current_metric, @current_most_easterly
       end 
     elsif
       # If there is no current badge, this is automatically the most superlative trip we've taken
-      create_badge @current_metric
+      create_badge @current_metric, @current_most_easterly
     end
   end
 

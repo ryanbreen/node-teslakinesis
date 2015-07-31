@@ -14,12 +14,9 @@ class BadgeProcessor
     @badge_type_id = id
   end
 
-  def create_badge(metric)
-    puts "Metric #{metric}"
+  def create_badge(metric, data)
     return if metric == nil
 
-    puts "Timestamp #{metric.timestamp.to_i}"
-    puts "Diff #{@last_issued - metric.timestamp.to_i}"
     # Check whether the last time we issued this badge was less than a minute ago.  We do this
     # so similar badges don't stack up on each other.
     return if ((@last_issued - metric.timestamp.to_i) < 60)
@@ -31,7 +28,8 @@ class BadgeProcessor
       :trip_id => @trip_detail.trip_id,
       :trip_detail_id => @trip_detail.id,
       :vehicle_telemetry_metric_id => metric.id,
-      :badge_type_id => self.class.badge_type_id
+      :badge_type_id => self.class.badge_type_id,
+      :data => data
     )
   end
 
