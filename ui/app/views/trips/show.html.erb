@@ -82,39 +82,9 @@
           </div>
           <div class="col-md-2">
           </div>
-          <div class="col-md-6">
-            <div class="widget-box transparent collapsed">
-               <div class="widget-header widget-header-small">
-                <h3 class="widget-title smaller">Detailed vehicle telemetry</h3>
-                <span class="widget-toolbar">
-                  <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
-                </span>
-              </div>
-              <div class="widget-body"><div class="widget-main">
-                <table id="simple-table" class="table table-striped table-bordered table-hover">
-                  <thead>
-                    <tr>
-                      <th>Time (reverse order)</th>
-                      <th>Speed</th>
-                      <th>Power</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                  <% if @trip.start_location_id == -1 %>
-                  <% @trip.vehicle_telemetry_metrics.each do |metric| %>
-                    <tr>
-                      <td><%= metric.timestamp.in_time_zone('America/New_York').to_formatted_s(:time_precise_us) %></td>
-                      <td><%= (metric.shift_state == 'R' ? '-' : '') %><%= metric.speed %> MPH</td>
-                      <td><%= metric.power %> kW</td>
-                    </tr>
-                  <% end %>
-                  <% end %>
-                  </tbody>
-              </div></div>
-            </div>
+          <div class="col-md-6" id="vehicle_telemetry" data-ajax-content="true">
+            
           </div>
-        </div>
       </div>
     </div>
   </div>

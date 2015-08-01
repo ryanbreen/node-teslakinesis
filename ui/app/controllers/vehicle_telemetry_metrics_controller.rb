@@ -1,6 +1,6 @@
 class VehicleTelemetryMetricsController < ApplicationController
 
-  def index
+  def trip_metrics
     @vehicle_telemetry_metrics = VehicleTelemetryMetric.where("trip_id = ?", params[:trip_id]).
       paginate(:page => params[:page], :per_page => 100)
 
