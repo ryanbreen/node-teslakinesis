@@ -104,7 +104,7 @@ $('#vehicle_telemetry').ace_ajax({
 });
 
 $('#vehicle_telemetry').on('ajaxloadcomplete', function(e, params) {
-  console.log('done');
+  $('.ajax-loading-overlay').remove();
 });
           </script>
       </div>
