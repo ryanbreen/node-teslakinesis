@@ -5,7 +5,7 @@ class VehicleTelemetryMetricsController < ApplicationController
       paginate(:page => params[:page], :per_page => 100)
 
     respond_to do |format|
-      format.html
+      format.html { render :layout => false }
       format.json { render json: @vehicle_telemetry_metrics}
     end
   end
