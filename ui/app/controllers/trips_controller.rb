@@ -138,7 +138,7 @@ class TripsController < ApplicationController
 
           first_line = true
 
-          Gmaps4rails.build_markers(trip.vehicle_telemetry_metrics) do |vehicle|
+          trip.vehicle_telemetry_metrics.each do |vehicle|
 
             if vehicle.id % 16 == 0
               js_buffer << ',' unless first_line
