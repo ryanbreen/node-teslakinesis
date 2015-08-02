@@ -147,7 +147,7 @@ class TripsController < ApplicationController
             end
 
             # Process this vehicle metric for the badge
-            badge_engine.process_metric(vehicle)
+            badge_engine.process_metric(vehicle) unless trip.end_time == nil
 
             lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
             lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
@@ -179,7 +179,7 @@ class TripsController < ApplicationController
             current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
           end
 
-          badge_engine.metrics_complete
+          badge_engine.metrics_complete unless trip.end_time == nil
 
           js_buffer << "], \'"
           js_buffer << @@color_scale[0]
