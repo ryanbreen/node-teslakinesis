@@ -22,16 +22,16 @@ var color_scale = {
 </div>
 
 <div id="overlay_bag_<%= index %>" style="display: none">
-  <div id="start_icon_<%=index%>" class="row">
+  <div id="start_icon_<%=index%>">
     <span class='ace-icon btn btn-xs btn-default btn-success fa fa-play no-hover tesla-tooltip' title="Departed at <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
-  <div id="stop_icon_<%=index%>" class="row">
+  <div id="stop_icon_<%=index%>">
     <span class='ace-icon btn btn-xs btn-default btn-danger fa fa-stop no-hover tesla-tooltip' title="Arrived at <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
 
   <% if trip.badges.length > 0 %>
     <%  trip.badges.each_with_index do |badge, i| %>
-      <div id="badge_icon_<%=index%>_<%=i%>" class="row">
+      <div id="badge_icon_<%=index%>_<%=i%>">
         <span class='ace-icon btn btn-xs btn-default btn-<%= badge.badge_type.flavor %> fa fa-<%= badge.badge_type.icon %> no-hover tesla-tooltip' title="<%= badge.badge_type.description %>" ></span>
       </div>
     <% end %>
@@ -107,9 +107,9 @@ map_load_functions.push(function() {
             "<%= trip.start_location.longitude %>");
       cm = new CustomMarker(
         start,
-        handler<%=index%>.map.serviceObject
+        handler<%=index%>.map.serviceObject,
+        document.getElementById('start_icon_<%=index%>')
       );
-      cm.div = document.getElementById('start_icon_<%=index%>');
 
       <% if trip.end_location != nil %>
       var end = new google.maps.LatLng(
@@ -117,9 +117,9 @@ map_load_functions.push(function() {
             "<%= trip.end_location.longitude %>");
       cm = new CustomMarker(
         end,
-        handler<%=index%>.map.serviceObject
+        handler<%=index%>.map.serviceObject,
+        document.getElementById('stop_icon_<%=index%>')
       );
-      cm.div = document.getElementById('stop_icon_<%=index%>');
 
       <% end %>
 
@@ -131,9 +131,9 @@ map_load_functions.push(function() {
                   "<%= badge.vehicle_telemetry_metric.location.longitude %>");
             cm = new CustomMarker(
               badge_loc,
-              handler<%=index%>.map.serviceObject
+              handler<%=index%>.map.serviceObject,
+              document.getElementById('badge_icon_<%=index%>_<%=i%>')
             );
-            cm.div = document.getElementById('badge_icon_<%=index%>_<%=i%>');
         <% end %>
       <% end %>
 
@@ -141,9 +141,9 @@ map_load_functions.push(function() {
     var legend = document.getElementById('legend');
     legend.index = 1;
     handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-  <% end %>
 
-  document.getElementById('overlay_bag_<%=index%>').style.display='block';
+    document.getElementById('overlay_bag_<%=index%>').style.display='block';
+  <% end %>
 
   <% if trip.trip_detail != nil %>
 
