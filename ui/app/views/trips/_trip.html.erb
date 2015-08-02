@@ -141,9 +141,9 @@ map_load_functions.push(function() {
     var legend = document.getElementById('legend');
     legend.index = 1;
     handler<%=index%>.map.serviceObject.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
-
-    document.getElementById('overlay_bag_<%=index%>').style.display='block';
   <% end %>
+
+  document.getElementById('overlay_bag_<%=index%>').style.display='block';
 
   <% if trip.trip_detail != nil %>
 
