@@ -30,7 +30,7 @@
   <div class="row">
     <div class="col-xs-12">
       <div class="row">
-        <%= render 'trip', :trip => @trip, :trip_detail => @trip_detail[0] %>
+        <%= render 'trip', :trip => @trip %>
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@
                         <dt>Start Time</dt>
                         <dd><%= @trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></dd>
                         <dt>Duration</dt>
-                        <dd><%= @trip_detail[0]['pretty_precise_duration'] %></dd>
+                        <dd><%= pretty_precise_duration @trip %></dd>
                         <dt>Origin</dt>
                         <dd><%= @from_linked.html_safe %></dd>
                         <dt>Destination</dt>

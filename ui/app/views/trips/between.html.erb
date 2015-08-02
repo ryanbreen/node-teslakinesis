@@ -33,9 +33,9 @@
 
           <tr>
             <td style="vertical-align: middle"><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
-            <td style="vertical-align: middle"><%= @trip_detail[index]['pretty_precise_duration'] %></td>
+            <td style="vertical-align: middle"><%= pretty_precise_duration trip %></td>
             <td class="col-md-6"><a href="<%= vehicle_trip_path(params[:vehicle_id], trip) %>">
-                    <%= render 'trip', :index => index, :trip => trip, :trip_detail => @trip_detail[index] %>
+                    <%= render 'trip', :index => index, :trip => trip %>
                 </a>
             </td>
           </tr>

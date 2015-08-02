@@ -6,6 +6,8 @@ include ActionView::Helpers::DateHelper
 
 class TripsController < ApplicationController
 
+  helper FormattedTimeHelper
+
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
   @@color_scale = [
@@ -88,33 +90,11 @@ class TripsController < ApplicationController
 
     def collect_trip_data
 
-      now = Time.zone.now.in_time_zone('America/New_York')
-      current_date = now.to_date
-
       @trips = [ @trip ] if @trips == nil
-
-      @trip_detail = []
 
       @trips.each_with_index do |trip, index|
 
         lowest_lng, highest_lng, lowest_lat, highest_lat = nil
-
-        trip_date = trip.start_time.in_time_zone('America/New_York').to_date
-
-        trip_detail = {}
-        @trip_detail[index] = trip_detail
-
-        trip_detail['pretty_start_date'] = (current_date == trip_date) ? "Today" : 
-          (current_date.yesterday == trip_date) ? "Yesterday" :
-            trip.start_time.in_time_zone('America/New_York').to_formatted_s(:date_us)
-
-        if trip.end_time != nil
-          trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true)
-          trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, trip.end_time)
-        else
-          trip_detail['pretty_duration'] = distance_of_time_in_words(trip.start_time, DateTime.now, include_seconds: true)
-          trip_detail['pretty_precise_duration'] = precise_distance_of_time_in_words(trip.start_time, Time.now)
-        end
 
         if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil || trip.trip_detail.summary_route == nil
 
