@@ -43,14 +43,8 @@
                   <% if trip.end_time == nil %>
                   <h5 class="widget-title smaller">Trip ongoing</h5>
                     <% trip.end_time = Time.now %>
-                  <% elsif trip.destination == nil %>
-                  <h5 class="widget-title smaller">Arrived at an unknown location (<%=
-                        link_to 'name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
-                          :lng => trip[:end_location].longitude, :lat => trip[:end_location].latitude, 
-                          :z => trip[:end_location].z) %>)
-                          </h5>
                   <% else %>
-                  <h5 class="widget-title smaller">Arrived at <%= link_to trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination) %></h5>
+                  <h5 class="widget-title smaller"><%= destination_link trip %></h5>
                   <% end %>
                   <span class="widget-toolbar no-border">
                     <%= link_to vehicle_trip_path(@vehicle, trip), class: "ace-icon fa fa-search" do %>
@@ -121,14 +115,7 @@
 
                <div class="widget-box transparent">
                  <div class="widget-body"><div class="widget-main">
-                  <% if trip.origin == nil %>
-                  Departed from an unknown location (<%=
-                          link_to 'name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
-                          :lng => trip[:start_location].longitude, :lat => trip[:start_location].latitude, 
-                          :z => trip[:start_location].z) %>)</h5>
-                  <% else %>
-                  Departed <%= link_to trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin) %>
-                  <% end %>
+                  <h5 class="widget-title smaller"><%= origin_link trip %></h5>
                   <div class="pull-right">
                     <i class="ace-icon fa fa-clock-o bigger-110"></i>
                     <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
