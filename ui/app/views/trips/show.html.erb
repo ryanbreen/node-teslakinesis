@@ -90,8 +90,6 @@
 $('#vehicle_telemetry').ace_ajax({
   content_url: function(hash) {
     //hash is the value from document url hash
-    console.log(hash);
-
     var base = '/vehicles/<%= params[:vehicle_id]%>/vehicle_telemetry_metrics/<%= params[:id]%>?';
 
     //take "url" param and return the relevant url to load
@@ -99,13 +97,23 @@ $('#vehicle_telemetry').ace_ajax({
   },
   update_active: false,
   update_title: false,
-  update_breadcrumbs: false,
-  default_url: 'page=1'
+  update_breadcrumbs: false
 });
 
 $('#vehicle_telemetry').on('ajaxloadcomplete', function(e, params) {
-  $('.ajax-loading-overlay').remove();
+
+  $('.trip_pagination a').each(function(i, link) {
+    if (link.href.indexOf('?page=')) {
+      link.href = "javascript:$('#vehicle_telemetry').ace_ajax('loadUrl', '" +
+        link.href.substring(link.href.indexOf('page=')) + "');";
+    }
+  });
+
+  $('#vehicle_telemetry').ace_ajax('stopLoading', true);
+  //$('.ajax-loading-overlay').remove();
 });
+
+$('#vehicle_telemetry').ace_ajax('loadUrl', 'page=1');
           </script>
       </div>
     </div>
