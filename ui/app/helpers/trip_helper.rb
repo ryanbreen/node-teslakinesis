@@ -8,7 +8,7 @@ module TripHelper
           :z => trip[:start_location].z)) +
         ")").html_safe
     else
-      ("Departed " + link_to(trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin))).html_safe
+      ("Departed from " + link_to(trip.origin.name, vehicle_location_path(trip.vehicle_id, trip.origin))).html_safe
     end
   end
 
@@ -20,7 +20,7 @@ module TripHelper
           :z => trip[:end_location].z)) +
         ")").html_safe
     else
-      ("Departed " + link_to(trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination))).html_safe
+      ("Arrived at " + link_to(trip.destination.name, vehicle_location_path(trip.vehicle_id, trip.destination))).html_safe
     end
   end
 
