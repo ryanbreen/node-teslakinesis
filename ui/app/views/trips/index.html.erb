@@ -47,13 +47,13 @@
                   <h5 class="widget-title smaller"><%= destination_link trip %></h5>
                   <% end %>
                   <span class="widget-toolbar no-border">
-                    <%= link_to vehicle_trip_path(@vehicle, trip), class: "ace-icon fa fa-search" do %>
+                    <%= link_to vehicle_trip_path(trip[:vehicle_id], trip), class: "ace-icon fa fa-search" do %>
                     <% end %>
                     <% if trip.origin != nil && trip.destination != nil %>
-                      <%= link_to vehicle_trips_between_path(@vehicle, trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h tesla-tooltip", title: "Show more like this..." do %>
+                      <%= link_to vehicle_trips_between_path(trip[:vehicle_id], trip.origin.name, trip.destination.name), class: "ace-icon fa fa-ellipsis-h tesla-tooltip", title: "Show more like this..." do %>
                       <% end %>
                     <% end %>
-                    <%= link_to vehicle_trip_path(@vehicle, trip), method: :delete, class: "ace-icon fa fa-trash-o red tesla-tooltip", id: "trip_" + trip.id.to_s + "_delete_link", title: 'Delete this trip' do %>
+                    <%= link_to vehicle_trip_path(trip[:vehicle_id], trip), method: :delete, class: "ace-icon fa fa-trash-o red tesla-tooltip", id: "trip_" + trip.id.to_s + "_delete_link", title: 'Delete this trip' do %>
                     <% end %>
                     <script>
                       $('#trip_<%= trip.id %>_delete_link').on('click', function(e) {

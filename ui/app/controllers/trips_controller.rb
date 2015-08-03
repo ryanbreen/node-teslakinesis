@@ -60,8 +60,6 @@ class TripsController < ApplicationController
 
     def set_models
       @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil
-      @vehicle = Vehicle.find(params[:vehicle_id]) if params[:vehicle_id] != nil
-      @vehicle = Vehicle.find(@trip[:vehicle_id]) if @trip != nil
     end
 
 end
