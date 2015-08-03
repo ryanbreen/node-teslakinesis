@@ -12,6 +12,11 @@ class Trip < ActiveRecord::Base
     "#C44537"
   ]
 
+  alias_method :original_badges, :badges
+  def badges
+    trip_detail.badges
+  end
+
   # We want to populate a trip_detail record if one doesn't exist, so we override
   # the default getter and add our logic.
   alias_method :original_trip_detail, :trip_detail
