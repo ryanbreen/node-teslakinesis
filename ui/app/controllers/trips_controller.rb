@@ -10,16 +10,9 @@ class TripsController < ApplicationController
 
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
 
-  @@color_scale = [
-    "#74AD6A",
-    "#FFAA38",
-    "#C44537"
-  ]
-
   def index
     @trips = Trip.includes(:trip_detail).includes(:origin).includes(:destination).
       where(:vehicle_id => params[:vehicle_id]).order("start_time desc").paginate(:page => params[:page], :per_page => 10)
-    collect_trip_data
 
     respond_to do |format|
       format.html
@@ -49,7 +42,6 @@ class TripsController < ApplicationController
     @trips = Trip.where(:vehicle_id => params[:vehicle_id], :start_location_id => @from.id, :end_location_id => @to.id).
       order("EXTRACT(EPOCH FROM (end_time - start_time))").paginate(:page => params[:page], :per_page => 10)
     @map_type = :overview
-    collect_trip_data
   end
 
   def show
@@ -75,7 +67,6 @@ class TripsController < ApplicationController
       view_context.link_to('Name it!', new_vehicle_location_path(:vehicle_id => params[:vehicle_id], 
         :lng => @trip[:end_location].longitude, :lat => @trip[:end_location].latitude, 
         :z => @trip[:end_location].z)) + ")" unless @trip[:end_location] == nil
-    collect_trip_data
   end
 
   def destroy
@@ -87,94 +78,6 @@ class TripsController < ApplicationController
   end
 
   private
-
-    def collect_trip_data
-
-      @trips = [ @trip ] if @trips == nil
-
-      @trips.each_with_index do |trip, index|
-
-        lowest_lng, highest_lng, lowest_lat, highest_lat = nil
-
-        if trip.trip_detail == nil || trip.trip_detail.detailed_route == nil || trip.trip_detail.summary_route == nil
-
-          if trip.trip_detail == nil
-            trip.create_trip_detail
-            trip.trip_detail.vehicle_id = params[:vehicle_id]
-            trip.trip_detail.trip_id = trip.id
-          end
-
-          badge_engine = BadgeEngine.new(trip.trip_detail)
-
-          current_hash = []
-          current_hash_speed = nil
-
-          js_buffer = StringIO.new
-          js_buffer << "var polylines = [];\n"
-          js_buffer << "polylines.push([ ["
-
-          detailed_js_buffer = StringIO.new
-          detailed_js_buffer << "var polylines = [];\n"
-
-          first_line = true
-
-          trip.vehicle_telemetry_metrics.each do |vehicle|
-
-            if vehicle.id % 16 == 0
-              js_buffer << ',' unless first_line
-              js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
-              first_line = false
-            end
-
-            # Process this vehicle metric for the badge
-            badge_engine.process_metric(vehicle) unless trip.end_time == nil
-
-            lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
-            lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
-            highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
-            highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
-
-            case vehicle.speed
-            when 0..25
-              speed = 0
-            when 26..50
-              speed = 1
-            else
-              speed = 2
-            end
-
-            # Create a new hash at this speed
-            if current_hash_speed != speed
-              if current_hash.length > 0
-                detailed_js_buffer << "polylines.push([ "
-                detailed_js_buffer << (current_hash.to_json.html_safe)
-                detailed_js_buffer << ", \'"
-                detailed_js_buffer << @@color_scale[current_hash_speed]
-                detailed_js_buffer << "\']);\n"
-              end
-              current_hash_speed = speed
-              current_hash = []
-            end
-
-            current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
-          end
-
-          badge_engine.metrics_complete unless trip.end_time == nil
-
-          js_buffer << "], \'"
-          js_buffer << @@color_scale[0]
-          js_buffer << "\']);\n"
-
-          trip.trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
-          trip.trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(js_buffer.string.html_safe))
-
-          trip.trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
-          trip.trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
-
-          trip.trip_detail.save unless trip.end_time == nil
-        end
-      end
-    end
 
     def set_models
       @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil

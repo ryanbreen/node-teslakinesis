@@ -6,4 +6,94 @@ class Trip < ActiveRecord::Base
   has_one :origin, :class_name => "Location", :primary_key => 'start_location_id', :foreign_key => 'id'
   has_one :destination, :class_name => "Location", :primary_key => 'end_location_id', :foreign_key => 'id'
 
+  @@color_scale = [
+    "#74AD6A",
+    "#FFAA38",
+    "#C44537"
+  ]
+
+  # We want to populate a trip_detail record if one doesn't exist, so we override
+  # the default getter and add our logic.
+  alias_method :original_trip_detail, :trip_detail
+  def trip_detail
+    lowest_lng, highest_lng, lowest_lat, highest_lat = nil
+
+    return self.original_trip_detail if self.original_trip_detail != nil
+    
+    self.build_trip_detail
+    self.original_trip_detail.vehicle_id = self.vehicle_id
+
+    badge_engine = BadgeEngine.new(self.original_trip_detail)
+
+    current_hash = []
+    current_hash_speed = nil
+
+    js_buffer = StringIO.new
+    js_buffer << "var polylines = [];\n"
+    js_buffer << "polylines.push([ ["
+
+    detailed_js_buffer = StringIO.new
+    detailed_js_buffer << "var polylines = [];\n"
+
+    first_line = true
+
+    self.vehicle_telemetry_metrics.each do |vehicle|
+
+      if vehicle.id % 16 == 0
+        js_buffer << ',' unless first_line
+        js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
+        first_line = false
+      end
+
+      # Process this vehicle metric for the badge
+      badge_engine.process_metric(vehicle) unless self.end_time == nil
+
+      lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
+      lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
+      highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
+      highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
+
+      case vehicle.speed
+      when 0..25
+        speed = 0
+      when 26..50
+        speed = 1
+      else
+        speed = 2
+      end
+
+      # Create a new hash at this speed
+      if current_hash_speed != speed
+        if current_hash.length > 0
+          detailed_js_buffer << "polylines.push([ "
+          detailed_js_buffer << (current_hash.to_json.html_safe)
+          detailed_js_buffer << ", \'"
+          detailed_js_buffer << @@color_scale[current_hash_speed]
+          detailed_js_buffer << "\']);\n"
+        end
+        current_hash_speed = speed
+        current_hash = []
+      end
+
+      current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
+    end
+
+    badge_engine.metrics_complete unless self.end_time == nil
+
+    js_buffer << "], \'"
+    js_buffer << @@color_scale[0]
+    js_buffer << "\']);\n"
+
+    self.original_trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
+    self.original_trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(js_buffer.string.html_safe))
+
+    self.original_trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
+    self.original_trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
+
+    # Do not save this trip_detail unless the trip is done.
+    self.original_trip_detail.save unless self.end_time == nil
+
+    self.original_trip_detail
+  end
+
 end
