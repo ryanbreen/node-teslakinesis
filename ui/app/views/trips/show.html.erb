@@ -53,7 +53,7 @@
                         <dd><%= trip_destination_summary @trip %></dd>
                         <% if @trip.destination != nil && @trip.origin != nil %>
                         <dt>Links</dt>
-                        <dd><%= link_to 'All trips on this route', vehicle_trips_between_path(@vehicle, @trip.origin.name, @trip.destination.name) %></dd>
+                        <dd><%= link_to 'All trips on this route', vehicle_trips_between_path(@trip[:vehicle_id], @trip.origin.name, @trip.destination.name) %></dd>
                         <% end %>
                       </dl>
 
@@ -82,7 +82,7 @@
 $('#vehicle_telemetry').ace_ajax({
   content_url: function(hash) {
     //hash is the value from document url hash
-    var base = '/vehicles/<%= params[:vehicle_id]%>/vehicle_telemetry_metrics/<%= params[:id]%>?';
+    var base = '/vehicles/<%= @trip[:vehicle_id]%>/vehicle_telemetry_metrics/<%= @trip[:id]%>?';
 
     //take "url" param and return the relevant url to load
     return base + hash;
