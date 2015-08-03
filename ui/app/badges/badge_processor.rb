@@ -15,6 +15,7 @@ class BadgeProcessor
   end
 
   def create_badge(metric, data)
+    puts "Create badge called with #{metric} #{data}"
     return if metric == nil
 
     # Check whether the last time we issued this badge was less than a minute ago.  We do this

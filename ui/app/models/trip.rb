@@ -20,7 +20,8 @@ class Trip < ActiveRecord::Base
 
     return self.original_trip_detail if self.original_trip_detail != nil
     
-    self.build_trip_detail
+    self.build_trip_detail if self.end_time == nil
+    self.create_trip_detail unless self.end_time == nil
     self.original_trip_detail.vehicle_id = self.vehicle_id
 
     badge_engine = BadgeEngine.new(self.original_trip_detail)
@@ -37,23 +38,23 @@ class Trip < ActiveRecord::Base
 
     first_line = true
 
-    self.vehicle_telemetry_metrics.each do |vehicle|
+    self.vehicle_telemetry_metrics.each do |metric|
 
-      if vehicle.id % 16 == 0
+      if metric.id % 16 == 0
         js_buffer << ',' unless first_line
-        js_buffer << {:lat => vehicle.location.latitude, :lng => vehicle.location.longitude}.to_json.html_safe
+        js_buffer << {:lat => metric.location.latitude, :lng => metric.location.longitude}.to_json.html_safe
         first_line = false
       end
 
       # Process this vehicle metric for the badge
-      badge_engine.process_metric(vehicle) unless self.end_time == nil
+      badge_engine.process_metric(metric) unless self.end_time == nil
 
-      lowest_lat = vehicle.location.latitude if lowest_lat == nil || vehicle.location.latitude < lowest_lat
-      lowest_lng = vehicle.location.longitude if lowest_lng == nil || vehicle.location.longitude < lowest_lng
-      highest_lat = vehicle.location.latitude if highest_lat == nil || vehicle.location.latitude > highest_lat
-      highest_lng = vehicle.location.longitude if highest_lng == nil || vehicle.location.longitude > highest_lng
+      lowest_lat = metric.location.latitude if lowest_lat == nil || metric.location.latitude < lowest_lat
+      lowest_lng = metric.location.longitude if lowest_lng == nil || metric.location.longitude < lowest_lng
+      highest_lat = metric.location.latitude if highest_lat == nil || metric.location.latitude > highest_lat
+      highest_lng = metric.location.longitude if highest_lng == nil || metric.location.longitude > highest_lng
 
-      case vehicle.speed
+      case metric.speed
       when 0..25
         speed = 0
       when 26..50
@@ -75,7 +76,7 @@ class Trip < ActiveRecord::Base
         current_hash = []
       end
 
-      current_hash.push({:lat => vehicle.location.latitude, :lng => vehicle.location.longitude})
+      current_hash.push({:lat => metric.location.latitude, :lng => metric.location.longitude})
     end
 
     badge_engine.metrics_complete unless self.end_time == nil
