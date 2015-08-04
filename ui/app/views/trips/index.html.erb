@@ -17,14 +17,21 @@
   </div>
 
   <div class="row"><div class="col-xs-12">
- 
-  <% @trips.each_with_index do |trip, index| %>
 
-    <% trip.trip_detail %>
+  <%
+  @trips.each_with_index do |trip, index|
+    # Prime the pump, pulling in each trip_detail and making sure it's cached.
+    puts "There are #{trip.trip_detail.badges.length} badges for this trip after first load."
+  end
+  %>
 
-  <% end %>
+  <% @trips.each_with_index do |trip, index|
 
-  <% @trips.each_with_index do |trip, index| %>
+    #trip.reload.trip_detail
+
+    puts "There are #{trip.trip_detail.badges.length} badges for this trip after second load."
+
+    %>
 
     <div id="timeline-<%= index %>">
 
@@ -87,9 +94,9 @@
               </div>
             </div>
 
-            <% if trip.badges(true).length > 0 %>
+            <% if trip.badges.length > 0 %>
 
-              <% trip.badges(true).each_with_index do |badge, i| %>
+              <% trip.badges.each_with_index do |badge, i| %>
                 <div class="timeline-item clearfix">
                    <div class="timeline-info">
                      <i class="timeline-indicator ace-icon fa fa-certificate btn btn-<%= badge.badge_type.flavor %> no-hover"></i>

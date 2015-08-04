@@ -15,12 +15,11 @@ class TopSpeedBadgeProcessor < BadgeProcessor
   end
 
   def metrics_complete()
-    # if this is farther west than the current globally farthest west, delete the current
-    # badge and add a new one
-    badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: 7
+    # if this is the fastest we've gone, delete any prior badge for this vehicle
+    badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: self.class.badge_type_id
     if badge != nil
       if @current_top_speed > badge.vehicle_telemetry_metric.speed
-        badge.destroy
+        Badge.where(vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: self.class.badge_type_id).destroy_all
         create_badge @current_metric, @current_top_speed
       end 
     else

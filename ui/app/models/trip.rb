@@ -16,10 +16,11 @@ class Trip < ActiveRecord::Base
   # the default getter and add our logic.
   alias_method :original_trip_detail, :trip_detail
   def trip_detail
-    lowest_lng, highest_lng, lowest_lat, highest_lat = nil
 
     return self.original_trip_detail if self.original_trip_detail != nil
     
+    lowest_lng, highest_lng, lowest_lat, highest_lat = nil
+
     self.build_trip_detail if self.end_time == nil
     self.create_trip_detail unless self.end_time == nil
     self.original_trip_detail.vehicle_id = self.vehicle_id
@@ -93,8 +94,6 @@ class Trip < ActiveRecord::Base
 
     # Do not save this trip_detail unless the trip is done.
     self.original_trip_detail.save unless self.end_time == nil
-
-    self.badges.reload unless self.end_time == nil
 
     self.original_trip_detail
   end
