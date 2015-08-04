@@ -20,7 +20,7 @@ class GoWestYoungManBadgeProcessor < BadgeProcessor
     badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: 3
     if badge != nil
       if @current_most_westerly < badge.vehicle_telemetry_metric.location.x
-        badge.destroy
+        Badge.where(vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: self.class.badge_type_id).destroy_all
         create_badge @current_metric, @current_most_westerly
       end 
     else

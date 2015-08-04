@@ -17,10 +17,10 @@ class TheGreatWhiteNorthBadgeProcessor < BadgeProcessor
   def metrics_complete()
     # if this is farther north than the current globally farthest north, delete the current
     # badge and add a new one
-    badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: 5
+    badge = Badge.find_by vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: self.class.badge_type_id
     if badge != nil
       if @current_most_northerly > badge.vehicle_telemetry_metric.location.y
-        badge.destroy
+        Badge.where(vehicle_id: @trip_detail.trip.vehicle_id, badge_type_id: self.class.badge_type_id).destroy_all
         create_badge @current_metric, @current_most_northerly
       end 
     else
