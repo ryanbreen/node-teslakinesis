@@ -20,6 +20,12 @@
  
   <% @trips.each_with_index do |trip, index| %>
 
+    <% trip.trip_detail %>
+
+  <% end %>
+
+  <% @trips.each_with_index do |trip, index| %>
+
     <div id="timeline-<%= index %>">
 
       <div class="row"><div class="col-xs-12 col-sm-10 col-sm-offset-1">
@@ -81,9 +87,9 @@
               </div>
             </div>
 
-            <% if trip.badges.length > 0 %>
+            <% if trip.badges(true).length > 0 %>
 
-              <% trip.badges.each_with_index do |badge, i| %>
+              <% trip.badges(true).each_with_index do |badge, i| %>
                 <div class="timeline-item clearfix">
                    <div class="timeline-info">
                      <i class="timeline-indicator ace-icon fa fa-certificate btn btn-<%= badge.badge_type.flavor %> no-hover"></i>
