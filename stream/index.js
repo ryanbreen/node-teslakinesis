@@ -6,16 +6,11 @@
 //
 var es = require('event-stream');
 var request = require('request');
-var kinesis = require('kinesis');
 var teslams = require('teslams');
 var fs = require('fs');
 var util = require('util');
 
-function argchecker( argv ) {
-    if (argv.kinesis == true) throw 'MongoDB database name is unspecified. Use -d dbname or --db dbname';
-}
-
-var usage = 'Usage: $0 -u <username> -p <password> [-sz] --stream <kinesis_stream> \n' +
+var usage = 'Usage: $0 -u <username> -p <password> [-sz] --post_records_to <target_url> \n' +
     '   [--values <value list>] [--maxrpm <#num>] \n';
 
 var p_url = 'https://portal.vn.teslamotors.com/vehicles/';
@@ -51,9 +46,9 @@ var argv = require('optimist')
     .alias('z', 'zzz')
     .describe('z', 'enable sleep mode checking')
     .boolean(['s', 'z'])
-    .alias('S', 'stream')
-    .describe('S', 'AWS Kinesis stream')
-    .default('S', 'tesla')
+    .alias('P', 'post_records_to')
+    .describe('P', 'Target host to receive metrics')
+    .default('P', 'http://teslainput.ryanbreen.com/metric')
     .alias('f', 'file')
     .describe('f', 'Log file containing streaming data')
     .alias('r', 'maxrpm')
@@ -85,8 +80,7 @@ var creds = {
 
 teslams.get_vid({email: creds.username, password: creds.password}, function(vehicle_id) {
 
-    console.log('starting kinesis stream %s', argv.stream);
-    var kinesis_sink = require('kinesis').stream(argv.stream);
+    console.log('starting stream %s', argv.stream);
 
     argv.napcheck *= 60000;
     argv.sleepcheck *= 60000;
@@ -95,7 +89,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
 
     var reading = false;
 
-    var write_to_kinesis = function(line) {
+    var write_record = function(line) {
         var vals = line.split(/[,\n\r]/);
 
         if (vals.length !== (fields.length+1)) {
@@ -104,7 +98,9 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         }
 
         var record = {};
-        record["vehicle_id"] = vehicle_id;
+//        record["vehicle_id"] = vehicle_id;
+        // TODO: Hard-code this to something bogus for now
+        record["vehicle_id"] = "4d3d3d3";
         record["timestamp"] = vals[0];
         for (i=1; i<vals.length; i++) {
             record[fields[i-1]] = vals[i];
@@ -112,9 +108,11 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
 
         console.log('Writing record %s', JSON.stringify(record));
 
+/**
         kinesis_sink.write({
             Data: new Buffer(JSON.stringify(record)).toString('base64')
         });
+**/
     }
 
     // Support loading a file that contains a streaming log.  This gives us a mechanism to test input without a car
@@ -123,7 +121,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         fs.createReadStream(argv.file).
             pipe(es.split(/[\r]?\n/)).
             pipe(es.mapSync(function(data) {
-                  write_to_kinesis(data);
+                  write_record(data);
               }));
 
         return;
@@ -298,7 +296,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
             } else {
                 
                 //for (i = 0; i < vals.length; i += nFields) { // seems unecessary and loops once anyway
-                write_to_kinesis(data.toString().trim());
+                write_record(data.toString().trim());
                 //tesla_telemetry_stream.push(JSON.stringify(record));
                 
                 lastss = ss; 
@@ -504,10 +502,10 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
                 sleepmode = false;
                 if (firstTime) {    // initialize only once
                     firstTime = false;
-                    if (argv.kinesis) { // initialize database
+                    if (argv.post_records_to) { // if we are posting records, start 
                         initdb(vehicles);
                     } else { // initialize first line of CSV file output with field names 
-                        //stream.write('timestamp,' + argv.values + '\n');
+                        console.error('Invalid everything.')
                     }
                 }
                 tsla_poll( vehicles.id, vehicles.vehicle_id, vehicles.tokens[0] );

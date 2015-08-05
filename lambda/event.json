@@ -1,61 +1,16 @@
 {
-  "Records": [
-    {
-      "kinesis": {
-        "partitionKey": "partitionKey-3",
-        "kinesisSchemaVersion": "1.0",
-        "data": "ewogICAgInZlaGljbGVfaWQiOiAiNjg1NjE5ODYxMjI2MDY3MTQ4MiIsCiAgICAidGltZXN0YW1wIjogIjE0MzE3MzI0MzM0ODUiLAogICAgInNwZWVkIjogIiIsCiAgICAib2RvbWV0ZXIiOiAiMzIyODkuNCIsCiAgICAic29jIjogIjg1IiwKICAgICJlbGV2YXRpb24iOiAiNTAiLAogICAgImVzdF9oZWFkaW5nIjogIjY4IiwKICAgICJlc3RfbGF0IjogIjQyLjQ3OTg2MyIsCiAgICAiZXN0X2xuZyI6ICItNzEuMjA4MzgxIiwKICAgICJwb3dlciI6ICIzNSIsCiAgICAic2hpZnRfc3RhdGUiOiAiIiwKICAgICJyYW5nZSI6ICIxNzAiLAogICAgImVzdF9yYW5nZSI6ICIxMzIiLAogICAgImhlYWRpbmciOiAiNjgiCn0=",
-        "sequenceNumber": "49545115243490985018280067714973144582180062593244200961"
-      },
-      "eventSource": "aws:kinesis",
-      "eventID": "shardId-000000000000:49545115243490985018280067714973144582180062593244200961",
-      "invokeIdentityArn": "arn:aws:iam::465070256155:role/lambda_kinesis_role",
-      "eventVersion": "1.0",
-      "eventName": "aws:kinesis:record",
-      "eventSourceARN": "arn:aws:kinesis:tesla",
-      "awsRegion": "us-east-1"
-    },{
-      "kinesis": {
-        "partitionKey": "partitionKey-3",
-        "kinesisSchemaVersion": "1.0",
-        "data": "ewogICAgInZlaGljbGVfaWQiOiAiNjg1NjE5ODYxMjI2MDY3MTQ4MiIsCiAgICAidGltZXN0YW1wIjogIjE0MzE3MzI0MzM0ODYiLAogICAgInNwZWVkIjogIi0xIiwKICAgICJvZG9tZXRlciI6ICIzMjI4OS40IiwKICAgICJzb2MiOiAiODUiLAogICAgImVsZXZhdGlvbiI6ICI1MCIsCiAgICAiZXN0X2hlYWRpbmciOiAiNjgiLAogICAgImVzdF9sYXQiOiAiNDIuNDc5ODYzIiwKICAgICJlc3RfbG5nIjogIi03MS4yMDgzODEiLAogICAgInBvd2VyIjogIjM1IiwKICAgICJzaGlmdF9zdGF0ZSI6ICJSIiwKICAgICJyYW5nZSI6ICIxNzAiLAogICAgImVzdF9yYW5nZSI6ICIxMzIiLAogICAgImhlYWRpbmciOiAiNjgiCn0=",
-        "sequenceNumber": "49545115243490985018280067714973144582180062593244200961"
-      },
-      "eventSource": "aws:kinesis",
-      "eventID": "shardId-000000000000:49545115243490985018280067714973144582180062593244200961",
-      "invokeIdentityArn": "arn:aws:iam::465070256155:role/lambda_kinesis_role",
-      "eventVersion": "1.0",
-      "eventName": "aws:kinesis:record",
-      "eventSourceARN": "arn:aws:kinesis:tesla",
-      "awsRegion": "us-east-1"
-    },{
-      "kinesis": {
-        "partitionKey": "partitionKey-3",
-        "kinesisSchemaVersion": "1.0",
-        "data": "ewogICAgInZlaGljbGVfaWQiOiAiNjg1NjE5ODYxMjI2MDY3MTQ4MiIsCiAgICAidGltZXN0YW1wIjogIjE0MzE3MzI0MzM0ODciLAogICAgInNwZWVkIjogIjEiLAogICAgIm9kb21ldGVyIjogIjMyMjg5LjQiLAogICAgInNvYyI6ICI4NSIsCiAgICAiZWxldmF0aW9uIjogIjUwIiwKICAgICJlc3RfaGVhZGluZyI6ICI2OCIsCiAgICAiZXN0X2xhdCI6ICI0Mi40Nzk4NjMiLAogICAgImVzdF9sbmciOiAiLTcxLjIwODM4MSIsCiAgICAicG93ZXIiOiAiMzUiLAogICAgInNoaWZ0X3N0YXRlIjogIkQiLAogICAgInJhbmdlIjogIjE3MCIsCiAgICAiZXN0X3JhbmdlIjogIjEzMiIsCiAgICAiaGVhZGluZyI6ICI2OCIKfQ==",
-        "sequenceNumber": "49545115243490985018280067714973144582180062593244200961"
-      },
-      "eventSource": "aws:kinesis",
-      "eventID": "shardId-000000000000:49545115243490985018280067714973144582180062593244200961",
-      "invokeIdentityArn": "arn:aws:iam::465070256155:role/lambda_kinesis_role",
-      "eventVersion": "1.0",
-      "eventName": "aws:kinesis:record",
-      "eventSourceARN": "arn:aws:kinesis:tesla",
-      "awsRegion": "us-east-1"
-    },{
-      "kinesis": {
-        "partitionKey": "partitionKey-3",
-        "kinesisSchemaVersion": "1.0",
-        "data": "ewogICAgInZlaGljbGVfaWQiOiAiNjg1NjE5ODYxMjI2MDY3MTQ4MiIsCiAgICAidGltZXN0YW1wIjogIjE0MzE3MzI0MzM0ODciLAogICAgInNwZWVkIjogIiIsCiAgICAib2RvbWV0ZXIiOiAiMzIyODkuNCIsCiAgICAic29jIjogIjg1IiwKICAgICJlbGV2YXRpb24iOiAiNTAiLAogICAgImVzdF9oZWFkaW5nIjogIjY4IiwKICAgICJlc3RfbGF0IjogIjQyLjQ3OTg2MyIsCiAgICAiZXN0X2xuZyI6ICItNzEuMjA4MzgxIiwKICAgICJwb3dlciI6ICIzNSIsCiAgICAic2hpZnRfc3RhdGUiOiAiIiwKICAgICJyYW5nZSI6ICIxNzAiLAogICAgImVzdF9yYW5nZSI6ICIxMzIiLAogICAgImhlYWRpbmciOiAiNjgiCn0=",
-        "sequenceNumber": "49545115243490985018280067714973144582180062593244200961"
-      },
-      "eventSource": "aws:kinesis",
-      "eventID": "shardId-000000000000:49545115243490985018280067714973144582180062593244200961",
-      "invokeIdentityArn": "arn:aws:iam::465070256155:role/lambda_kinesis_role",
-      "eventVersion": "1.0",
-      "eventName": "aws:kinesis:record",
-      "eventSourceARN": "arn:aws:kinesis:tesla",
-      "awsRegion": "us-east-1"
-    }
-  ]
+    "vehicle_id": "ryan_test_vehicle",
+    "timestamp": "1431732433487",
+    "speed": "88",
+    "odometer": "32289.4",
+    "soc": "85",
+    "elevation": "72",
+    "est_heading": "68",
+    "est_lat": "42.466758",
+    "est_lng": "-71.229481",
+    "power": "35",
+    "shift_state": "D",
+    "range": "170",
+    "est_range": "132",
+    "heading": "68"
 }

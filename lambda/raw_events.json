@@ -1,7 +1,7 @@
 {
-    "vehicle_id": "6856198612260671482",
+    "vehicle_id": "ryan_test_vehicle",
     "timestamp": "1431732433487",
-    "speed": "",
+    "speed": "88",
     "odometer": "32289.4",
     "soc": "85",
     "elevation": "72",
