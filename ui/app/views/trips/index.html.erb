@@ -21,15 +21,13 @@
   <%
   @trips.each_with_index do |trip, index|
     # Prime the pump, pulling in each trip_detail and making sure it's cached.
-    puts "There are #{trip.trip_detail.badges.length} badges for this trip after first load."
+    puts "There are #{trip.trip_detail.badges.length} badges for this trip after first load for #{trip.id}."
   end
   %>
 
   <% @trips.each_with_index do |trip, index|
 
-    #trip.reload.trip_detail
-
-    puts "There are #{trip.trip_detail.badges.length} badges for this trip after second load."
+    puts "There are #{trip.trip_detail.badges.length} badges for this trip after second load for #{trip.id}."
 
     %>
 
