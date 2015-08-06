@@ -110,7 +110,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
 
         line_count += 1;
 
-        request.post({'url': 'https://fx4akdkh33.execute-api.us-east-1.amazonaws.com/v1/metric', body: record, json: true},
+        request.post({'url': argv.post_records_to, body: record, json: true},
             function(err, httpMessage, body) {
                 if (err) return console.error(err);
              
