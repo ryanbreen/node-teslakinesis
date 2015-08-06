@@ -1,0 +1,65 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "VehicleTelemetryMetrics",
+    "description": "A single metric from a Tesla",
+    "type": "object",
+    "properties": {
+        "vehicle_id": {
+            "description": "The unique identifier for this car",
+            "type": "string"
+        },
+        "timestamp": {
+            "description": "Epoch time for this metric",
+            "type": "integer"
+        },
+        "speed": {
+            "description": "Speed of the vehicle",
+            "type": "integer"
+        },
+        "odometer": {
+            "description": "Total miles traveled",
+            "type": "integer"
+        },
+        "soc": {
+            "description": "Percentage of charge remaining",
+            "type": "integer"
+        },
+        "elevation": {
+            "description": "Meters above sea level",
+            "type": "integer"
+        },
+        "est_heading": {
+            "description": "Compass direction in degrees",
+            "type": "integer"
+        },
+        "est_lat": {
+            "description": "Latitude",
+            "type": "number"
+        },
+        "est_lng": {
+            "description": "Longitude",
+            "type": "number"
+        },
+        "power": {
+            "description": "Power usage",
+            "type": "integer"
+        },
+        "shift_state": {
+            "description": "Current gear position",
+            "type": "string"
+        },
+        "range": {
+            "description": "Miles of range remaining (ideal)",
+            "type": "integer"
+        },
+        "est_range": {
+            "description": "Miles of range remaining (estimated based on usage conditions)",
+            "type": "integer"
+        },
+        "heading": {
+            "description": "Compass direction in degrees",
+            "type": "integer"
+        }
+    },
+    "required": ["vehicle_id", "timestamp", "speed", "odometer", "soc", "elevation", "est_heading", "est_lat", "est_lng", "power", "shift_state", "range", "est_range", "heading"]
+}
