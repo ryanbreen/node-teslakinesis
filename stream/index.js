@@ -36,7 +36,6 @@ var ncount = 0;
 
 var argv = require('optimist')
     .usage(usage)
-    .check(argchecker)
     .alias('u', 'username')
     .describe('u', 'Teslamotors.com login')
     .alias('p', 'password')
@@ -89,6 +88,9 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
 
     var reading = false;
 
+    var line_count = 0;
+    var complete_count = 0;
+
     var write_record = function(line) {
         var vals = line.split(/[,\n\r]/);
 
@@ -98,9 +100,7 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
         }
 
         var record = {};
-//        record["vehicle_id"] = vehicle_id;
-        // TODO: Hard-code this to something bogus for now
-        record["vehicle_id"] = "4d3d3d3";
+        record["vehicle_id"] = vehicle_id;
         record["timestamp"] = vals[0];
         for (i=1; i<vals.length; i++) {
             record[fields[i-1]] = vals[i];
@@ -108,12 +108,18 @@ teslams.get_vid({email: creds.username, password: creds.password}, function(vehi
 
         console.log('Writing record %s', JSON.stringify(record));
 
-/**
-        kinesis_sink.write({
-            Data: new Buffer(JSON.stringify(record)).toString('base64')
-        });
-**/
-    }
+        line_count += 1;
+
+        request.post({'url': 'https://fx4akdkh33.execute-api.us-east-1.amazonaws.com/v1/metric', body: record, json: true},
+            function(err, httpMessage, body) {
+                if (err) return console.error(err);
+             
+                complete_count += 1;
+
+                if ((complete_count % 100) === 0) console.log('completed %s of %s', complete_count, line_count);   
+            }
+        );
+    };
 
     // Support loading a file that contains a streaming log.  This gives us a mechanism to test input without a car
     // in motion.

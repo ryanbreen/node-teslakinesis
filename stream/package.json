@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "true",
-    "start": "node . -u $TESLA_USER -p $TESLA_PASSWORD --stream tesla"
+    "start": "node . -u $TESLA_USER -p $TESLA_PASSWORD"
   },
   "author": "Ryan Breen",
   "repository": "https://github.com/ryanbreen/node-teslakinesis",
