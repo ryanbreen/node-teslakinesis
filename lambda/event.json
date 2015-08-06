@@ -1,6 +1,6 @@
 {
     "vehicle_id": "ryan_test_vehicle",
-    "timestamp": "1431732433487",
+    "timestamp": "1431732433493",
     "speed": "88",
     "odometer": "32289.4",
     "soc": "85",
@@ -9,7 +9,7 @@
     "est_lat": "42.466758",
     "est_lng": "-71.229481",
     "power": "35",
-    "shift_state": "D",
+    "shift_state": "",
     "range": "170",
     "est_range": "132",
     "heading": "68"
