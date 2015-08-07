@@ -125,12 +125,14 @@
                </div>
 
                <div class="widget-box transparent">
-                 <div class="widget-body"><div class="widget-main">
+                 <div class="widget-header widget-header-small">
                   <h5 class="widget-title smaller"><%= origin_link trip %></h5>
-                  <div class="pull-right">
+                  <span class="widget-toolbar">
                     <i class="ace-icon fa fa-clock-o bigger-110"></i>
                     <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>
-                  </div>
+                  </span>
+                </div>
+                 <div class="widget-body"><div class="widget-main">
                 </div></div>
               </div>
             </div>
