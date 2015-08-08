@@ -87,7 +87,9 @@
                   </span>
                 </div>
                 <div class="widget-body"><div class="widget-main">
-                  <%= render 'trip', :index => index, :trip => trip %>
+                  <%= link_to vehicle_trip_path(trip[:vehicle_id], trip.id) do %>
+                    <%= render 'trip', :index => index, :trip => trip %>
+                  <% end %>
                 </div></div>
               </div>
             </div>
