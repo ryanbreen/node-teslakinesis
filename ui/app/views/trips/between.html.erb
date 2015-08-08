@@ -1,3 +1,4 @@
+
 <div id="breadcrumbs" class="breadcrumbs">
  <ul class="breadcrumb">
    <li><i class="fa fa-home home-icon"></i> Vehicles</li>
@@ -18,37 +19,55 @@
      </h1>
     </div>
 
-    <div class="row"><div class="col-xs-12">
-      <table id="simple-table" class="table table-striped table-bordered table-hover">
-        <thead>
-          <tr>
-            <th>Start time</th>
-            <th>Duration</th>
-            <th>Route</th>
-          </tr>
-        </thead>
+  <div class="row"><div class="col-xs-12">
 
-        <tbody>
-    <% @trips.each_with_index do |trip, index| %>
+  <% @trips.each_with_index do |trip, index| %>
 
-          <tr>
-            <td style="vertical-align: middle"><%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></td>
-            <td style="vertical-align: middle"><%= pretty_precise_duration trip %></td>
-            <td class="col-md-6"><a href="<%= vehicle_trip_path(params[:vehicle_id], trip) %>">
+    <div id="timeline-<%= index %>">
+
+      <div class="row"><div class="col-xs-12 col-sm-10 col-sm-offset-1">
+
+        <div class="timeline-container">
+          <div class="timeline-label">
+             <span class="label label-primary arrowed-in-right label-lg">
+               <b><%= pretty_start_date trip %></b>
+             </span>
+          </div>
+          <div class="timeline-items">
+
+            <!-- Populate Destination, if any -->
+            <div class="timeline-item clearfix">
+               <div class="timeline-info">
+                 <i class="timeline-indicator ace-icon fa fa-<%= trip.end_time == nil ? 'play-circle' : 'stop' %> btn btn-danger no-hover"></i>
+               </div>
+
+               <div class="widget-box transparent">
+                 <div class="widget-header widget-header-small">
+                    <h5 class="widget-title smaller">#<%= 1 + index + (params[:page] ? params[:page] : 0) %> <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></h5>
+                   <span class="widget-toolbar">
+                      <span class="label label-warning tesla-tooltip" title="<%= pretty_precise_duration trip %>"><%= pretty_precise_duration trip %></span>
+                      <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
+                    </span>
+                </div>
+                <div class="widget-body"><div class="widget-main">
+                  <%= link_to vehicle_trip_path(trip[:vehicle_id], trip.id) do %>
                     <%= render 'trip', :index => index, :trip => trip %>
-                </a>
-            </td>
-          </tr>
+                  <% end %>
+                </div></div>
+              </div>
+            </div>
 
-    <% end %>
-
-        </tbody>
-      </table>
-
-    <div class="trip_pagination">
-    <%= will_paginate @trips, :container => false %>
+          </div>
+        </div>
+        <div class="space-6"></div>
+      </div></div>
     </div>
+<% end %>
 
-    </div></div>
-
+<div class="trip_pagination">
+<%= will_paginate @trips, :container => false %>
 </div>
+
+</div></div>
+
+</div><!-- /.page-content -->
