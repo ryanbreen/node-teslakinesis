@@ -43,7 +43,7 @@
 
                <div class="widget-box transparent">
                  <div class="widget-header widget-header-small">
-                    <h5 class="widget-title smaller">#<%= 1 + index + (params[:page] ? params[:page] : 0) %> <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></h5>
+                    <h5 class="widget-title smaller">#<%= 1 + index + (params[:page] ? (params[:page].to_i * 10) : 0) %> <%= trip.end_time.in_time_zone('America/New_York').to_formatted_s(:long_us) %></h5>
                    <span class="widget-toolbar">
                       <span class="label label-warning tesla-tooltip" title="<%= pretty_precise_duration trip %>"><%= pretty_precise_duration trip %></span>
                       <a href="#" data-action="collapse"><i class="ace-icon fa fa-chevron-up"></i></a>
