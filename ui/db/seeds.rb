@@ -123,7 +123,7 @@ if BadgeType.count == 0
     id: 13,
     name: "trip-slowest",
     description: "This is the slowest you've ever completed this trip.  Was Jenn driving?",
-    icon: 'hand-stop-o',
+    icon: 'trash',
     flavor: 'danger'
   )
 end

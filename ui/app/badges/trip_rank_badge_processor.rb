@@ -20,6 +20,8 @@ class TripRankBadgeProcessor < BadgeProcessor
         :end_location_id => trip.end_location_id).
       order("EXTRACT(EPOCH FROM (end_time - start_time))").limit(3)
 
+    puts "When querying from #{trip.id}, found top three:\n#{top_three_trips.to_yaml}"
+
     # Check to see if this trip is in the top 3.  If so, delete all current trip rank badges
     # for this route and create badges for the new 3.
     matched = top_three_trips.select {|t| trip.id = t.id}
@@ -43,10 +45,28 @@ class TripRankBadgeProcessor < BadgeProcessor
         create_badge t, (i + 1)
       end
 
-    else
-      # Otherwise, check to see if this is the slowest trip.  If so, delete any current trip
-      # for this route badged as slowest and badge this one.
     end
+
+    # Check to see if this is the slowest trip.  If so, delete any current trip
+    # for this route badged as slowest and badge this one.
+    slowest_trip =
+      Trip.where(
+        :vehicle_id => trip[:vehicle_id],
+        :start_location_id => trip.start_location_id,
+        :end_location_id => trip.end_location_id).
+      order("EXTRACT(EPOCH FROM (end_time - start_time)) DESC").limit(1)[0]
+
+    # Delete any previous slowest and create a badge
+    Badge.where(
+      :vehicle_id => trip[:vehicle_id],
+      :trip_id => Trip.where(
+        :vehicle_id => trip[:vehicle_id],
+        :start_location_id => trip.start_location_id,
+        :end_location_id => trip.end_location_id
+      ),
+      :badge_type_id => 13
+    ).delete_all
+    create_badge slowest_trip, 13
   end
 
   def create_badge(trip, data)
@@ -59,7 +79,7 @@ class TripRankBadgeProcessor < BadgeProcessor
       :trip_id => trip.id,
       :trip_detail_id => trip.trip_detail.id,
       :vehicle_telemetry_metric_id => metric[0].id,
-      :badge_type_id => 9 + data, # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
+      :badge_type_id => (data == 13) ? data : 9 + data, # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
       :data => data
     )
   end

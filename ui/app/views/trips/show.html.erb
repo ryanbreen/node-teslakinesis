@@ -58,11 +58,11 @@
                       </dl>
 
                       <div class="row">
-                        <% if @trip.badges.length > 0 %>
+                        <% if @trip.trip_detail.badges(true).length > 0 %>
                         <h5 class="header smaller lighter blue">Badges</h5>
                         <div>
                           <div class="btn-group">
-                          <% @trip.badges.each do |badge| %>
+                          <% @trip.trip_detail.badges.each do |badge| %>
                             <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>" ></span>
                           <% end %>
                           </div>
