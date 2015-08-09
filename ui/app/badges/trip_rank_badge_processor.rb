@@ -10,7 +10,7 @@ class TripRankBadgeProcessor < BadgeProcessor
   end
 
   def metrics_complete()
-    trip = @trip_detal.trip
+    trip = @trip_detail.trip
     return if trip.start_location_id == nil || trip.end_location_id == nil
 
     top_three_trips =
@@ -26,13 +26,16 @@ class TripRankBadgeProcessor < BadgeProcessor
     if matched
       Badge.where(
         :vehicle_id => trip.vehicle_id,
-        :start_location_id => trip.start_location_id,
-        :end_location_id => trip.end_location_id,
-        :badge_id => [10, 11, 12]
+        :trip_id => Trip.where(
+          :vehicle_id => trip.vehicle_id,
+          :start_location_id => trip.start_location_id,
+          :end_location_id => trip.end_location_id
+        ),
+        :badge_type_id => [10, 11, 12]
       ).destroy_all
 
       top_three_trips.each_with_index do |t, i|
-        create_badge trip, i
+        create_badge trip, (i + 1)
       end
 
     else
@@ -47,10 +50,10 @@ class TripRankBadgeProcessor < BadgeProcessor
     metric = VehicleTelemetryMetric.where(:trip_id => trip.id).order('id DESC').limit(1)
 
     Badge.create(
-      :vehicle_id => trip.vehicle_id,
+      :vehicle_id => trip[:vehicle_id],
       :trip_id => trip.id,
-      :trip_detail_id => trip.trip_detail_id,
-      :vehicle_telemetry_metric_id => metric.id,
+      :trip_detail_id => trip.trip_detail.id,
+      :vehicle_telemetry_metric_id => metric[0].id,
       :badge_type_id => 9 + data, # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
       :data => data
     )
