@@ -75,7 +75,7 @@ if BadgeType.count == 0
     id: 7,
     name: "top-speed",
     description: "This is the fastest you've gone on record.  Are you proud?",
-    icon: 'trophy',
+    icon: 'flag-checkered',
     flavor: 'danger'
   )
 
@@ -93,6 +93,38 @@ if BadgeType.count == 0
     description: "Less than 25% charge.  Range anxiety?",
     icon: 'exclamation-triangle',
     flavor: 'warning'
+  )
+
+  BadgeType.create(
+    id: 10,
+    name: "trip-first",
+    description: "This is the fastest you've ever completed this trip!",
+    icon: 'trophy',
+    flavor: 'danger'
+  )
+
+  BadgeType.create(
+    id: 11,
+    name: "trip-second",
+    description: "This is the second fastest you've ever completed this trip.  If you ain't first, you're last!",
+    icon: 'trophy',
+    flavor: 'warning'
+  )
+
+  BadgeType.create(
+    id: 12,
+    name: "trip-third",
+    description: "This is the third fastest you've ever completed this trip.  At least you placed!",
+    icon: 'trophy',
+    flavor: 'success'
+  )
+
+  BadgeType.create(
+    id: 13,
+    name: "trip-slowest",
+    description: "This is the slowest you've ever completed this trip.  Was Jenn driving?",
+    icon: 'hand-stop-o',
+    flavor: 'danger'
   )
 end
 
