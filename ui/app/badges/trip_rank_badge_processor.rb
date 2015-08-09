@@ -15,7 +15,7 @@ class TripRankBadgeProcessor < BadgeProcessor
 
     top_three_trips =
       Trip.where(
-        :vehicle_id => trip.vehicle_id,
+        :vehicle_id => trip[:vehicle_id],
         :start_location_id => trip.start_location_id,
         :end_location_id => trip.end_location_id).
       order("EXTRACT(EPOCH FROM (end_time - start_time))").limit(3)
@@ -23,19 +23,24 @@ class TripRankBadgeProcessor < BadgeProcessor
     # Check to see if this trip is in the top 3.  If so, delete all current trip rank badges
     # for this route and create badges for the new 3.
     matched = top_three_trips.select {|t| trip.id = t.id}
+    # Make sure each trip has its trip_detail object initiated.  We want to do this before
+    # adding badges or we will get into a weird loop where this badge is being created by
+    # trips in the top_three_trips array after we've deleted dupes.
+    top_three_trips.each {|t| t.trip_detail}
     if matched
       Badge.where(
-        :vehicle_id => trip.vehicle_id,
+        :vehicle_id => trip[:vehicle_id],
         :trip_id => Trip.where(
-          :vehicle_id => trip.vehicle_id,
+          :vehicle_id => trip[:vehicle_id],
           :start_location_id => trip.start_location_id,
           :end_location_id => trip.end_location_id
         ),
         :badge_type_id => [10, 11, 12]
-      ).destroy_all
+      ).delete_all
 
       top_three_trips.each_with_index do |t, i|
-        create_badge trip, (i + 1)
+        puts "Creating badge at rank #{i} for trip #{t.id} from #{trip.start_location_id} to #{trip.end_location_id}"
+        create_badge t, (i + 1)
       end
 
     else
