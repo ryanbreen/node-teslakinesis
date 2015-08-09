@@ -18,9 +18,12 @@ class TripRankBadgeProcessor < BadgeProcessor
         :vehicle_id => trip[:vehicle_id],
         :start_location_id => trip.start_location_id,
         :end_location_id => trip.end_location_id).
-      order("EXTRACT(EPOCH FROM (end_time - start_time))").limit(3)
+      order("EXTRACT(EPOCH FROM (end_time - start_time))").limit(4).to_a
+    at_least_four = top_three_trips.length == 4
 
-    puts "When querying from #{trip.id}, found top three:\n#{top_three_trips.to_yaml}"
+    # Pop off the 4th element so that there are really 3 trips.
+    top_three_trips.pop
+    puts "there are now #{top_three_trips.length} trips in array"
 
     # Check to see if this trip is in the top 3.  If so, delete all current trip rank badges
     # for this route and create badges for the new 3.
@@ -47,26 +50,30 @@ class TripRankBadgeProcessor < BadgeProcessor
 
     end
 
-    # Check to see if this is the slowest trip.  If so, delete any current trip
-    # for this route badged as slowest and badge this one.
-    slowest_trip =
-      Trip.where(
-        :vehicle_id => trip[:vehicle_id],
-        :start_location_id => trip.start_location_id,
-        :end_location_id => trip.end_location_id).
-      order("EXTRACT(EPOCH FROM (end_time - start_time)) DESC").limit(1)[0]
+    # If there are at least 4 trips (meaning, there's room for a top 3 and a last place),
+    # calculate last place.
+    if at_least_four
+      # Check to see if this is the slowest trip.  If so, delete any current trip
+      # for this route badged as slowest and badge this one.
+      slowest_trip =
+        Trip.where(
+          :vehicle_id => trip[:vehicle_id],
+          :start_location_id => trip.start_location_id,
+          :end_location_id => trip.end_location_id).
+        order("EXTRACT(EPOCH FROM (end_time - start_time)) DESC").limit(1)[0]
 
-    # Delete any previous slowest and create a badge
-    Badge.where(
-      :vehicle_id => trip[:vehicle_id],
-      :trip_id => Trip.where(
+      # Delete any previous slowest and create a badge
+      Badge.where(
         :vehicle_id => trip[:vehicle_id],
-        :start_location_id => trip.start_location_id,
-        :end_location_id => trip.end_location_id
-      ),
-      :badge_type_id => 13
-    ).delete_all
-    create_badge slowest_trip, 13
+        :trip_id => Trip.where(
+          :vehicle_id => trip[:vehicle_id],
+          :start_location_id => trip.start_location_id,
+          :end_location_id => trip.end_location_id
+        ),
+        :badge_type_id => 13
+      ).delete_all
+      create_badge slowest_trip, 13
+    end
   end
 
   def create_badge(trip, data)
