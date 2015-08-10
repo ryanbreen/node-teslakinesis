@@ -22,7 +22,7 @@ class TripRankBadgeProcessor < BadgeProcessor
     at_least_four = top_three_trips.length == 4
 
     # Pop off the 4th element so that there are really 3 trips.
-    top_three_trips.pop
+    top_three_trips.pop if at_least_four
     puts "there are now #{top_three_trips.length} trips in array"
 
     # Check to see if this trip is in the top 3.  If so, delete all current trip rank badges
