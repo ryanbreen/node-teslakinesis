@@ -81,12 +81,16 @@ class TripRankBadgeProcessor < BadgeProcessor
     # the trip ended.
     metric = VehicleTelemetryMetric.where(:trip_id => trip.id).order('id DESC').limit(1)
 
+    badge_type_id = data
+    # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
+    badge_type_id = 9 + data unless badge_type_id == 13
+
     Badge.create(
       :vehicle_id => trip[:vehicle_id],
       :trip_id => trip.id,
       :trip_detail_id => trip.trip_detail.id,
       :vehicle_telemetry_metric_id => metric[0].id,
-      :badge_type_id => (data == 13) ? data : 9 + data, # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
+      :badge_type_id => badge_type_id,
       :data => data
     )
   end
