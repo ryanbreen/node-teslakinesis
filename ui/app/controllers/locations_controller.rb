@@ -4,6 +4,9 @@ class LocationsController < ApplicationController
   before_action :set_vehicle, only: [:index, :show, :edit, :update, :destroy]
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
+  after_action :update_trips_after_delete, only: :destroy
+  after_action :update_trips_after_create, only: :create
+
   # GET /locations
   # GET /locations.json
   def index
@@ -86,6 +89,7 @@ class LocationsController < ApplicationController
   def destroy
     @vehicle = Vehicle.find(@location.vehicle_id)
     @location.destroy
+
     respond_to do |format|
       format.html { redirect_to vehicle_locations_url(@vehicle), notice: 'Location was successfully destroyed.' }
       format.json { head :no_content }
@@ -93,6 +97,34 @@ class LocationsController < ApplicationController
   end
 
   private
+
+    def update_trips_after_create
+      puts "Location #{@location.id} changed.  Reset trip details for matching trips."
+
+      # Retrieve all trips that match the old location
+      matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
+
+      matched_trips.each do |trip|
+        # Delete trip detail
+        trip.trip_detail.destroy
+      end
+    end
+
+    def update_trips_after_delete
+      puts "Location #{@location.id} changed.  Reset trip details for matching trips."
+
+      # Retrieve all trips that match the old location
+      matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
+
+      matched_trips.each do |trip|
+        # Delete trip detail
+        trip.trip_detail.destroy
+
+        # Update the record
+        trip.origin.delete if trip.start_location_id == @location.id
+        trip.destination.delete if trip.end_location_id == @location.id
+      end
+    end
 
     def set_vehicle
       @vehicle = Vehicle.find(params[:vehicle_id])
