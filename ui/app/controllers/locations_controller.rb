@@ -121,8 +121,8 @@ class LocationsController < ApplicationController
         trip.trip_detail.destroy
 
         # Update the record
-        trip.origin.delete if trip.start_location_id == @location.id
-        trip.destination.delete if trip.end_location_id == @location.id
+        trip.start_location_id = nil if trip.start_location_id == @location.id
+        trip.end_location_id = nil if trip.end_location_id == @location.id
       end
     end
 
