@@ -117,6 +117,13 @@ class LocationsController < ApplicationController
       matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
 
       matched_trips.each do |trip|
+
+        # Delete any trip place badges
+        Badge.where(
+          :trip_id => trip.id,
+          :badge_type_id => [10, 11, 12, 13]
+        ).delete_all
+
         # Delete trip detail
         trip.trip_detail.destroy
 
