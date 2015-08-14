@@ -45,7 +45,7 @@ class TripRankBadgeProcessor < BadgeProcessor
 
       top_three_trips.each_with_index do |t, i|
         puts "Creating badge at rank #{i} for trip #{t.id} from #{trip.start_location_id} to #{trip.end_location_id}"
-        create_badge t, (i + 1)
+        create_badge t, (trip.end_time - trip.start_time).round, (i + 10)
       end
 
     end
@@ -72,18 +72,14 @@ class TripRankBadgeProcessor < BadgeProcessor
         ),
         :badge_type_id => 13
       ).delete_all
-      create_badge slowest_trip, 13
+      create_badge slowest_trip, (trip.end_time - trip.start_time).round, 13
     end
   end
 
-  def create_badge(trip, data)
+  def create_badge(trip, data, badge_type_id)
     # The last metric for this trip is what we should associate with this badge.  It's when
     # the trip ended.
     metric = VehicleTelemetryMetric.where(:trip_id => trip.id).order('id DESC').limit(1)
-
-    badge_type_id = data
-    # This works because our badges are 10, 11, and 12 and data will be 1, 2, or 3
-    badge_type_id = 9 + data unless badge_type_id == 13
 
     Badge.create(
       :vehicle_id => trip[:vehicle_id],
