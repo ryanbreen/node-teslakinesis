@@ -81,6 +81,8 @@ class TripRankBadgeProcessor < BadgeProcessor
     # the trip ended.
     metric = VehicleTelemetryMetric.where(:trip_id => trip.id).order('id DESC').limit(1)
 
+    puts "create_badge #{trip.id} #{data} #{badge_type_id}"
+
     Badge.create(
       :vehicle_id => trip[:vehicle_id],
       :trip_id => trip.id,

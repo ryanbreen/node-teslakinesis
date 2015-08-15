@@ -130,6 +130,7 @@ class LocationsController < ApplicationController
         # Update the record
         trip.start_location_id = nil if trip.start_location_id == @location.id
         trip.end_location_id = nil if trip.end_location_id == @location.id
+        trip.save
       end
     end
 
