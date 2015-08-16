@@ -23,7 +23,6 @@ class TripRankBadgeProcessor < BadgeProcessor
 
     # Pop off the 4th element so that there are really 3 trips.
     top_three_trips.pop if at_least_four
-    puts "there are now #{top_three_trips.length} trips in array"
 
     # Check to see if this trip is in the top 3.  If so, delete all current trip rank badges
     # for this route and create badges for the new 3.
@@ -80,8 +79,6 @@ class TripRankBadgeProcessor < BadgeProcessor
     # The last metric for this trip is what we should associate with this badge.  It's when
     # the trip ended.
     metric = VehicleTelemetryMetric.where(:trip_id => trip.id).order('id DESC').limit(1)
-
-    puts "create_badge #{trip.id} #{data} #{badge_type_id}"
 
     Badge.create(
       :vehicle_id => trip[:vehicle_id],
