@@ -99,8 +99,6 @@ class LocationsController < ApplicationController
   private
 
     def update_trips_after_create
-      puts "Location #{@location.id} changed.  Reset trip details for matching trips."
-
       # Retrieve all trips that match the old location
       matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
 
@@ -111,8 +109,6 @@ class LocationsController < ApplicationController
     end
 
     def update_trips_after_delete
-      puts "Location #{@location.id} changed.  Reset trip details for matching trips."
-
       # Retrieve all trips that match the old location
       matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
 
