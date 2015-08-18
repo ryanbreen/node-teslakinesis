@@ -63,7 +63,7 @@
                         <div>
                           <div class="btn-group">
                           <% @trip.trip_detail.badges.each do |badge| %>
-                            <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %>" ></span>
+                            <span class='ace-icon fa fa-<%= badge.badge_type.icon %> btn btn-<%= badge.badge_type.flavor %> btn-default tesla-tooltip no-hover' title="<%= badge.badge_type.description %> <%= badge.data %>" ></span>
                           <% end %>
                           </div>
                         </div>
