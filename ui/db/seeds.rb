@@ -23,7 +23,7 @@ if Vehicle.count == 0
 end
 
 if BadgeType.count == 0
-  BadgeType.create(
+  SpeedDemonBadgeType.create(
     id: 1,
     name: "speed-demon",
     description: "You drove more than 90mph on this trip.  Slow the fuck down!",
