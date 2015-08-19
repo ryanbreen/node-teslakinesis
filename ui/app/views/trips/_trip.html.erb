@@ -25,9 +25,11 @@ var color_scale = {
   <div id="start_icon_<%=index%>">
     <span class='ace-icon btn btn-xs btn-default btn-success fa fa-play no-hover tesla-tooltip' title="Departed at <%= trip.start_time.in_time_zone('America/New_York').to_formatted_s(:time_us) %>" ></span>
   </div>
+  <% if trip.end_time != nil %>
   <div id="stop_icon_<%=index%>">
     <span class='ace-icon btn btn-xs btn-default btn-danger fa fa-stop no-hover tesla-tooltip' title="<%= trip_end_time trip%>" ></span>
   </div>
+  <% end %>
 
   <% if trip.trip_detail.badges(true).length > 0 %>
     <%  trip.trip_detail.badges.each_with_index do |badge, i| %>
