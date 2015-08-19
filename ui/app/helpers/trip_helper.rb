@@ -75,4 +75,8 @@ module TripHelper
     (trip.end_time == nil ? 'ongoing' : to_name_linked(trip)).html_safe
   end
 
+  def trip_end_time(trip)
+    (trip.end_time == nil ? "ongoing" : "Arrived at #{trip.end_time.in_time_zone('America/New_York').to_formatted_s(:time_us)}").html_safe
+  end
+
 end
