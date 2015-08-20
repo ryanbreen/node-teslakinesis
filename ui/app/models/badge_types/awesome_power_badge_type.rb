@@ -1,7 +1,7 @@
 class AwesomePowerBadgeType < BadgeType
 
   def to_description(badge)
-    "hit #{badge.data}KWH"
+    "You reached a peak energy consumption of #{badge.data}."
   end
 
 end

@@ -1,7 +1,7 @@
 class TopSpeedBadgeType < BadgeType
 
   def to_description(badge)
-    "hit #{badge.data}"
+    "You hit #{badge.data}MPH, you asshole.  You're a father now."
   end
 
 end

@@ -1,7 +1,7 @@
 class SouthernLivingBadgeType < BadgeType
 
   def to_description(badge)
-    "at latitude #{badge.data}"
+    "You traveled all the way to latitude #{badge.data}."
   end
 
 end

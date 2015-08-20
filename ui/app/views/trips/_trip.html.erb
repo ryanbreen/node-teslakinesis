@@ -34,7 +34,7 @@ var color_scale = {
   <% if trip.trip_detail.badges(true).length > 0 %>
     <%  trip.trip_detail.badges.each_with_index do |badge, i| %>
       <div id="badge_icon_<%=index%>_<%=i%>">
-        <span class='ace-icon btn btn-xs btn-default btn-<%= badge.badge_type.flavor %> fa fa-<%= badge.badge_type.icon %> no-hover tesla-tooltip' title="<%= badge.badge_type.description %>" ></span>
+        <span class='ace-icon btn btn-xs btn-default btn-<%= badge.badge_type.flavor %> fa fa-<%= badge.badge_type.icon %> no-hover tesla-tooltip' title="<%= badge.badge_type.description %> <%= badge_data_message badge %>" ></span>
       </div>
     <% end %>
   <% end %>

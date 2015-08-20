@@ -1,7 +1,7 @@
 class ComingDownTheMountainBadgeType < BadgeType
 
   def to_description(badge)
-    "energy consumption #{badge.data}"
+    "You reached a peak energy regen of #{badge.data}KW."
   end
 
 end

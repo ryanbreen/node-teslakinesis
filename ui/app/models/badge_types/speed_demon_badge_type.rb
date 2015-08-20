@@ -1,7 +1,7 @@
 class SpeedDemonBadgeType < BadgeType
 
   def to_description(badge)
-    "hit #{badge.data}MPH"
+    "You hit #{badge.data}MPH, you maniac."
   end
 
 end

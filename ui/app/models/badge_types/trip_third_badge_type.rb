@@ -1,7 +1,7 @@
 class TripThirdBadgeType < BadgeType
 
   def to_description(badge)
-    "total duration #{badge.data}"
+    "The total duration of the trip was #{badge.data}s."
   end
 
 end

@@ -1,7 +1,7 @@
 class RangeSurferBadgeType < BadgeType
 
   def to_description(badge)
-    "energy remaining hit #{badge.data}%"
+    "Energy remaining reached a low of #{badge.data}%."
   end
 
 end
