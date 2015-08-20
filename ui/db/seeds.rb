@@ -31,7 +31,7 @@ if BadgeType.count == 0
     flavor: 'danger'
   )
 
-  BadgeType.create(
+  AwesomePowerBadgeType.create(
     id: 2,
     name: "awesome-power",
     description: "You floored it.  Stop racing.",
@@ -39,7 +39,7 @@ if BadgeType.count == 0
     flavor: 'danger'
   )
 
-  BadgeType.create(
+  GoWestYoungManBadgeType.create(
     id: 3,
     name: "go-west-young-man",
     description: "This is the farthest west you've been.",
@@ -47,7 +47,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  ToTheSeaBadgeType.create(
     id: 4,
     name: "to-the-sea",
     description: "Stop before you hit the water.",
@@ -55,7 +55,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  TheGreatWhiteNorthBadgeType.create(
     id: 5,
     name: "the-great-white-north",
     description: "You going to Canada?",
@@ -63,7 +63,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  SouthernLivingBadgeType.create(
     id: 6,
     name: "southern-living",
     description: "The south is full of bugs.",
@@ -71,7 +71,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  TopSpeedBadgeType.create(
     id: 7,
     name: "top-speed",
     description: "This is the fastest you've gone on record.  Are you proud?",
@@ -79,7 +79,7 @@ if BadgeType.count == 0
     flavor: 'danger'
   )
 
-  BadgeType.create(
+  ComingDownTheMountainBadgeType.create(
     id: 8,
     name: "coming-down-the-mountain",
     description: "You picked up a lot of energy regen.  Great work!",
@@ -87,7 +87,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  RangeSurferBadgeType.create(
     id: 9,
     name: "range-surfer",
     description: "Less than 25% charge.  Range anxiety?",
@@ -95,7 +95,7 @@ if BadgeType.count == 0
     flavor: 'warning'
   )
 
-  BadgeType.create(
+  TripFirstBadgeType.create(
     id: 10,
     name: "trip-first",
     description: "This is the fastest you've ever completed this trip!",
@@ -103,7 +103,7 @@ if BadgeType.count == 0
     flavor: 'danger'
   )
 
-  BadgeType.create(
+  TripSecondBadgeType.create(
     id: 11,
     name: "trip-second",
     description: "This is the second fastest you've ever completed this trip.  If you ain't first, you're last!",
@@ -111,7 +111,7 @@ if BadgeType.count == 0
     flavor: 'warning'
   )
 
-  BadgeType.create(
+  TripThirdBadgeType.create(
     id: 12,
     name: "trip-third",
     description: "This is the third fastest you've ever completed this trip.  At least you placed!",
@@ -119,7 +119,7 @@ if BadgeType.count == 0
     flavor: 'success'
   )
 
-  BadgeType.create(
+  TripLastBadgeType.create(
     id: 13,
     name: "trip-slowest",
     description: "This is the slowest you've ever completed this trip.  Was Jenn driving?",
