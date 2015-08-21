@@ -39,6 +39,11 @@ class Trip < ActiveRecord::Base
 
     first_line = true
 
+    badge_types = BadgeType.all
+    badge_types.each do |type|
+      puts type
+    end
+
     self.vehicle_telemetry_metrics.each do |metric|
 
       if metric.id % 16 == 0
