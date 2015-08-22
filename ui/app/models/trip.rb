@@ -40,8 +40,9 @@ class Trip < ActiveRecord::Base
     first_line = true
 
     badge_types = BadgeType.all
+    badge_processors = []
     badge_types.each do |type|
-      puts type
+      badge_processors << type.dup
     end
 
     self.vehicle_telemetry_metrics.each do |metric|
