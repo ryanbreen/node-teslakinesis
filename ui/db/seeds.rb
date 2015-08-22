@@ -17,7 +17,7 @@ VehicleTelemetryMetric.create(
 
 if Vehicle.count == 0
   Vehicle.create(
-    vehicle_id: "6856198612260671482",
+    vehicle_id: "49369828398096201",
     name: "KITT"
   )
 end
