@@ -79,6 +79,9 @@ var creds = {
 
 teslams.get_vid({email: creds.username, password: creds.password}, function(vehicle_id) {
 
+    // TODO: get_vid is now returning random results.  For now, hardcode.
+    vehicle_id = '6856198612260671482';
+
     console.log('starting stream %s', argv.stream);
 
     argv.napcheck *= 60000;
