@@ -1,16 +1,6 @@
 class BadgeEngine
 
   @@badge_processor_classes = [
-    'SpeedDemonBadgeProcessor',
-    'AwesomePowerBadgeProcessor',
-    'GoWestYoungManBadgeProcessor',
-    'ToTheSeaBadgeProcessor',
-    'TheGreatWhiteNorthBadgeProcessor',
-    'SouthernLivingBadgeProcessor',
-    'ComingDownTheMountainBadgeProcessor',
-    'RangeSurferBadgeProcessor',
-    'TopSpeedBadgeProcessor',
-    'TripRankBadgeProcessor'
   ]
 
   def initialize(trip_detail)

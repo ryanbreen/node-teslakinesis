@@ -53,9 +53,7 @@ class Trip < ActiveRecord::Base
         first_line = false
       end
 
-      # Process this vehicle metric for the badge
-      #badge_engine.process_metric(metric) unless self.end_time == nil
-
+      # Process this vehicle metric for each badge type
       badge_processors.each do |badge_processor|
         badge_processor.process_metric self.original_trip_detail, metric
       end
@@ -95,8 +93,6 @@ class Trip < ActiveRecord::Base
         badge_processor.metrics_complete self.original_trip_detail
       end
     end
-
-    badge_engine.metrics_complete unless self.end_time == nil
 
     js_buffer << "], \'"
     js_buffer << @@color_scale[0]
