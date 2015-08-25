@@ -25,8 +25,6 @@ class Trip < ActiveRecord::Base
     self.create_trip_detail unless self.end_time == nil
     self.original_trip_detail.vehicle_id = self.vehicle_id
 
-    badge_engine = BadgeEngine.new(self.original_trip_detail)
-
     current_hash = []
     current_hash_speed = nil
 
