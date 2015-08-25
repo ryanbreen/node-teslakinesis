@@ -25,8 +25,6 @@ class Trip < ActiveRecord::Base
     self.create_trip_detail unless self.end_time == nil
     self.original_trip_detail.vehicle_id = self.vehicle_id
 
-    badge_engine = BadgeEngine.new(self.original_trip_detail)
-
     current_hash = []
     current_hash_speed = nil
 
@@ -53,8 +51,10 @@ class Trip < ActiveRecord::Base
         first_line = false
       end
 
-      # Process this vehicle metric for the badge
-      badge_engine.process_metric(metric) unless self.end_time == nil
+      # Process this vehicle metric for each badge type
+      badge_processors.each do |badge_processor|
+        badge_processor.process_metric self.original_trip_detail, metric
+      end
 
       lowest_lat = metric.location.latitude if lowest_lat == nil || metric.location.latitude < lowest_lat
       lowest_lng = metric.location.longitude if lowest_lng == nil || metric.location.longitude < lowest_lng
@@ -86,7 +86,11 @@ class Trip < ActiveRecord::Base
       current_hash.push({:lat => metric.location.latitude, :lng => metric.location.longitude})
     end
 
-    badge_engine.metrics_complete unless self.end_time == nil
+    if self.end_time != nil
+      badge_processors.each do |badge_processor|
+        badge_processor.metrics_complete self.original_trip_detail
+      end
+    end
 
     js_buffer << "], \'"
     js_buffer << @@color_scale[0]
