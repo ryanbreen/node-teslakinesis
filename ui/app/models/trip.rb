@@ -54,7 +54,11 @@ class Trip < ActiveRecord::Base
       end
 
       # Process this vehicle metric for the badge
-      badge_engine.process_metric(metric) unless self.end_time == nil
+      #badge_engine.process_metric(metric) unless self.end_time == nil
+
+      badge_processors.each do |badge_processor|
+        badge_processor.process_metric self.original_trip_detail, metric
+      end
 
       lowest_lat = metric.location.latitude if lowest_lat == nil || metric.location.latitude < lowest_lat
       lowest_lng = metric.location.longitude if lowest_lng == nil || metric.location.longitude < lowest_lng
@@ -84,6 +88,12 @@ class Trip < ActiveRecord::Base
       end
 
       current_hash.push({:lat => metric.location.latitude, :lng => metric.location.longitude})
+    end
+
+    if self.end_time != nil
+      badge_processors.each do |badge_processor|
+        badge_processor.metrics_complete self.original_trip_detail
+      end
     end
 
     badge_engine.metrics_complete unless self.end_time == nil
