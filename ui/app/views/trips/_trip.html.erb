@@ -125,8 +125,8 @@ map_load_functions.push(function() {
 
       <% end %>
 
-      <% if trip.badges.length > 0 %>
-        <%  trip.badges.each_with_index do |badge, i| %>
+      <% if trip.trip_detail.badges.length > 0 %>
+        <%  trip.trip_detail.badges.each_with_index do |badge, i| %>
 
             var badge_loc = new google.maps.LatLng(
                   "<%= badge.vehicle_telemetry_metric.location.latitude %>",
