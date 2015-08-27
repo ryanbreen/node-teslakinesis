@@ -10,11 +10,11 @@ var INSERT_METRIC =
 var ADD_TRIP =
   "INSERT INTO trips(id, vehicle_id, start_time, end_time, start_location, start_location_id, end_location, created_at, updated_at) " +
     "VALUES (DEFAULT, $1, $2, NULL, $3, " +
-      "(select id from locations where ST_DWithin($3, geolocation, 200) limit 1)," +
+      "(select id from locations where ST_DWithin($3, geolocation, 200) order by ST_Distance($3, geolocation) limit 1)," +
     " NULL, now(), now()) RETURNING id;";
 var CURRENT_TRIP = "SELECT id from trips where vehicle_id = $1 and end_time IS NULL;"
 var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, end_location_id = " +
-  "(select id from locations where ST_DWithin($2, geolocation, 200) limit 1)," +
+  "(select id from locations where ST_DWithin($2, geolocation, 200) order by ST_Distance($2, geolocation) limit 1)," +
   "updated_at = now() where id = $3;";
 
 var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWithin(start_location, end_location, 200) and " + 
