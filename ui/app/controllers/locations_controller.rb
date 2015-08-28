@@ -22,13 +22,13 @@ class LocationsController < ApplicationController
     @type = :show_only
 
     ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} " +
-      "where id in (select id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
+      "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
         "ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')) limit 1)")
+        "order by id, ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
     ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} " +
-      "where id in (select id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
+      "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
         "ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')) limit 1)")
+        "order by id, ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
   
     @as_origin_count = Trip.where(:vehicle_id => @location[:vehicle_id], :start_location_id => @location[:id]).
       where.not(end_location_id: nil).count
@@ -62,19 +62,14 @@ class LocationsController < ApplicationController
         geolocation = @location[:geolocation]
 
         # Figure out if this location is near any trip start or end points
-#        ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
-#        ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} where vehicle_id = '#{@location.vehicle_id}' and ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200)")
-
-
-    ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} " +
-      "where id in (select id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-        "ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')) limit 1)")
-    ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} " +
-      "where id in (select id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-        "ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')) limit 1)")
-
+        ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} " +
+          "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
+            "ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
+            "order by id, ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
+        ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} " +
+          "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
+            "ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
+            "order by id, ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
 
         format.html { redirect_to vehicle_location_path(@vehicle, @location), notice: 'Location was successfully created.' }
         format.json { render :show, status: :created, location: @location }
