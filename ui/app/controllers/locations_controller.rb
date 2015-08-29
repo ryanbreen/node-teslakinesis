@@ -4,6 +4,8 @@ class LocationsController < ApplicationController
   before_action :set_vehicle, only: [:index, :show, :edit, :update, :destroy]
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
+  after_action :update_close_trips, only: [:create, :destroy]
+
   after_action :update_trips_after_delete, only: :destroy
   after_action :update_trips_after_create, only: :create
 
@@ -21,15 +23,6 @@ class LocationsController < ApplicationController
 
     @type = :show_only
 
-    ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} " +
-      "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-        "ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by id, ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
-    ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} " +
-      "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-        "ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-        "order by id, ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
-  
     @as_origin_count = Trip.where(:vehicle_id => @location[:vehicle_id], :start_location_id => @location[:id]).
       where.not(end_location_id: nil).count
     @as_destination_count = Trip.where(:vehicle_id => @location[:vehicle_id], :end_location_id => @location[:id]).
@@ -60,16 +53,6 @@ class LocationsController < ApplicationController
       if @location.save
 
         geolocation = @location[:geolocation]
-
-        # Figure out if this location is near any trip start or end points
-        ActiveRecord::Base.connection.execute("update trips set start_location_id = #{@location.id} " +
-          "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-            "ST_DWITHIN(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-            "order by id, ST_Distance(trips.start_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
-        ActiveRecord::Base.connection.execute("update trips set end_location_id = #{@location.id} " +
-          "where id in (select distinct on (id) id from trips where vehicle_id = '#{@location.vehicle_id}' and " +
-            "ST_DWITHIN(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})'), 200) " +
-            "order by id, ST_Distance(trips.end_location, ST_GeographyFromText('SRID=4326;POINT(#{geolocation.longitude} #{geolocation.latitude} #{geolocation.z})')))")
 
         format.html { redirect_to vehicle_location_path(@vehicle, @location), notice: 'Location was successfully created.' }
         format.json { render :show, status: :created, location: @location }
@@ -109,6 +92,18 @@ class LocationsController < ApplicationController
   end
 
   private
+
+    def update_close_trips
+      ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
+        "(select trips.id as trip_id, (select locations.id location_id from locations " +
+        "order by st_distance(trips.start_location, locations.geolocation) limit 1) from trips) as start_location_search " +
+        "where trips.id = start_location_search.trip_id")
+      ActiveRecord::Base.connection.execute("update trips set end_location_id = end_location_search.location_id from " +
+        "(select trips.id as trip_id, (select locations.id location_id from locations " +
+        "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
+        "where trips.id = end_location_search.trip_id")
+      # TODO: Force reload of origin and destination associations?
+    end
 
     def update_trips_after_create
       # Retrieve all trips that match the old location
