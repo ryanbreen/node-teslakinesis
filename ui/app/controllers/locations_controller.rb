@@ -106,7 +106,7 @@ class LocationsController < ApplicationController
     end
 
     def update_trips_after_create
-      # Retrieve all trips that match the old location
+      # Retrieve all trips that match the new location
       matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
 
       matched_trips.each do |trip|
