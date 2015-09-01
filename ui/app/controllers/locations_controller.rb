@@ -18,9 +18,6 @@ class LocationsController < ApplicationController
   # GET /locations/1
   # GET /locations/1.json
   def show
-    # Figure out if this location is near any trip start or end points
-    geolocation = @location[:geolocation]
-
     @type = :show_only
 
     @as_origin_count = Trip.where(:vehicle_id => @location[:vehicle_id], :start_location_id => @location[:id]).
