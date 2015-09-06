@@ -19,7 +19,6 @@ var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, end_locatio
 
 var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWithin(start_location, end_location, 200) and " + 
   "(EXTRACT(EPOCH FROM (end_time - start_time)) < 60)";
-// TODO: CLOSE_TRIP should set end_location_id if applicable.
 
 var creds = require('./creds/db.js');
 
