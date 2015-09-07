@@ -110,7 +110,6 @@ exports.handler = function(record, context) {
           console.log(require('util').inspect(record));
 
           //["timestamp","speed","odometer","soc","elevation","est_heading","est_lat","est_lng","power","shift_state","range","est_range","heading"]
-
           var shift_state = (record['shift_state'] && record['shift_state'] !== '' ? record['shift_state'] : 'O');
 
           console.log("client.query(INSERT_METRIC, [" +
