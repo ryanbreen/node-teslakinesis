@@ -27,9 +27,9 @@ class Trip < ActiveRecord::Base
     current_hash = []
     current_hash_speed = nil
 
-    js_buffer = StringIO.new
-    js_buffer << "var polylines = [];\n"
-    js_buffer << "polylines.push([ ["
+    summary_js_buffer = StringIO.new
+    summary_js_buffer << "var polylines = [];\n"
+    summary_js_buffer << "polylines.push([ ["
 
     detailed_js_buffer = StringIO.new
     detailed_js_buffer << "var polylines = [];\n"
@@ -45,8 +45,8 @@ class Trip < ActiveRecord::Base
     self.vehicle_telemetry_metrics.each do |metric|
 
       if metric.id % 16 == 0
-        js_buffer << ',' unless first_line
-        js_buffer << {:lat => metric.location.latitude, :lng => metric.location.longitude}.to_json.html_safe
+        summary_js_buffer << ',' unless first_line
+        summary_js_buffer << {:lat => metric.location.latitude, :lng => metric.location.longitude}.to_json.html_safe
         first_line = false
       end
 
@@ -91,12 +91,12 @@ class Trip < ActiveRecord::Base
       end
     end
 
-    js_buffer << "], \'"
-    js_buffer << @@color_scale[0]
-    js_buffer << "\']);\n"
+    summary_js_buffer << "], \'"
+    summary_js_buffer << @@color_scale[0]
+    summary_js_buffer << "\']);\n"
 
     self.original_trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
-    self.original_trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(js_buffer.string.html_safe))
+    self.original_trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(summary_js_buffer.string.html_safe))
 
     self.original_trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
     self.original_trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
