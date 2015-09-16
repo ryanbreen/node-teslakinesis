@@ -27,6 +27,10 @@ class Trip < ActiveRecord::Base
     current_hash = []
     current_hash_speed = nil
 
+    # We create two buffers to store in the trip_detail record: 1 with every point in the trip and another
+    # with 1/16th of the points.  The latter, which represents a data point every 4 seconds while driving,
+    # is much quicker to load while being appropriate for busy pages like trip#index.
+
     summary_js_buffer = StringIO.new
     summary_js_buffer << "var polylines = [];\n"
     summary_js_buffer << "polylines.push([ ["
