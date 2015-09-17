@@ -46,7 +46,10 @@ class Trip < ActiveRecord::Base
       badge_processors << type.dup
     end
 
+    # While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
+    # metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
     self.vehicle_telemetry_metrics.each do |metric|
+
 
       if metric.id % 16 == 0
         summary_js_buffer << ',' unless first_line
