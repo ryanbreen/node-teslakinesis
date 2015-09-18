@@ -67,6 +67,8 @@ class Trip < ActiveRecord::Base
       highest_lat = metric.location.latitude if highest_lat == nil || metric.location.latitude > highest_lat
       highest_lng = metric.location.longitude if highest_lng == nil || metric.location.longitude > highest_lng
 
+      # We bucket speeds such that, in the detailed map buffer, trip segments of similar speeds are
+      # displayed as a colored polyline.
       case metric.speed
       when 0..25
         speed = 0
