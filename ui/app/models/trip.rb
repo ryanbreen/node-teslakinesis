@@ -78,7 +78,8 @@ class Trip < ActiveRecord::Base
         speed = 2
       end
 
-      # Create a new hash at this speed
+      # If the previous bucket differs from the bucket of this metric, create a new polyline at the
+      # new speed.
       if current_hash_speed != speed
         if current_hash.length > 0
           detailed_js_buffer << "polylines.push([ "
