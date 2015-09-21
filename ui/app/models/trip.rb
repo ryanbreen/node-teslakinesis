@@ -92,6 +92,7 @@ class Trip < ActiveRecord::Base
         current_hash = []
       end
 
+      # Add this metric to the current speed-bucket polyline.
       current_hash.push({:lat => metric.location.latitude, :lng => metric.location.longitude})
     end
 
