@@ -96,6 +96,7 @@ class Trip < ActiveRecord::Base
       current_hash.push({:lat => metric.location.latitude, :lng => metric.location.longitude})
     end
 
+    # If this trip is complete, send metrics_complete to each badge processor.
     if self.end_time != nil
       badge_processors.each do |badge_processor|
         badge_processor.metrics_complete self.original_trip_detail
