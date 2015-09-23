@@ -103,6 +103,7 @@ class Trip < ActiveRecord::Base
       end
     end
 
+    # All metrics in the summary polyline use the same color.
     summary_js_buffer << "], \'"
     summary_js_buffer << @@color_scale[0]
     summary_js_buffer << "\']);\n"
