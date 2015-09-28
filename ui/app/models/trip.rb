@@ -112,6 +112,8 @@ class Trip < ActiveRecord::Base
     self.original_trip_detail.detailed_route = Base64.encode64(Zlib::Deflate.deflate(detailed_js_buffer.string.html_safe))
     self.original_trip_detail.summary_route = Base64.encode64(Zlib::Deflate.deflate(summary_js_buffer.string.html_safe))
 
+    # The client needs to know the bounding box for this map.  This is defined by the coordinates of the furthest
+    # top left and bottom right points.
     self.original_trip_detail.upper_left = { :lat => highest_lat, :lng => lowest_lng }.to_json.html_safe
     self.original_trip_detail.lower_right = { :lat => lowest_lat, :lng => highest_lng }.to_json.html_safe
 
