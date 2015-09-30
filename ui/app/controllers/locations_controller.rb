@@ -6,9 +6,6 @@ class LocationsController < ApplicationController
 
   after_action :update_close_trips, only: [:create, :destroy]
 
-  after_action :update_trips_after_delete, only: :destroy
-  after_action :update_trips_after_create, only: :create
-
   # GET /locations
   # GET /locations.json
   def index
@@ -103,6 +100,12 @@ class LocationsController < ApplicationController
         trip.trip_detail.destroy
       end
 
+      # Delete any trip place badges
+      Badge.where(
+        :trip_id => trip.id,
+        :badge_type_id => [10, 11, 12, 13]
+      ).delete_all
+
       ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
         "where ST_DWITHIN(trips.start_location, locations.geolocation), 200) " +
@@ -114,40 +117,6 @@ class LocationsController < ApplicationController
         "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
         "where trips.id = end_location_search.trip_id")
       # TODO: Force reload of origin and destination associations?
-    end
-
-    def update_trips_after_create
-      # Retrieve all trips that match the new location
-      matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
-
-      matched_trips.each do |trip|
-        # Delete trip detail
-        trip.trip_detail.destroy
-      end
-    end
-
-    def update_trips_after_delete
-      # Retrieve all trips that match the old location
-      matched_trips = Trip.where("start_location_id = #{@location.id} or end_location_id = #{@location.id}")
-
-      matched_trips.each do |trip|
-
-        # Delete any trip place badges
-        Badge.where(
-          :trip_id => trip.id,
-          :badge_type_id => [10, 11, 12, 13]
-        ).delete_all
-
-        # Delete trip detail
-        trip.trip_detail.destroy
-
-        puts "Updating trip #{trip.to_yaml}"
-
-        # Update the record
-        trip.start_location_id = nil if trip.start_location_id == @location.id
-        trip.end_location_id = nil if trip.end_location_id == @location.id
-        trip.save
-      end
     end
 
     def set_vehicle
