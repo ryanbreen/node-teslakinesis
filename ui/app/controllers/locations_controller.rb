@@ -90,11 +90,11 @@ class LocationsController < ApplicationController
     def update_close_trips
       # Always purge all location mappings.  This is to make sure that previous errors in location matching logic
       # are correctable.
-      ActiveRecord::Base.connection.execute("update trips set start_location_id = NULL, end_location_id = NULL "
-        "where vehicle_id = #{vehicle.id}")
+      ActiveRecord::Base.connection.execute("update trips set start_location_id = NULL, end_location_id = NULL " +
+        "where vehicle_id = '#{params[:vehicle_id]}'")
 
       # Kill all trip details
-      all_trips = Trip.where("vehicle_id = #{vehicle.id}")
+      all_trips = Trip.where("vehicle_id = '#{params[:vehicle_id]}'")
       all_trips.each do |trip|
         # Delete trip detail
         trip.trip_detail.destroy
