@@ -88,6 +88,8 @@ class LocationsController < ApplicationController
   private
 
     def update_close_trips
+
+=begin
       # Always purge all location mappings.  This is to make sure that previous errors in location matching logic
       # are correctable.
       ActiveRecord::Base.connection.execute("update trips set start_location_id = NULL, end_location_id = NULL " +
@@ -99,21 +101,15 @@ class LocationsController < ApplicationController
         # Delete trip detail
         trip.trip_detail.destroy
       end
-
-      # Delete any trip place badges
-      Badge.where(
-        :trip_id => trip.id,
-        :badge_type_id => [10, 11, 12, 13]
-      ).delete_all
-
+=end
       ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
-        "where ST_DWITHIN(trips.start_location, locations.geolocation), 200) " +
+        "where ST_DWITHIN(trips.start_location, locations.geolocation, 200) " +
         "order by st_distance(trips.start_location, locations.geolocation) limit 1) from trips) as start_location_search " +
         "where trips.id = start_location_search.trip_id")
       ActiveRecord::Base.connection.execute("update trips set end_location_id = end_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
-        "where ST_DWITHIN(trips.end_location, locations.geolocation), 200) " +
+        "where ST_DWITHIN(trips.end_location, locations.geolocation, 200) " +
         "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
         "where trips.id = end_location_search.trip_id")
       # TODO: Force reload of origin and destination associations?
