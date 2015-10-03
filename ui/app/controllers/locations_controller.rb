@@ -86,7 +86,6 @@ class LocationsController < ApplicationController
   end
 
   private
-
     def update_close_trips
 
 =begin
@@ -102,17 +101,23 @@ class LocationsController < ApplicationController
         trip.trip_detail.destroy
       end
 =end
-      ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
+      [*ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
         "where ST_DWITHIN(trips.start_location, locations.geolocation, 200) " +
         "order by st_distance(trips.start_location, locations.geolocation) limit 1) from trips) as start_location_search " +
-        "where trips.id = start_location_search.trip_id")
-      ActiveRecord::Base.connection.execute("update trips set end_location_id = end_location_search.location_id from " +
+        "where trips.id = start_location_search.trip_id returning id")].map do |trip|
+        puts "Purging trip #{trip['id']}"
+        Trip.find(trip['id']).trip_detail.destroy
+      end
+
+      [*ActiveRecord::Base.connection.execute("update trips set end_location_id = end_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
         "where ST_DWITHIN(trips.end_location, locations.geolocation, 200) " +
         "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
-        "where trips.id = end_location_search.trip_id")
-      # TODO: Force reload of origin and destination associations?
+        "where trips.id = end_location_search.trip_id returning id")].map do |trip|
+        puts "Purging trip #{trip['id']}"
+        Trip.find(trip['id']).trip_detail.destroy
+      end
     end
 
     def set_vehicle
