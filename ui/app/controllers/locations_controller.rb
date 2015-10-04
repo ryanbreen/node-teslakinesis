@@ -88,26 +88,25 @@ class LocationsController < ApplicationController
   private
     def update_close_trips
 
-=begin
+      # cache current start and end locations for trips.  we only want to rebuild trip_detail if there was an actual
+      # change, so we diff the updates against the current_trips cache to see which trips actually changed
+      current_trips = ActiveRecord::Base.connection.execute("select id, start_location_id, end_location_id from trips")
+
       # Always purge all location mappings.  This is to make sure that previous errors in location matching logic
       # are correctable.
       ActiveRecord::Base.connection.execute("update trips set start_location_id = NULL, end_location_id = NULL " +
         "where vehicle_id = '#{params[:vehicle_id]}'")
 
-      # Kill all trip details
-      all_trips = Trip.where("vehicle_id = '#{params[:vehicle_id]}'")
-      all_trips.each do |trip|
-        # Delete trip detail
-        trip.trip_detail.destroy
-      end
-=end
       [*ActiveRecord::Base.connection.execute("update trips set start_location_id = start_location_search.location_id from " +
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
         "where ST_DWITHIN(trips.start_location, locations.geolocation, 200) " +
         "order by st_distance(trips.start_location, locations.geolocation) limit 1) from trips) as start_location_search " +
-        "where trips.id = start_location_search.trip_id returning id")].map do |trip|
-        puts "Purging trip #{trip['id']}"
-        Trip.find(trip['id']).trip_detail.destroy
+        "where trips.id = start_location_search.trip_id returning id, start_location_id")].map do |changed_trip|
+        if current_trips[changed_trip['id']]['start_location_id'] != changed_trip['start_location_id']
+          puts "Trip #{trip['id']} start location changed from #{current_trips[changed_trip['id']]['start_location_id']}\
+            #{changed_trip['start_location_id']} to "
+          Trip.find(trip['id']).trip_detail.destroy
+        end
       end
 
       [*ActiveRecord::Base.connection.execute("update trips set end_location_id = end_location_search.location_id from " +
