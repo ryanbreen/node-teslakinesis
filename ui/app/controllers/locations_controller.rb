@@ -90,7 +90,11 @@ class LocationsController < ApplicationController
 
       # cache current start and end locations for trips.  we only want to rebuild trip_detail if there was an actual
       # change, so we diff the updates against the current_trips cache to see which trips actually changed
-      current_trips = ActiveRecord::Base.connection.execute("select id, start_location_id, end_location_id from trips")
+      current_trips_result = ActiveRecord::Base.connection.execute("select id, start_location_id, end_location_id from trips")
+      current_trips = {}
+      current_trips_result.each do |trip|
+        current_trips[trip['id']] = trip
+      end
 
       # Always purge all location mappings.  This is to make sure that previous errors in location matching logic
       # are correctable.
@@ -103,9 +107,9 @@ class LocationsController < ApplicationController
         "order by st_distance(trips.start_location, locations.geolocation) limit 1) from trips) as start_location_search " +
         "where trips.id = start_location_search.trip_id returning id, start_location_id")].map do |changed_trip|
         if current_trips[changed_trip['id']]['start_location_id'] != changed_trip['start_location_id']
-          puts "Trip #{trip['id']} start location changed from #{current_trips[changed_trip['id']]['start_location_id']} \
+          puts "Trip #{changed_trip['id']} start location changed from #{current_trips[changed_trip['id']]['start_location_id']} \
             to #{changed_trip['start_location_id']}"
-          Trip.find(trip['id']).trip_detail.destroy
+          Trip.find(changed_trip['id']).trip_detail.destroy
         end
       end
 
@@ -115,9 +119,9 @@ class LocationsController < ApplicationController
         "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
         "where trips.id = end_location_search.trip_id returning id")].map do |changed_trip|
         if current_trips[changed_trip['id']]['end_location_id'] != changed_trip['end_location_id']
-          puts "Trip #{trip['id']} end location changed from #{current_trips[changed_trip['id']]['end_location_id']} \
+          puts "Trip #{changed_trip['id']} end location changed from #{current_trips[changed_trip['id']]['end_location_id']} \
             to #{changed_trip['end_location_id']}"
-          Trip.find(trip['id']).trip_detail.destroy
+          Trip.find(changed_trip['id']).trip_detail.destroy
         end
       end
     end
