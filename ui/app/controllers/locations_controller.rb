@@ -117,7 +117,7 @@ class LocationsController < ApplicationController
         "(select trips.id as trip_id, (select locations.id location_id from locations " +
         "where ST_DWITHIN(trips.end_location, locations.geolocation, 200) " +
         "order by st_distance(trips.end_location, locations.geolocation) limit 1) from trips) as end_location_search " +
-        "where trips.id = end_location_search.trip_id returning id")].map do |changed_trip|
+        "where trips.id = end_location_search.trip_id returning id, end_location_id")].map do |changed_trip|
         if current_trips[changed_trip['id']]['end_location_id'] != changed_trip['end_location_id']
           puts "Trip #{changed_trip['id']} end location changed from #{current_trips[changed_trip['id']]['end_location_id']} \
             to #{changed_trip['end_location_id']}"
