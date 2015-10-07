@@ -109,6 +109,14 @@ class LocationsController < ApplicationController
         if current_trips[changed_trip['id']]['start_location_id'] != changed_trip['start_location_id']
           puts "Trip #{changed_trip['id']} start location changed from #{current_trips[changed_trip['id']]['start_location_id']} \
             to #{changed_trip['start_location_id']}"
+
+          # Delete any trip place badges
+          Badge.where(
+            :trip_id => changed_trip['id'],
+            :badge_type_id => [10, 11, 12, 13]
+          ).delete_all
+
+          # Force a rebuild of trip_detail for this trip
           Trip.find(changed_trip['id']).trip_detail.destroy
         end
       end
@@ -121,6 +129,15 @@ class LocationsController < ApplicationController
         if current_trips[changed_trip['id']]['end_location_id'] != changed_trip['end_location_id']
           puts "Trip #{changed_trip['id']} end location changed from #{current_trips[changed_trip['id']]['end_location_id']} \
             to #{changed_trip['end_location_id']}"
+          Trip.find(changed_trip['id']).trip_detail.destroy
+
+          # Delete any trip place badges
+          Badge.where(
+            :trip_id => changed_trip['id'],
+            :badge_type_id => [10, 11, 12, 13]
+          ).delete_all
+
+          # Force a rebuild of trip_detail for this trip
           Trip.find(changed_trip['id']).trip_detail.destroy
         end
       end
