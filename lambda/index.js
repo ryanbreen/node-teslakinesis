@@ -20,6 +20,10 @@ var CLOSE_TRIP = "UPDATE trips set end_time = $1, end_location = $2, end_locatio
 var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWithin(start_location, end_location, 200) and " + 
   "(EXTRACT(EPOCH FROM (end_time - start_time)) < 60)";
 
+// TODO: Remove trips that have a small number of points since they are likely due to a race condition calling
+// close_trip
+var PURGE_DUPLICATE_TRIPS = ""
+
 var creds = require('./creds/db.js');
 
 exports.handler = function(record, context) {
