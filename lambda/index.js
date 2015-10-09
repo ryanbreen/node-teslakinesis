@@ -22,7 +22,9 @@ var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWith
 
 // TODO: Remove trips that have a small number of points since they are likely due to a race condition calling
 // close_trip
-var PURGE_DUPLICATE_TRIPS = ""
+var DELETE_DUPLICATE_TRIPS = "DELETE from trips where id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_ORPHANED_TRIP_DETAILS = "DELETE from vehicle_telemetry_metrics where trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_ORPHANED_METRICS = "DELETE from vehicle_telemetry_metrics where trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
 
 var creds = require('./creds/db.js');
 
