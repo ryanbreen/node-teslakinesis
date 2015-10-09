@@ -22,9 +22,10 @@ var PURGE_NONSENSE_TRIPS = "DELETE from trips where vehicle_id = $1 and ST_DWith
 
 // TODO: Remove trips that have a small number of points since they are likely due to a race condition calling
 // close_trip
-var DELETE_DUPLICATE_TRIPS = "DELETE from trips where id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
-var DELETE_ORPHANED_TRIP_DETAILS = "DELETE from vehicle_telemetry_metrics where trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
-var DELETE_ORPHANED_METRICS = "DELETE from vehicle_telemetry_metrics where trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_DUPLICATE_TRIPS = "DELETE from trips where vehicle_id = $1 and id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_ORPHANED_TRIP_DETAILS = "DELETE from vehicle_telemetry_metrics where vehicle_id = $1 and trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_ORPHANED_BADGES = "DELETE from badges where vehicle_id = $1 and trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
+var DELETE_ORPHANED_METRICS = "DELETE from vehicle_telemetry_metrics where vehicle_id = $1 and trip_id in (select counter.trip_id from (select trip_id, count(trip_id) as total from vehicle_telemetry_metrics group by trip_id) counter where counter.total < 10)"
 
 var creds = require('./creds/db.js');
 
@@ -73,7 +74,23 @@ exports.handler = function(record, context) {
             client.query(PURGE_NONSENSE_TRIPS, [vehicle_id], function(err, result) {
               if (err) return context.fail("Failed to purge silly trips due to " + err);
 
-              handle_record();
+              client.query(DELETE_DUPLICATE_TRIPS, [vehicle_id], function(err, result) {
+                if (err) return context.fail("Failed to purge silly trips due to " + err);
+
+                client.query(DELETE_ORPHANED_TRIP_DETAILS, [vehicle_id], function(err, result) {
+                  if (err) return context.fail("Failed to purge silly trips due to " + err);
+
+                  client.query(DELETE_ORPHANED_BADGES, [vehicle_id], function(err, result) {
+                    if (err) return context.fail("Failed to purge silly trips due to " + err);
+
+                    client.query(DELETE_ORPHANED_METRICS, [vehicle_id], function(err, result) {
+                      if (err) return context.fail("Failed to purge silly trips due to " + err);
+
+                      handle_record();
+                    });
+                  });
+                });
+              });
             });
           });
         } else if (!in_trip && !unshifted) {
