@@ -5,14 +5,16 @@ class Trip < ActiveRecord::Base
   has_one :origin, :class_name => "Location", :primary_key => 'start_location_id', :foreign_key => 'id'
   has_one :destination, :class_name => "Location", :primary_key => 'end_location_id', :foreign_key => 'id'
 
+  # For detailed routes, we want to use line segments of different colors to represent different speeds.
+  # We use green for 0-25MPH, orange for 25-50MPH, and red for 50+.
   @@color_scale = [
     "#74AD6A",
     "#FFAA38",
     "#C44537"
   ]
 
-  # We want to populate a trip_detail record if one doesn't exist, so we override
-  # the default getter and add our logic.
+  # We want to populate a trip_detail record if one doesn't exist, so we override the default getter and
+  # add our logic.
   alias_method :original_trip_detail, :trip_detail
   def trip_detail
 
@@ -30,7 +32,6 @@ class Trip < ActiveRecord::Base
     # We create two buffers to store in the trip_detail record: 1 with every point in the trip and another
     # with 1/16th of the points.  The latter, which represents a data point every 4 seconds while driving,
     # is much quicker to load while being appropriate for busy pages like trip#index.
-
     summary_js_buffer = StringIO.new
     summary_js_buffer << "var polylines = [];\n"
     summary_js_buffer << "polylines.push([ ["
