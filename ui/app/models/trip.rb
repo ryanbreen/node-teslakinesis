@@ -18,6 +18,8 @@ class Trip < ActiveRecord::Base
   alias_method :original_trip_detail, :trip_detail
   def trip_detail
 
+    # If the active record trip_detail method returns a result, that means we've already created and
+    # cached this record.  If that's the case, return it.
     return self.original_trip_detail if self.original_trip_detail != nil
     
     lowest_lng, highest_lng, lowest_lat, highest_lat = nil
