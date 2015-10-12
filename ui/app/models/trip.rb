@@ -123,6 +123,7 @@ class Trip < ActiveRecord::Base
     # Do not save this trip_detail unless the trip is done.
     self.original_trip_detail.save unless self.end_time == nil
 
+    # Finally, return the created trip_detail
     self.original_trip_detail
   end
 
