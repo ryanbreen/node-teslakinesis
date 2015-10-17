@@ -9,9 +9,8 @@ var logentries_creds = require('./creds/logentries.js');
 var bunyan = require('bunyan');
 var bunyanLogentries = require('bunyan-logentries');
 
-var le = require('le_node');
-/**
-var logger = new le({token: logentries_creds.TOKEN});
+//var le = require('le_node');
+//var logger = new le({token: logentries_creds.TOKEN});
 var logentries_stream = bunyanLogentries.createStream({token: logentries_creds.TOKEN});
 var logger = module.exports.logger = bunyan.createLogger({
   name: 'skunkworks',
@@ -21,32 +20,15 @@ var logger = module.exports.logger = bunyan.createLogger({
     type: 'raw'
   }]
 });
-**/
-
-var logger = new le({ token: logentries_creds.TOKEN });
 
 var flushed = false;
-
-var util = require('util');
-
-logger.on('connection drain', function() {
-  console.log('Connection drained!');
+logentries_stream['_logger'].on('connect', function() {
+  console.log('Connection made!');
   flushed = true;
 });
 
-logger.on('connect', function() {
-  console.log('Connection made!');
-});
-
-logger.on('error', function(e) {
-  console.log('Error ' + e);
-});
-
 var complete = function(err, context) {
-  // Loop for at most a second waiting for logs to flush.
-  //logentries_stream.end();
-
-  var counter = 500;
+  var counter = 100;
   var interval = setInterval(function(){
     --counter;
     if (flushed || counter <= 0) {
@@ -60,7 +42,7 @@ var complete = function(err, context) {
 var GET_METRICS_FOR_TRIP = "select * from vehicle_telemetry_metrics where trip_id = $1;";
 
 function calculateTripDetail(trip_id, cb) {
-  logger.info("Calculating trip detail for trip " + trip_id);
+  logger.info({trip_id: trip_id}, "Calculating trip detail");
   cb();
 }
 
