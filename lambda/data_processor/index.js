@@ -46,6 +46,11 @@ var GET_METRICS_FOR_TRIP = "SELECT id, vehicle_id, \"timestamp\", speed, odomete
        est_heading, heading, st_asgeojson(location) as location, power, shift_state, range, est_range, \
        created_at, updated_at, trip_id \
   FROM vehicle_telemetry_metrics where trip_id = $1 order by timestamp;";
+var INSERT_TRIP_DETAILS = "INSERT INTO trip_details( \
+            vehicle_id, trip_id, detailed_route, summary_route, upper_left, \
+            lower_right, created_at, updated_at) \
+    VALUES ($1, $2, $3, $4, $5, \
+            $6, NOW(), NOW()) returning id;";
 
 // For detailed routes, we want to use line segments of different colors to represent different speeds.
 // We use green for 0-25MPH, orange for 25-50MPH, and red for 50+.
@@ -109,14 +114,14 @@ function calculateTripDetail(client, context, trip_id, cb) {
         // metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
         metrics.rows.forEach(function(metric) {
 
-          logger.info(metric);
+          logger.debug(metric);
 
           // Location is a geojson string, so we must parse it to interact with it.
           metric.location = JSON.parse(metric.location);
 
           if (metric.id % 16 == 0) {
             if (!first_line) summary_js_buffer.push(',');
-            summary_js_buffer.push(JSON.stringify({lat : metric.location.latitude, lng : metric.location.longitude}));
+            summary_js_buffer.push(JSON.stringify({lat : metric.location.coordinates[1], lng : metric.location.coordinates[0]}));
             first_line = false;
           }
 
@@ -126,8 +131,6 @@ function calculateTripDetail(client, context, trip_id, cb) {
             badge_processor.process_metric self.original_trip_detail, metric
           end
           **/
-
-          console.log(metric);
 
           if (lowest_lat == undefined  || metric.location.coordinates[1] < lowest_lat) lowest_lat = metric.location.coordinates[1];
           if (lowest_lng == undefined  || metric.location.coordinates[0] < lowest_lng) lowest_lng = metric.location.coordinates[0];
@@ -148,9 +151,9 @@ function calculateTripDetail(client, context, trip_id, cb) {
           // new speed.
           if (current_hash_speed != speed) {
             if (current_hash.length > 0) {
-              detailed_js_buffer.push("polylines.push([ ");
-              detailed_js_buffer.push(JSON.stringify({lat : metric.location.coordinates[1], lng : metric.location.coordinates[0]}));
-              detailed_js_buffer.push(", \'");
+              detailed_js_buffer.push("polylines.push([ [");
+              detailed_js_buffer.push(current_hash.join(''));
+              detailed_js_buffer.push("], \'");
               detailed_js_buffer.push(COLOR_SCALE[current_hash_speed]);
               detailed_js_buffer.push("\']);\n");
             }
@@ -159,6 +162,7 @@ function calculateTripDetail(client, context, trip_id, cb) {
           }
 
           // Add this metric to the current speed-bucket polyline.
+          if (current_hash.length > 0) current_hash.push(",");
           current_hash.push(JSON.stringify({lat : metric.location.coordinates[1], lng : metric.location.coordinates[0]}));
         });
 
@@ -176,18 +180,32 @@ function calculateTripDetail(client, context, trip_id, cb) {
         summary_js_buffer.push(COLOR_SCALE[0]);
         summary_js_buffer.push("\']);\n");
 
+        logger.info(detailed_js_buffer.join(''));
+        logger.info(summary_js_buffer.join(''));
+
         // The JS buffers are very large but compress well, so we store them deflated.
         var detailed_route = zlib.deflateSync(detailed_js_buffer.join('')).toString('base64');
         var summary_route = zlib.deflateSync(summary_js_buffer.join('')).toString('base64');
 
         // The client needs to know the bounding box for this map.  This is defined by the coordinates of the furthest
         // top left and bottom right points.
-        var upper_left = JSON.stringify({ lat: highest_lat, lng: lowest_lng });
-        var lower_right = JSON.stringify({ lat: lowest_lat, lng: highest_lng });
+        var upper_left = JSON.stringify({ lng: lowest_lng, lat: highest_lat });
+        var lower_right = JSON.stringify({ lng: highest_lng, lat: lowest_lat });
 
         // Insert new trip_details record
         logger.info({upper_left: upper_left, lower_right: lower_right}, "Calculated bounds");
-        cb();
+
+        // Find current trip.  If none and car is in gear, create a new trip.
+        client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route, upper_left, lower_right], function(err, res) {
+
+          if (err) {
+            logger.error(err, 'Trip detail insert failed');
+            return complete(err, context);
+          }
+
+          logger.info(res, "Created trip detail");
+          cb();
+        });
       });
     });
   });
