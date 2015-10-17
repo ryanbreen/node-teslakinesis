@@ -39,11 +39,31 @@ var complete = function(err, context) {
   }, 10);
 }
 
+var PURGE_TRIP_DETAIL_FOR_TRIP = "delete from trip_details where trip_id = $1;";
+
 var GET_METRICS_FOR_TRIP = "select * from vehicle_telemetry_metrics where trip_id = $1;";
 
-function calculateTripDetail(trip_id, cb) {
+function calculateTripDetail(client, context, trip_id, cb) {
   logger.info({trip_id: trip_id}, "Calculating trip detail");
-  cb();
+
+  // We plan to build trip detail, so purge any that already exists.
+  client.query(PURGE_TRIP_DETAIL_FOR_TRIP, [trip_id], function(err, results) {
+    if (err) {
+      logger.error(err, 'Trip detail purge failed');
+      return complete(err, context);
+    }
+
+    // Find current trip.  If none and car is in gear, create a new trip.
+    client.query(GET_METRICS_FOR_TRIP, [trip_id], function(err, results) {
+      if (err) {
+        logger.error(err, 'Trip metric query failed');
+        return complete(err, context);
+      }
+
+      logger.info({metrics_count: results.rows.length}, "Found metrics for trip.");
+      cb();
+    });
+  });
 }
 
 exports.handler = function(record, context) {
@@ -52,11 +72,11 @@ exports.handler = function(record, context) {
   pg.connect(conn_string, function(err, client, done) {
 
     try {
-      if (err) return complete(err);
+      if (err) return complete(err, context);
 
       // If we were provided a trip_id, process it for metrics.  If not, look for a trip to process.
       if (record && record.trip_id) {
-        calculateTripDetail(record.trip_id, function(err) {
+        calculateTripDetail(client, context, record.trip_id, function(err) {
           complete(err, context);
         });
       }
