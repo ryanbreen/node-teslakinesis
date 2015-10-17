@@ -16,14 +16,13 @@
   },
   "bundledDependencies": [
     "bunyan",
+    "bunyan-logentries",
     "pg",
-    "underscore",
-    "le_node"
+    "underscore"
   ],
   "dependencies": {
     "bunyan": "^1.5.1",
     "bunyan-logentries": "^1.1.2",
-    "le_node": "^1.1.0",
     "pg": "^4.3.0",
     "underscore": "^1.8.3"
   }
