@@ -28,6 +28,10 @@ logentries_stream['_logger'].on('connect', function() {
   flushed = true;
 });
 
+logentries_stream['_logger'].on('connection drain', function() {
+  flushed = true;
+});
+
 var complete = function(err, context) {
   var counter = 100;
   var interval = setInterval(function(){
@@ -110,6 +114,8 @@ function calculateTripDetail(client, context, trip_id, cb) {
         end
         **/
 
+        var start = new Date().getTime();
+
         // While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
         // metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
         metrics.rows.forEach(function(metric) {
@@ -180,31 +186,34 @@ function calculateTripDetail(client, context, trip_id, cb) {
         summary_js_buffer.push(COLOR_SCALE[0]);
         summary_js_buffer.push("\']);\n");
 
-        logger.info(detailed_js_buffer.join(''));
-        logger.info(summary_js_buffer.join(''));
-
         // The JS buffers are very large but compress well, so we store them deflated.
-        var detailed_route = zlib.deflateSync(detailed_js_buffer.join('')).toString('base64');
-        var summary_route = zlib.deflateSync(summary_js_buffer.join('')).toString('base64');
+        zlib.deflate(detailed_js_buffer.join(''), function(err, buf) {
+          if (err) return complete(err, context);
+          var detailed_route = buf.toString('base64');
+          zlib.deflate(summary_js_buffer.join(''), function(err, buf) {
+            if (err) return complete(err, context);
+            var summary_route = buf.toString('base64');
 
-        // The client needs to know the bounding box for this map.  This is defined by the coordinates of the furthest
-        // top left and bottom right points.
-        var upper_left = JSON.stringify({ lng: lowest_lng, lat: highest_lat });
-        var lower_right = JSON.stringify({ lng: highest_lng, lat: lowest_lat });
+            // The client needs to know the bounding box for this map.  This is defined by the coordinates of the furthest
+            // top left and bottom right points.
+            var upper_left = JSON.stringify({ lng: lowest_lng, lat: highest_lat });
+            var lower_right = JSON.stringify({ lng: highest_lng, lat: lowest_lat });
 
-        // Insert new trip_details record
-        logger.info({upper_left: upper_left, lower_right: lower_right}, "Calculated bounds");
+            // Insert new trip_details record
+            logger.info({duration: (new Date().getTime() - start)}, 'Processing completed');
 
-        // Find current trip.  If none and car is in gear, create a new trip.
-        client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route, upper_left, lower_right], function(err, res) {
+            // Find current trip.  If none and car is in gear, create a new trip.
+            client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route, upper_left, lower_right], function(err, res) {
 
-          if (err) {
-            logger.error(err, 'Trip detail insert failed');
-            return complete(err, context);
-          }
+              if (err) {
+                logger.error(err, 'Trip detail insert failed');
+                return complete(err, context);
+              }
 
-          logger.info(res, "Created trip detail");
-          cb();
+              logger.info(res, "Created trip detail");
+              cb();
+            });
+          });
         });
       });
     });

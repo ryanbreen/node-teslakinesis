@@ -12,7 +12,8 @@ module.exports = function(grunt) {
       default: {
         arn: 'arn:aws:lambda:us-east-1:465070256155:function:tesla_data_processing',
         options: {
-          profile: 'lambda_deployer'
+          profile: 'lambda_deployer',
+          timeout: 60
         }
       }
     },
