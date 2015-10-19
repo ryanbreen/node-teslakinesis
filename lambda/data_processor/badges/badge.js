@@ -3,7 +3,13 @@ var Badge = function() {
   this.last_issued = 4611686018427387903;
 };
 
-Badge.create = function(trip_detail, metric, data) {
+var INSERT_BADGE = "INSERT INTO badges( \
+            vehicle_id, trip_id, trip_detail_id, vehicle_telemetry_metric_id, \
+            badge_type_id, data, created_at, updated_at) \
+    VALUES (?, ?, ?, ?, \
+            ?, ?, ?, ?);";
+
+Badge.create = function(trip, metric, data) {
   if (!metric) return;
 
   // Check whether the last time we issued this badge was less than a minute ago.  We do this
