@@ -106,14 +106,6 @@ function calculateTripDetail(client, context, trip_id, cb) {
 
         var first_line = true;
 
-        /**
-        badge_types = BadgeType.all
-        badge_processors = []
-        badge_types.each do |type|
-          badge_processors << type.dup
-        end
-        **/
-
         var start = new Date().getTime();
 
         // While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
