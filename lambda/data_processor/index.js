@@ -10,6 +10,8 @@ var logentries_creds = require('./creds/logentries.js');
 var bunyan = require('bunyan');
 var bunyanLogentries = require('bunyan-logentries');
 
+var badges = require('./badges/');
+
 var logentries_stream = bunyanLogentries.createStream({token: logentries_creds.TOKEN});
 var logger = module.exports.logger = bunyan.createLogger({
   name: 'skunkworks',
@@ -108,6 +110,12 @@ function calculateTripDetail(client, context, trip_id, cb) {
 
         var start = new Date().getTime();
 
+        // Initialize a badge processor for each badge type
+        var badge_processors = [];
+        badge_types.forEach(function(bt) {
+          badge_processors.push(bt);
+        });
+
         // While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
         // metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
         metrics.rows.forEach(function(metric) {
@@ -123,12 +131,10 @@ function calculateTripDetail(client, context, trip_id, cb) {
             first_line = false;
           }
 
-          /**
-          # Process this vehicle metric for each badge type
-          badge_processors.each do |badge_processor|
-            badge_processor.process_metric self.original_trip_detail, metric
-          end
-          **/
+          // Process this vehicle metric for each badge type
+          badge_processors.forEach(function(badge_processor) {
+            badge_processor.process_metric({}, metric);
+          });
 
           if (lowest_lat == undefined  || metric.location.coordinates[1] < lowest_lat) lowest_lat = metric.location.coordinates[1];
           if (lowest_lng == undefined  || metric.location.coordinates[0] < lowest_lng) lowest_lng = metric.location.coordinates[0];

@@ -11,3 +11,5 @@ SpeedDemonBadge.prototype.process_metrics = function(trip_detail, metric) {
     this.create_badge(trip_detail, metric, metric.speed);
   }
 };
+
+module.exports = SpeedDemonBadge;
