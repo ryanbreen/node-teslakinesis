@@ -209,19 +209,35 @@ function calculateTripDetail(client, context, trip_id, cb) {
                 return complete(err, context);
               }
 
-              // Render all created badges
-              var trip_details = {id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: res.rows[0].id};
-              var badge_sql = "";
-              var badge_params = [];
-              badge_processors.forEach(function(badge_processor) {
-                badge_sql = badge_sql += badge_processor.toSQL();
-                badge_params = badge_params.concat(badge_processor.getSQLParams(trip_details));
+              var trip_detail_id = res.rows[0].id;
+              logger.info({trip_detail_id: trip_detail_id}, "Saved new trip detail id");
+
+              // First, delete all badges for this trip.
+              client.query("DELETE FROM badges where trip_id = $1;", [trip_id], function(err) {
+                if (err) {
+                  logger.error(err, 'Badge delete failed');
+                  return complete(err, context);
+                }
+
+                // Render all created badges
+                var trip_details = {id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: trip_detail_id};
+
+                // Gather up all the pending sql operations as a result of the pending badge creates / deletes.
+                var sql_functions = [];
+                badge_processors.forEach(function(badge_processor) {
+                  sql_functions = sql_functions.concat(badge_processor.getSQLFunctions());
+                });
+
+                // If there are pending operations as a result of badge creation, run them and cb once all are
+                // complete.  Otherwise, callback immediately.
+                if (sql_functions.length > 0) {
+                  var deferred_cb = _.after(sql_functions.length, cb);
+                  logger.info("Running %s badge processing operations", sql_functions.length);
+                  sql_functions.forEach(function(sql_fn) {
+                    sql_fn(client, trip_details, deferred_cb);
+                  });
+                } else cb();
               });
-
-              logger.info({sql: badge_sql, params: badge_params}, "Creating badges");
-
-              //logger.info(res, "Created trip detail");
-              cb();
             });
           });
         });
