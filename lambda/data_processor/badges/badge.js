@@ -10,7 +10,9 @@ Badge.create = function(trip_detail, metric, data) {
   // so similar badges don't stack up on each other.
   if ((this.last_issued - metric.timestamp) < 60) return;
 
-  this.last_issued = metric.timestamp
+  this.last_issued = metric.timestamp;
+
+  console.log('Issuing speed demon badge');
 
 /**
   Badge.create(

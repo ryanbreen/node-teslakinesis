@@ -1,7 +1,13 @@
+var Badge = require('./badge.js');
 
+var SpeedDemonBadge = function() {
+  this.badge_type_id = 1;
+};
 
-module.exports.process_metrics = function(trip_detail, metric) {
+SpeedDemonBadge.prototype = new Badge();
+
+SpeedDemonBadge.prototype.process_metrics = function(trip_detail, metric) {
   if (metric.speed > 90) {
-    create_badge(trip_detail, metric, metric.speed);
+    this.create_badge(trip_detail, metric, metric.speed);
   }
 };
