@@ -10,7 +10,7 @@ var logentries_creds = require('./creds/logentries.js');
 var bunyan = require('bunyan');
 var bunyanLogentries = require('bunyan-logentries');
 
-var badges = require('./badges/');
+var badge_types = require('./badges/');
 
 var logentries_stream = bunyanLogentries.createStream({token: logentries_creds.TOKEN});
 var logger = module.exports.logger = bunyan.createLogger({
@@ -48,15 +48,15 @@ var complete = function(err, context) {
 
 var PURGE_TRIP_DETAIL_FOR_TRIP = "delete from trip_details where trip_id = $1;";
 var GET_TRIP = "select * from trips where id = $1;";
-var GET_METRICS_FOR_TRIP = "SELECT id, vehicle_id, \"timestamp\", speed, odometer, soc, elevation, \
-       est_heading, heading, st_asgeojson(location) as location, power, shift_state, range, est_range, \
-       created_at, updated_at, trip_id \
+var GET_METRICS_FOR_TRIP = "SELECT id, vehicle_id, EXTRACT(EPOCH FROM timestamp) * 1000 as timestamp, speed, \
+      odometer, soc, elevation, est_heading, heading, st_asgeojson(location) as location, power, shift_state, range, est_range, \
+      created_at, updated_at, trip_id \
   FROM vehicle_telemetry_metrics where trip_id = $1 order by timestamp;";
 var INSERT_TRIP_DETAILS = "INSERT INTO trip_details( \
-            vehicle_id, trip_id, detailed_route, summary_route, upper_left, \
-            lower_right, created_at, updated_at) \
+          vehicle_id, trip_id, detailed_route, summary_route, upper_left, \
+          lower_right, created_at, updated_at) \
     VALUES ($1, $2, $3, $4, $5, \
-            $6, NOW(), NOW()) returning id;";
+          $6, NOW(), NOW()) returning id;";
 
 // For detailed routes, we want to use line segments of different colors to represent different speeds.
 // We use green for 0-25MPH, orange for 25-50MPH, and red for 50+.
@@ -77,11 +77,13 @@ function calculateTripDetail(client, context, trip_id, cb) {
     }
 
     // Find current trip.  If none and car is in gear, create a new trip.
-    client.query(GET_TRIP, [trip_id], function(err, trip) {
+    client.query(GET_TRIP, [trip_id], function(err, trip_record) {
       if (err) {
         logger.error(err, 'Trip metric query failed');
         return complete(err, context);
       }
+
+      var trip = trip_record.rows[0];
 
       // Find current trip.  If none and car is in gear, create a new trip.
       client.query(GET_METRICS_FOR_TRIP, [trip_id], function(err, metrics) {
@@ -112,8 +114,8 @@ function calculateTripDetail(client, context, trip_id, cb) {
 
         // Initialize a badge processor for each badge type
         var badge_processors = [];
-        badge_types.forEach(function(bt) {
-          badge_processors.push(bt);
+        badge_types.forEach(function(BadgeType) {
+          badge_processors.push(new BadgeType());
         });
 
         // While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
@@ -133,7 +135,7 @@ function calculateTripDetail(client, context, trip_id, cb) {
 
           // Process this vehicle metric for each badge type
           badge_processors.forEach(function(badge_processor) {
-            badge_processor.process_metric({}, metric);
+            badge_processor.process_metric(metric);
           });
 
           if (lowest_lat == undefined  || metric.location.coordinates[1] < lowest_lat) lowest_lat = metric.location.coordinates[1];
@@ -172,11 +174,10 @@ function calculateTripDetail(client, context, trip_id, cb) {
 
         // If this trip is complete, send metrics_complete to each badge processor.
         if (trip.end_time != undefined) {
-          /**
-          badge_processors.each do |badge_processor|
-            badge_processor.metrics_complete self.original_trip_detail
-          end
-          **/
+          // Process this vehicle metric for each badge type
+          badge_processors.forEach(function(badge_processor) {
+            badge_processor.metrics_complete();
+          });
         }
 
         // All metrics in the summary polyline use the same color.
@@ -208,7 +209,18 @@ function calculateTripDetail(client, context, trip_id, cb) {
                 return complete(err, context);
               }
 
-              logger.info(res, "Created trip detail");
+              // Render all created badges
+              var trip_details = {id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: res.rows[0].id};
+              var badge_sql = "";
+              var badge_params = [];
+              badge_processors.forEach(function(badge_processor) {
+                badge_sql = badge_sql += badge_processor.toSQL();
+                badge_params = badge_params.concat(badge_processor.getSQLParams(trip_details));
+              });
+
+              logger.info({sql: badge_sql, params: badge_params}, "Creating badges");
+
+              //logger.info(res, "Created trip detail");
               cb();
             });
           });

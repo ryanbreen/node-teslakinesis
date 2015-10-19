@@ -1,14 +1,17 @@
+var util = require('util');
+
 var Badge = require('./badge.js');
 
 var SpeedDemonBadge = function() {
+  Badge.call(this);
   this.badge_type_id = 1;
 };
 
-SpeedDemonBadge.prototype = new Badge();
+util.inherits(SpeedDemonBadge, Badge);
 
-SpeedDemonBadge.prototype.process_metrics = function(trip_detail, metric) {
+SpeedDemonBadge.prototype.process_metric = function(metric) {
   if (metric.speed > 90) {
-    this.create_badge(trip_detail, metric, metric.speed);
+    this.createSQL(metric, metric.speed);
   }
 };
 
