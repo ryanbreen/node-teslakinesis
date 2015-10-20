@@ -259,6 +259,12 @@ exports.handler = function(record, context) {
         calculateTripDetail(client, context, record.trip_id, function(err) {
           complete(err, context);
         });
+
+        client.query0 = client.query;
+        client.query = function(config, params, cb) {
+          logger.info(params, config);
+          client.query0(config, params, cb);
+        };
       }
 
     } catch(e) {

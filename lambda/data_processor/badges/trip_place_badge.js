@@ -104,6 +104,7 @@ util.inherits(TripPlaceBadge, Badge);
 TripPlaceBadge.prototype.metrics_complete = function() {
 
   this.sql_functions.push(function(client, trip_detail, cb) {
+
     client.query("SELECT * from trips where vehicle_id = $1 and start_location_id = $2 and end_location_id = $3 order by \
       EXTRACT(EPOCH FROM (end_time - start_time)) limit 4;", [
       trip_detail.vehicle_id,
@@ -146,13 +147,14 @@ TripPlaceBadge.prototype.metrics_complete = function() {
           // Run our callback once all three trips are processed.
           var delayed_cb = _.after(3, cb);
 
-          // Once we've cleared badge state, we need to create our new top three.
+          // A convenience method for the boilerplate necessary to create badges.
           var create_badge = function(my_trip, badge_ctor) {
             var my_badge = new badge_ctor();
             my_badge.createSQL(trip_detail, my_trip.id, Math.round(my_trip.end_time - my_trip.start_time));
             my_badge.getSQLFunctions()[0](client, delayed_cb);
           };
 
+          // Once we've cleared badge state, we need to create our new top three.
           create_badge(top_three_trips[0], TripFirstPlaceBadge);
           create_badge(top_three_trips[1], TripSecondPlaceBadge);
           create_badge(top_three_trips[2], TripThirdPlaceBadge);
@@ -181,7 +183,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
               // Delete any previous slowest and create a badge
               client.query("DELETE from badges where vehicle_id = $1 and trip_id IN \
                               (select id from trips where vehicle_id = $1 and start_location_id = $2 and end_location_id = $3) \
-                            and badge_type_id IN (10, 11, 12);", [
+                            and badge_type_id = 13;", [
                 trip_detail.vehicle_id,
                 trip_detail.trip.start_location_id,
                 trip_detail.trip.end_location_id
@@ -190,15 +192,21 @@ TripPlaceBadge.prototype.metrics_complete = function() {
                   trip.logger.error("Failed to delete existing badges due to %s", err);
                   return cb(err);
                 }
-              create_badge slowest_trip, (trip.end_time - trip.start_time).round, 13
+
+                var my_badge = new TripLastPlaceBadge();
+                my_badge.createSQL(trip_detail, oldest_trip.id, Math.round(oldest_trip.end_time - oldest_trip.start_time));
+                my_badge.getSQLFunctions()[0](client, cb);
+              });
 
             } else {
               // Nothing to be done.  This trip is not the slowest.
               cb();
             }
-      } else {
-        // Nothing to be done.  Fire the callback.
-        cb();
+          });
+        } else {
+          // Nothing to be done.  Fire the callback.
+          cb();
+        }
       }
     });
   });
