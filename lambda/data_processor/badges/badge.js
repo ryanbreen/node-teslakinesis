@@ -17,7 +17,7 @@ Badge.prototype.createSQL = function(metric, data) {
 
   // Check whether the last time we issued this badge was less than a minute ago.  We do this
   // so similar badges don't stack up on each other.
-  if (this.last_issued && (this.last_issued - metric.timestamp) < (60 * 1000)) return;
+  if (this.last_issued && (metric.timestamp - this.last_issued) < (60 * 1000)) return;
 
   this.last_issued = metric.timestamp;
 
