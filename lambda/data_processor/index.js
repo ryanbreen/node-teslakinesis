@@ -220,7 +220,7 @@ function calculateTripDetail(client, context, trip_id, cb) {
                 }
 
                 // Render all created badges
-                var trip_details = {id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: trip_detail_id};
+                var trip_details = {logger:logger, id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: trip_detail_id, trip: trip};
 
                 // Gather up all the pending sql operations as a result of the pending badge creates / deletes.
                 var sql_functions = [];
@@ -232,7 +232,7 @@ function calculateTripDetail(client, context, trip_id, cb) {
                 // complete.  Otherwise, callback immediately.
                 if (sql_functions.length > 0) {
                   var deferred_cb = _.after(sql_functions.length, cb);
-                  logger.info("Running %s badge processing operations", sql_functions.length);
+                  logger.info(sql_functions.length, "Running badge processing operations");
                   sql_functions.forEach(function(sql_fn) {
                     sql_fn(client, trip_details, deferred_cb);
                   });
@@ -266,3 +266,4 @@ exports.handler = function(record, context) {
     }
   });
 };
+
