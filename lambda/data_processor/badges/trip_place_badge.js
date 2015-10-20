@@ -150,7 +150,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
           // A convenience method for the boilerplate necessary to create badges.
           var create_badge = function(my_trip, badge_ctor) {
             var my_badge = new badge_ctor();
-            my_badge.createSQL(trip_detail, my_trip.id, Math.round(my_trip.end_time - my_trip.start_time));
+            my_badge.createSQL(trip_detail, my_trip.id, Math.round((my_trip.end_time - my_trip.start_time)/1000));
             my_badge.getSQLFunctions()[0](client, delayed_cb);
           };
 
@@ -194,7 +194,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
                 }
 
                 var my_badge = new TripLastPlaceBadge();
-                my_badge.createSQL(trip_detail, oldest_trip.id, Math.round(oldest_trip.end_time - oldest_trip.start_time));
+                my_badge.createSQL(trip_detail, oldest_trip.id, Math.round((oldest_trip.end_time - oldest_trip.start_time)/1000));
                 my_badge.getSQLFunctions()[0](client, cb);
               });
 
