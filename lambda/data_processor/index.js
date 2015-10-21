@@ -262,7 +262,7 @@ exports.handler = function(record, context) {
 
         client.query0 = client.query;
         client.query = function(config, params, cb) {
-          logger.info(params, config);
+          logger.info({values: params}, config);
           client.query0(config, params, cb);
         };
       }

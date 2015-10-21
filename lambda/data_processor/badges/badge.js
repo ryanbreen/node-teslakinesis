@@ -6,7 +6,7 @@ var Badge = function() {
   this.sql_functions = [];
 };
 
-Badge.INSERT_BADGE = "INSERT INTO badges( \
+Badge.prototype.INSERT_BADGE = "INSERT INTO badges( \
             vehicle_id, trip_id, trip_detail_id, vehicle_telemetry_metric_id, \
             badge_type_id, data, created_at, updated_at) \
     VALUES ($1, $2, $3, $4, \

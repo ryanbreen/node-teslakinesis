@@ -44,7 +44,7 @@ TopSpeedBadge.prototype.metrics_complete = function() {
 
         badge = res.rows[0];
         // if this is the fastest we've gone, delete any prior badge for this vehicle
-        if (this_objcurrent_top_speed > badge.data)
+        if (this_objcurrent_top_speed > badge.data) {
           client.query("DELETE from badges where badge_type_id = 7 and vehicle_id = [$1];", [trip_detail.vehicle_id], function(err, res) {
 
             if (err) {
