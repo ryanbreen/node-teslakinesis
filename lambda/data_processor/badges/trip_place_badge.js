@@ -9,12 +9,6 @@ var TripNumberedPlaceBadge = function() {
 
 util.inherits(TripNumberedPlaceBadge, Badge);
 
-var INSERT_BADGE = "INSERT INTO badges( \
-            vehicle_id, trip_id, trip_detail_id, vehicle_telemetry_metric_id, \
-            badge_type_id, data, created_at, updated_at) \
-    VALUES ($1, $2, $3, $4, \
-            $5, $6, NOW(), NOW());";
-
 TripNumberedPlaceBadge.prototype.createSQL = function(trip_detail, trip_id, data) {
   var this_obj = this;
 
@@ -54,7 +48,7 @@ TripNumberedPlaceBadge.prototype.createSQL = function(trip_detail, trip_id, data
 
         // After gathering the metric and trip_detail corresponding to the trip for which we must create this badge, 
         // we're finally ready to populate the badge.
-        client.query(INSERT_BADGE, [
+        client.query(this_obj.INSERT_BADGE, [
           my_metric.vehicle_id,
           my_metric.trip_id,
           my_trip_detail.id,
