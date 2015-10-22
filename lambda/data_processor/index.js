@@ -54,9 +54,9 @@ var GET_METRICS_FOR_TRIP = "SELECT id, vehicle_id, EXTRACT(EPOCH FROM timestamp)
   FROM vehicle_telemetry_metrics where trip_id = $1 order by timestamp;";
 var INSERT_TRIP_DETAILS = "INSERT INTO trip_details( \
           vehicle_id, trip_id, detailed_route, summary_route, upper_left, \
-          lower_right, created_at, updated_at) \
+          lower_right, created_at, updated_at, true_duration) \
     VALUES ($1, $2, $3, $4, $5, \
-          $6, NOW(), NOW()) returning id;";
+          $6, NOW(), NOW(), $7) returning id;";
 
 // For detailed routes, we want to use line segments of different colors to represent different speeds.
 // We use green for 0-25MPH, orange for 25-50MPH, and red for 50+.
@@ -118,11 +118,19 @@ function calculateTripDetail(client, context, trip_id, cb) {
           badge_processors.push(new BadgeType());
         });
 
+        var first_movement_timestamp = undefined;
+        var last_movement_timestamp = undefined;
+
         // While the vehicle is in motion, the stream generates a datapoint every 250ms.  Loop over each
         // metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
         metrics.rows.forEach(function(metric) {
 
           logger.debug(metric);
+
+          if (metric.speed !== 0) {
+            if (first_movement_timestamp === undefined) first_movement_timestamp = metric.timestamp;
+            last_movement_timestamp = metric.timestamp;
+          }
 
           // Location is a geojson string, so we must parse it to interact with it.
           metric.location = JSON.parse(metric.location);
@@ -202,7 +210,8 @@ function calculateTripDetail(client, context, trip_id, cb) {
             logger.info({duration: (new Date().getTime() - start)}, 'Processing completed');
 
             // Find current trip.  If none and car is in gear, create a new trip.
-            client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route, upper_left, lower_right], function(err, res) {
+            client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route,
+              upper_left, lower_right, (last_movement_timestamp - first_movement_timestamp)], function(err, res) {
 
               if (err) {
                 logger.error(err, 'Trip detail insert failed');
