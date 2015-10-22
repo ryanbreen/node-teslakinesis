@@ -22,7 +22,6 @@ TopSpeedBadge.prototype.metrics_complete = function() {
   var this_obj = this;
 
   this.sql_functions.push(function(client, trip_detail, cb) {
-    trip_detail.logger.info("I like turtles.");
 
     client.query("SELECT * from badges where badge_type_id = 7 and vehicle_id = $1;", [trip_detail.vehicle_id], function(err, res) {
 
