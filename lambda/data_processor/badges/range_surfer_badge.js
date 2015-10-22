@@ -8,7 +8,7 @@ var RangeSurferBadge = function() {
   this.current_lowest_soc = 180;
 };
 
-util.inherits(ComingDownTheMountainBadge, Badge);
+util.inherits(RangeSurferBadge, Badge);
 
 RangeSurferBadge.prototype.process_metric = function(metric) {
   if (metric.soc < 25 && metric.soc < this.current_lowest_soc) {
