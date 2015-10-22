@@ -34,7 +34,7 @@ CompassDirectionalBadge.prototype.createSQL = function() {
         client.query(this_obj.INSERT_BADGE, [
           this_obj.exemplar_metric.vehicle_id,
           this_obj.exemplar_metric.trip_id,
-          trip_detail.id,
+          trip_detail.trip_detail_id,
           this_obj.exemplar_metric.id,
           this_obj.badge_type_id,
           this_obj.data
@@ -70,7 +70,7 @@ CompassDirectionalBadge.prototype.createSQL = function() {
             client.query(this_obj.INSERT_BADGE, [
               this_obj.exemplar_metric.vehicle_id,
               this_obj.exemplar_metric.trip_id,
-              trip_detail.id,
+              trip_detail.trip_detail_id,
               this_obj.exemplar_metric.id,
               this_obj.badge_type_id,
               this_obj.data
