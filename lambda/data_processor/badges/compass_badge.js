@@ -42,6 +42,7 @@ CompassDirectionalBadge.prototype.createSQL = function() {
       } else {
         var current_exemplar = res.rows[0];
         
+        // Create a dummy metric representing the current, global exemplar: the metric that earned the badge.
         var dummy_metric = {
           id: false,
           location: {
