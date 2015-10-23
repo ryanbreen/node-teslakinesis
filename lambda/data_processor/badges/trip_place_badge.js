@@ -99,8 +99,8 @@ TripPlaceBadge.prototype.metrics_complete = function() {
 
   this.sql_functions.push(function(client, trip_detail, cb) {
 
-    client.query("SELECT * from trips where vehicle_id = $1 and start_location_id = $2 and end_location_id = $3 order by \
-      EXTRACT(EPOCH FROM (end_time - start_time)) limit 4;", [
+    client.query("SELECT t.*, td.true_duration from trips t, trip_details td where t.vehicle_id = $1 and t.start_location_id = $2 \
+      and t.end_location_id = $3 and t.id = td.trip_id order by td.true_duration limit 4;", [
       trip_detail.vehicle_id,
       trip_detail.trip.start_location_id,
       trip_detail.trip.end_location_id
@@ -144,7 +144,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
           // A convenience method for the boilerplate necessary to create badges.
           var create_badge = function(my_trip, badge_ctor) {
             var my_badge = new badge_ctor();
-            my_badge.createSQL(trip_detail, my_trip.id, Math.round((my_trip.end_time - my_trip.start_time)/1000));
+            my_badge.createSQL(trip_detail, my_trip.id, Math.round(my_trip.true_duration/1000));
             my_badge.getSQLFunctions()[0](client, delayed_cb);
           };
 
@@ -161,8 +161,9 @@ TripPlaceBadge.prototype.metrics_complete = function() {
 
           // Check to see if this is the slowest trip.  If so, delete any current trip
           // for this route badged as slowest and badge this one.
-          client.query("SELECT * from trips where vehicle_id = $1 and start_location_id = $2 and end_location_id = $3 order by \
-            EXTRACT(EPOCH FROM (end_time - start_time)) DESC limit 1;", [
+          client.query("SELECT t.*, td.true_duration from trips t, trip_details td \
+            where t.vehicle_id = $1 and t.start_location_id = $2 and t.end_location_id = $3 and t.id = td.trip_id order by \
+            td.true_duration DESC limit 1;", [
             trip_detail.vehicle_id,
             trip_detail.trip.start_location_id,
             trip_detail.trip.end_location_id
@@ -188,7 +189,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
                 }
 
                 var my_badge = new TripLastPlaceBadge();
-                my_badge.createSQL(trip_detail, oldest_trip.id, Math.round((oldest_trip.end_time - oldest_trip.start_time)/1000));
+                my_badge.createSQL(trip_detail, oldest_trip.id, Math.round(oldest_trip.true_duration/1000));
                 my_badge.getSQLFunctions()[0](client, cb);
               });
 
