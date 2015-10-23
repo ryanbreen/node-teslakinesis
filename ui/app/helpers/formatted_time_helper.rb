@@ -11,8 +11,9 @@ module FormattedTimeHelper
 
   def pretty_duration(trip, summarize = false)
     if trip.end_time != nil
-      return "in #{distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true)}" if summarize
-      distance_of_time_in_words(trip.start_time, trip.end_time, include_seconds: true)
+      now = DateTime.now
+      return "in #{distance_of_time_in_words(now - (trip.trip_detail.true_duration/1000), now, include_seconds: true)}" if summarize
+      distance_of_time_in_words(now - (trip.trip_detail.true_duration/1000), now, include_seconds: true)
     elsif summarize
       "is ongoing"
     else
@@ -21,8 +22,9 @@ module FormattedTimeHelper
   end
 
   def pretty_precise_duration(trip)
+    now = DateTime.now
     if trip.end_time != nil
-      precise_distance_of_time_in_words(trip.start_time, trip.end_time)
+      precise_distance_of_time_in_words(now - (trip.trip_detail.true_duration/1000), now)
     else
       precise_distance_of_time_in_words(trip.start_time, Time.now)
     end
