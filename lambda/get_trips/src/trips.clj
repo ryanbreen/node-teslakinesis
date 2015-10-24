@@ -24,5 +24,5 @@
   (json/write-str (list-streams (creds)) :value-fn my-value-writer))
   ;(print-str (describe-instances cred) :value-fn my-value-writer))
 
-(println (-get))
+;(println (-get))
 ;(pprint (-get))
