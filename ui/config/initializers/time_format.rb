@@ -22,6 +22,3 @@ module ActionView::Helpers::DateHelper
     end
   end
 end
-
-#include ActionView::Helpers::DateHelper
-#puts precise_distance_of_time_in_words(Time.now - 90, Time.now)
