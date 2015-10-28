@@ -13,15 +13,19 @@
   (async-lambda-fn
    (fn [{:keys [page]} context]
      (go
+      (.log js/console "About to connect")
       (.connect client 
-        (fn [err] 
-          (if err
-            (js/Error. (str "Couldn't connect" err))
-            (.query client "select * from trip_details limit 5;" 
-              (fn [err result] 
-               (if err 
-                 (.error js/console "Query error" err)
-                 (do
-                   (.log js/console result.rows)
-                   (.end client)
-                   (js/Success. "Happy"))))))))))))
+        (async-lambda-fn
+          (fn [err]
+            (go
+            (.log js/console "Connected with err " err)
+            (if err
+              (js/Error. (str "Couldn't connect" err))
+              (.query client "select * from trip_details limit 5;"
+                (fn [err result]
+                 (if err
+                   (.error js/console "Query error" err)
+                   (do
+                     (.log js/console result.rows)
+                     (.end client)
+                     (js/Success. "Happy"))))))))))))))
