@@ -16,7 +16,7 @@
       (fn [err]
        (if err
          (.error js/console "Couldn't connect" err)
-         (.query client "select trip_id from trip_details limit 5 offset $1;" [(page * 5)]
+         (.query client "select trip_id from trip_details limit 5 offset $1;" (array (* (- page 1) 5))
            (fn [err result]
              (if err
                (.error js/console "Query error" err)
