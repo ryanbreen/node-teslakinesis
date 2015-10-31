@@ -11,7 +11,7 @@
 
 (def ^:export get-trips
    (fn [{:keys [page]} context]
-    (.log js/console "About to connect")
+    (.log js/console "About to connect and load page " page)
     (.connect client
       (fn [err]
        (if err
