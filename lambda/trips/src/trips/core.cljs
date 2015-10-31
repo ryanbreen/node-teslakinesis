@@ -9,17 +9,17 @@
 (def conn db-creds/connection-string)
 (def client (pg.Client. conn))
 
-(def ^:export get-trips
-   (fn [{:keys [page]} context]
-    (.log js/console "About to connect and load page " page)
-    (.connect client
-      (fn [err]
-       (if err
-         (.error js/console "Couldn't connect" err)
-         (.query client "select trip_id from trip_details limit 5 offset $1;" (array (* (- page 1) 5))
-           (fn [err result]
-             (if err
-               (.error js/console "Query error" err)
-               (do
-                 (.log js/console result.rows)
-                 (.end client))))))))))
+(defn ^:export get-trips [page context]
+  (.log js/console "About to connect and load page" (select-keys page [:page]) context)
+  (.log js/console "About to connect and load page" {:keys (JSON/parse page)} context)
+  (.connect client
+    (fn [err]
+     (if err
+       (.error js/console "Couldn't connect" err)
+       (.query client "select trip_id from trip_details limit 5 offset $1;" (array (* (- page 1) 5))
+         (fn [err result]
+           (if err
+             (.error js/console "Query error" err)
+             (do
+               (.log js/console result.rows)
+               (.end client)))))))))
