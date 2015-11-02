@@ -15,5 +15,5 @@
   (sql/query (creds)
     ["select * from trips limit 10;"]))
 
-(println (-get))
+;(println (-get))
 ;(pprint (-get))
