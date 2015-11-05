@@ -11,9 +11,9 @@
       (io/resource
         "creds/db.creds" ))))
 
-(defn -get []
+(defn -get [event]
+  (println event)
   (sql/query (creds)
     ["select * from trips limit 10;"]))
 
 ;(println (-get))
-;(pprint (-get))
