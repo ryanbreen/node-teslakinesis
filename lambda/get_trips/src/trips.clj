@@ -17,3 +17,4 @@
     ["select * from trips limit 10;"]))
 
 ;(println (-get))
+;(pprint (-get))
