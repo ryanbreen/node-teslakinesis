@@ -10,6 +10,8 @@ var teslams = require('teslams');
 var fs = require('fs');
 var util = require('util');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
 var usage = 'Usage: $0 -u <username> -p <password> [-sz] --post_records_to <target_url> \n' +
     '   [--values <value list>] [--maxrpm <#num>] \n';
 
