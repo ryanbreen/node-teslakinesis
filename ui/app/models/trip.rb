@@ -22,7 +22,6 @@ class Trip < ActiveRecord::Base
     req = Net::HTTP::Post.new(uri)
     req.body = "{\"trip_id\": \"#{id}\"}"
     req.content_type = 'application/json'
-    puts "beans"
     puts req
     res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) {|http|
       http.request(req)
