@@ -12,8 +12,12 @@
         "creds/db.creds" ))))
 
 (defn -get []
-  (sql/query (creds)
-    ["select * from trips limit 10;"]))
+  (let [db_creds (creds)]
+    (pprint db_creds)
+    (let [result (sql/query db_creds
+      ["select * from trips limit 10;"])]
+      (pprint result)
+      (str result))))
 
 ;(println (-get))
 ;(pprint (-get))
