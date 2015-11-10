@@ -1,6 +1,6 @@
 (ns trips
   (:gen-class
-   :methods [^:static [get [] String]])
+   :methods [^:static [get [] Object]])
   (:use [clojure.java.io :as io]
         [clojure.data.json :as json]
         [clojure.java.jdbc :as sql]))
@@ -24,5 +24,6 @@
   (let [db_creds (creds)]
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
-      (json/write-str result
-        :value-fn my-value-writer))))
+      (json/read-str
+        (json/write-str result
+          :value-fn my-value-writer)))))
