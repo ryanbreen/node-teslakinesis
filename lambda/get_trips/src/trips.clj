@@ -11,23 +11,26 @@
       (io/resource
         "creds/db.creds" ))))
 
-(defn my-value-reader [key value]
-  (pprint (type value))
-  (if (= (type value) "java.sql.Timestamp")
-    (java.sql.Timestamp/valueOf value)
-    value))
+(defn my-value-writer [key value]
+  ;(pprint (type value))
+  (pprint key)
+  (pprint (str (type value)))
+  (cond
+    (= (str (type value)) "class java.sql.Timestamp") (.toString value)
+    (= (str (type value)) "class org.postgresql.util.PGobject") (.toString value)
+    :else value))
+
+(defn my-value-writerz [key value]
+  (pprint value)
+  (.toString value))
 
 (defn -get []
   (let [db_creds (creds)]
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
-      (pprint (apply str result))
+      ;(pprint (take 1 result))
       (json/write-str result
-            :value-fn my-value-reader))))
-;      (str
-;        (json/read-str (apply str result)
- ;         :value-fn my-value-reader
- ;         :key-fn keyword)))))
+        :value-fn my-value-writer))))
 
 ;(println (-get))
 ;(pprint (-get))
