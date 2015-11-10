@@ -20,17 +20,9 @@
     (= (str (type value)) "class org.postgresql.util.PGobject") (.toString value)
     :else value))
 
-(defn my-value-writerz [key value]
-  (pprint value)
-  (.toString value))
-
 (defn -get []
   (let [db_creds (creds)]
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
-      ;(pprint (take 1 result))
       (json/write-str result
         :value-fn my-value-writer))))
-
-;(println (-get))
-;(pprint (-get))
