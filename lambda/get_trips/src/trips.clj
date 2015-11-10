@@ -19,7 +19,6 @@
 
 (defn -get []
   (let [db_creds (creds)]
-    (pprint db_creds)
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
       (pprint (apply str result))
