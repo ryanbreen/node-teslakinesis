@@ -23,7 +23,7 @@
 (defn -get []
   (let [db_creds (creds)]
     (let [result (sql/query db_creds
-      ["select * from trips limit 10;"])]
+      ["select start_time, start_location_id, st_asgeojson(start_location) as start_location, end_time, end_location_id, st_asgeojson(end_location) as end_location from trips limit 10;"])]
       (json/read-str
         (json/write-str result
           :value-fn my-value-writer)))))
