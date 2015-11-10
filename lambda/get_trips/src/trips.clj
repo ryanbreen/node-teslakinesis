@@ -11,13 +11,27 @@
       (io/resource
         "creds/db.creds" ))))
 
+(defn my-value-reader [key value]
+  (if (= (type value) "java.sql.Timestamp")
+    (java.sql.Timestamp/valueOf value)
+    value))
+
 (defn -get []
   (let [db_creds (creds)]
     (pprint db_creds)
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
-      (pprint result)
-      (str result))))
+      (pprint (apply str result))
+      (apply str result))))
+;      (pprint
+;        (str
+;          (json/read-str (apply str result)
+;            :value-fn my-value-reader
+;            :key-fn keyword)))
+;      (str
+;        (json/read-str (apply str result)
+ ;         :value-fn my-value-reader
+ ;         :key-fn keyword)))))
 
 ;(println (-get))
 ;(pprint (-get))
