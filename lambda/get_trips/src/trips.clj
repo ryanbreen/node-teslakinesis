@@ -22,12 +22,8 @@
     (let [result (sql/query db_creds
       ["select * from trips limit 10;"])]
       (pprint (apply str result))
-      (apply str result))))
-;      (pprint
-;        (str
-;          (json/read-str (apply str result)
-;            :value-fn my-value-reader
-;            :key-fn keyword)))
+      (json/write-str result
+            :value-fn my-value-reader))))
 ;      (str
 ;        (json/read-str (apply str result)
  ;         :value-fn my-value-reader
