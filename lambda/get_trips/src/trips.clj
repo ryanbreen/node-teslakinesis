@@ -12,6 +12,7 @@
         "creds/db.creds" ))))
 
 (defn my-value-reader [key value]
+  (pprint (type value))
   (if (= (type value) "java.sql.Timestamp")
     (java.sql.Timestamp/valueOf value)
     value))
