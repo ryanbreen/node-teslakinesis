@@ -17,7 +17,7 @@
   (pprint (str (type value)))
   (cond
     (= (str (type value)) "class java.sql.Timestamp") (.toString value)
-    (= (str (type value)) "class org.postgresql.util.PGobject") (json/read-str value)
+    (= (str (type value)) "class org.postgresql.util.PGobject") (json/write-str (json/read-str value))
     :else value))
 
 (defn -get []
