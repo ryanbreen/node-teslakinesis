@@ -150,8 +150,8 @@ TripPlaceBadge.prototype.metrics_complete = function() {
 
           // Once we've cleared badge state, we need to create our new top three.
           create_badge(top_three_trips[0], TripFirstPlaceBadge);
-          create_badge(top_three_trips[1], TripSecondPlaceBadge);
-          create_badge(top_three_trips[2], TripThirdPlaceBadge);
+          if (top_three_trips.length > 0) create_badge(top_three_trips[1], TripSecondPlaceBadge);
+          if (top_three_trips.length > 1) create_badge(top_three_trips[2], TripThirdPlaceBadge);
         });
       } else {
 
