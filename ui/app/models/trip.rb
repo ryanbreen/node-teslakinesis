@@ -21,8 +21,8 @@ class Trip < ActiveRecord::Base
     uri = URI("https://api.ryanbreen.com/v1/trip_detail")
     req = Net::HTTP::Post.new(uri)
     req.body = "{\"trip_id\": \"#{id}\"}"
+    puts req.body
     req.content_type = 'application/json'
-    puts req
     res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) {|http|
       http.request(req)
     }
