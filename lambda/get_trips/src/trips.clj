@@ -12,12 +12,9 @@
         "creds/db.creds" ))))
 
 (defn my-value-writer [key value]
-  ;(pprint (type value))
-  (pprint key)
-  (pprint (str (type value)))
   (cond
     (= (str (type value)) "class java.sql.Timestamp") (.toString value)
-    (= key "end_location") ((pprint key) (json/read-str value))
+    (or (= key :start_location) (= key :end_location)) (json/read-str value)
     :else value))
 
 (defn -get []
