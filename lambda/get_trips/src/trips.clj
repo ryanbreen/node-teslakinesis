@@ -1,6 +1,6 @@
 (ns trips
   (:gen-class
-   :methods [^:static [get [] Object]])
+   :implements [com.amazonaws.services.lambda.runtime.RequestStreamHandler])
   (:use [clojure.java.io :as io]
         [clojure.data.json :as json]
         [clojure.java.jdbc :as sql]))
@@ -17,7 +17,8 @@
     (or (= key :start_location) (= key :end_location)) (json/read-str value)
     :else value))
 
-(defn -get []
+(defn -handleRequest [this is os context]
+  (println (str this))
   (let [db_creds (creds)]
     (let [result (sql/query db_creds
       ["select start_time, start_location_id, st_asgeojson(start_location) as start_location, end_time, end_location_id, st_asgeojson(end_location) as end_location from trips limit 10;"])]
