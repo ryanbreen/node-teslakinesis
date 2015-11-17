@@ -6,10 +6,7 @@
         [clojure.java.jdbc :as sql]))
 
 (defn creds []
-  (slurp
-    (io/file
-      (io/resource
-        "creds/db.creds" ))))
+  (-> "creds/db.creds" (io/resource) (io/file) slurp))
 
 (defn my-value-writer [key value]
   (cond
