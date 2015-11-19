@@ -16,9 +16,9 @@
 
 (defn -handleRequest [this is os context]
   (let [w (io/writer os)]
-    (let [result (sql/query (creds)
-      ["select start_time, start_location_id, st_asgeojson(start_location) as start_location, end_time, end_location_id, st_asgeojson(end_location) as end_location from trips limit 10;"])]
-      (let [w (io/writer os)]
-        (-> (json/read-str (json/write-str result :value-fn my-value-writer))
-            (json/write w))
-        (.flush w)))))
+    (let [w (io/writer os)]
+      (-> (["select start_time, start_location_id, st_asgeojson(start_location) as start_location, end_time, end_location_id, st_asgeojson(end_location) as end_location from trips limit 10;"]
+        (json/write-str :value-fn my-value-writer)
+        (json/read-str)
+        (json/write w))
+      (.flush w)))))
