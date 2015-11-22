@@ -15,7 +15,7 @@ class Trip < ActiveRecord::Base
 
     # If the active record trip_detail method returns a result, that means we've already created and
     # cached this record.  If that's the case, return it.
-    return self.original_trip_detail if self.original_trip_detail != nil
+    return self.original_trip_detail if self.original_trip_detail != nil && trip.end_time != nil
 
     # Otherwise, call the trip_detail API
     uri = URI("https://api.ryanbreen.com/v1/trip_detail")
