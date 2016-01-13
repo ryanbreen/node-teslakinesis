@@ -1,5 +1,6 @@
 class VehiclesController < ApplicationController
   before_action :set_vehicle, only: [:show, :edit, :update, :destroy]
+  before_action :logged_in_using_omniauth?
 
   # GET /vehicles
   # GET /vehicles.json
@@ -62,6 +63,14 @@ class VehiclesController < ApplicationController
   end
 
   private
+  
+    def logged_in_using_omniauth?
+      unless session[:userinfo].present?
+        # Redirect to page that has the login here
+        redirect_to '/login.html'
+      end
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
       params[:vehicle_id] = params[:id]

@@ -9,6 +9,7 @@ class TripsController < ApplicationController
   helper FormattedTimeHelper
 
   before_action :set_models, only: [:index, :show, :destroy, :calculate_badges]
+  before_action :logged_in_using_omniauth?
 
   def index
     @trips = Trip.includes(:trip_detail).includes(:origin).includes(:destination).
@@ -57,6 +58,13 @@ class TripsController < ApplicationController
   end
 
   private
+
+    def logged_in_using_omniauth?
+      unless session[:userinfo].present?
+        # Redirect to page that has the login here
+        redirect_to '/login.html'
+      end
+    end
 
     def set_models
       @trip = Trip.includes(:trip_detail).find(params[:id]) if params[:id] != nil

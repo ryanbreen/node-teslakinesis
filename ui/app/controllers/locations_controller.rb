@@ -1,8 +1,11 @@
 require 'rgeo'
 
 class LocationsController < ApplicationController
+
   before_action :set_vehicle, only: [:index, :show, :edit, :update, :destroy]
   before_action :set_location, only: [:show, :edit, :update, :destroy]
+
+  before_action :logged_in_using_omniauth?
 
   after_action :update_close_trips, only: [:create, :destroy]
 
@@ -86,6 +89,14 @@ class LocationsController < ApplicationController
   end
 
   private
+
+    def logged_in_using_omniauth?
+      unless session[:userinfo].present?
+        # Redirect to page that has the login here
+        redirect_to '/login.html'
+      end
+    end
+
     def update_close_trips
 
       # cache current start and end locations for trips.  we only want to rebuild trip_detail if there was an actual
