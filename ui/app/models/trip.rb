@@ -11,11 +11,9 @@ class Trip < ActiveRecord::Base
   # add our logic.
   alias_method :original_trip_detail, :trip_detail
   def trip_detail
-    puts "Looking for trip trip_detail"
-
     # If the active record trip_detail method returns a result, that means we've already created and
     # cached this record.  If that's the case, return it.
-    return self.original_trip_detail if self.original_trip_detail != nil && self.end_time != nil
+    return self.original_trip_detail if self.original_trip_detail != nil
 
     # Otherwise, call the trip_detail API
     uri = URI("https://api.ryanbreen.com/v1/trip_detail")
@@ -27,7 +25,14 @@ class Trip < ActiveRecord::Base
       http.request(req)
     }
     puts res.body
-    self.original_trip_detail(true)
+    rvalue = self.original_trip_detail(true)
+
+    if self.end_time == nil
+      # Delete trip_detail from DB if it was from a trip in progress.
+      self.original_trip_detail.destroy
+    end
+
+    rvalue
   end
 
 end
