@@ -17,32 +17,34 @@ TripNumberedPlaceBadge.prototype.createSQL = function(trip_detail, trip_id, data
     client.query("SELECT * from vehicle_telemetry_metrics where trip_id = $1 order by id DESC limit 1;", [trip_id], function(err, res) {
 
       if (err) {
-        trip_detail.logger.error(err, "Failed to query for metrics for superlative trip.");
+        console.log("Failed to query for metrics for superlative trip.");
+        console.log(err);
         return cb(err);
       }
 
       if (res.rows.length !== 1) {
-        trip_detail.logger.error({size: res.rows.length}, "Incorrect number of metrics returned for superlative trip.");
+        console.log("Incorrect number of metrics %s returned for superlative trip.", res.rows.length);
         return cb(err); 
       }
 
-      trip_detail.logger.info(res.rows, "Got metric for trip");
+      console.log("Got metric for trip: %s", res.rows);
 
       var my_metric = res.rows[0];
 
       client.query("SELECT id from trip_details where trip_id = $1 limit 1;", [trip_id], function(err, res) {
 
         if (err) {
-          trip_detail.logger(err, "Failed to query for trip_details for superlative trip.");
+          console.log("Failed to query for trip_details for superlative trip.");
+          console.log(err);
           return cb(err);
         }
 
         if (res.rows.length !== 1) {
-          trip_detail.logger({size: res.rows.length}, "Incorrect number of trip_details returned for superlative trip.");
+          console.log("Incorrect number of trip_details returned for superlative trip. %s", res.rows.length);
           return cb(err); 
         }
 
-        trip_detail.logger.info(res.rows, "Got trip detail for trip");
+        console.log("Got trip detail for trip: %s", res.rows);
 
         var my_trip_detail = res.rows[0];
 
@@ -106,7 +108,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
       trip_detail.trip.end_location_id
     ], function(err, top_trips) {
       if (err) {
-        trip.logger.error("Failed to query for top trips due to %s", err);
+        console.log("Failed to query for top trips due to %s", err);
         return cb(err);
       }
 
@@ -134,7 +136,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
           trip_detail.trip.end_location_id
         ], function(err, top_trips) {
           if (err) {
-            trip.logger.error("Failed to delete existing badges due to %s", err);
+            console.log("Failed to delete existing badges due to %s", err);
             return cb(err);
           }
 
@@ -169,7 +171,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
             trip_detail.trip.end_location_id
           ], function(err, oldest_trip_res) {
             if (err) {
-              trip.logger.error("Failed to query for oldest trips due to %s", err);
+              console.log("Failed to query for oldest trips due to %s", err);
               return cb(err);
             }
 
@@ -184,7 +186,7 @@ TripPlaceBadge.prototype.metrics_complete = function() {
                 trip_detail.trip.end_location_id
               ], function(err, top_trips) {
                 if (err) {
-                  trip.logger.error("Failed to delete existing badges due to %s", err);
+                  console.log("Failed to delete existing badges due to %s", err);
                   return cb(err);
                 }
 

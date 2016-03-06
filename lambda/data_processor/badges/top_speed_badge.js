@@ -26,11 +26,11 @@ TopSpeedBadge.prototype.metrics_complete = function() {
     client.query("SELECT * from badges where badge_type_id = 7 and vehicle_id = $1;", [trip_detail.vehicle_id], function(err, res) {
 
       if (err) {
-        trip_detail.logger.error(err, "Failed to query for fastest trip badge.");
+        console.log("Failed to query for fastest trip badge.");
         return cb(err);
       }
 
-      trip_detail.logger.info({rows: res.rows}, "Current top speed badge");
+      console.log("Current top speed badge");
 
       if (res.rows.length === 0) {
         // Assume this is the first badge for this trip.
@@ -46,14 +46,12 @@ TopSpeedBadge.prototype.metrics_complete = function() {
 
         badge = res.rows[0];
 
-        trip_detail.logger.info({current_top_speed: this_obj.top_speed, global_top_speed : badge.data}, "Is this the new top speed?");
-
         // if this is the fastest we've gone, delete any prior badge for this vehicle
         if (this_obj.top_speed > badge.data) {
           client.query("DELETE from badges where badge_type_id = 7 and vehicle_id = $1;", [trip_detail.vehicle_id], function(err, res) {
 
             if (err) {
-              trip_detail.logger.error(err, "Failed to delete fastest trip badge.");
+              console.log("Failed to delete fastest trip badge due to %s", err);
               return cb(err);
             }
 

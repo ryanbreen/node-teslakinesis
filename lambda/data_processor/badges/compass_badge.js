@@ -17,18 +17,18 @@ CompassDirectionalBadge.prototype.createSQL = function() {
 
   return function(client, trip_detail, cb) {
 
-    trip_detail.logger.info({local_exemplar: this_obj.exemplar_metric}, "local exemplar for badge");
+    console.log("local exemplar for badge: %s", this_obj.exemplar_metric);
 
     client.query("SELECT * from badges where vehicle_id = $1 and badge_type_id = $2;", [trip_detail.vehicle_id, this_obj.badge_type_id], function(err, res) {
 
       if (err) {
-        trip_detail.logger.error(err, "Failed to query for directional badge for superlative trip.");
+        console.log("Failed to query for directional badge for superlative trip due to %s", err);
         return cb(err);
       }
 
       if (res.rows.length === 0) {
 
-        trip_detail.logger.info("Trip has no existing directional superlative badge.");
+        console.log("Trip has no existing directional superlative badge.");
 
         // If this is the first trip to receive a location, set the badge now.
         client.query(this_obj.INSERT_BADGE, [
@@ -50,20 +50,20 @@ CompassDirectionalBadge.prototype.createSQL = function() {
           }
         };
 
-        trip_detail.logger.info({global_exemplar: current_exemplar}, "global exemplar for badge");
+        console.log("global exemplar for badge: %s", global_exemplar);
 
         // Send the dummy_metric through process_metric.  If it replaces this_obj's exemplar, it means that the current
         // metric is more exemplar than this one, so there's no need to update badges.
         this_obj.process_metric(dummy_metric);
         if (this_obj.exemplar_metric.id) {
 
-          trip_detail.logger.info("Trip has a superlative coordinate of %s", this_obj.data);
+          console.log("Trip has a superlative coordinate of %s", this_obj.data);
 
           // Delete the existing badge
           client.query("DELETE from badges where vehicle_id = $1 and badge_type_id = $2;",  [trip_detail.vehicle_id, this_obj.badge_type_id], function(err, res) {
 
             if (err) {
-              trip_detail.logger.error(err, "Failed to delete previous directional badge for superlative trip.");
+              console.log("Failed to delete previous directional badge for superlative trip due to %s", err);
               return cb(err);
             }
 

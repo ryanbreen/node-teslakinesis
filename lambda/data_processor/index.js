@@ -5,46 +5,8 @@ var _ = require('underscore');
 var zlib = require('zlib');
 
 var db_creds = require('./creds/db.js');
-var logentries_creds = require('./creds/logentries.js');
-
-var bunyan = require('bunyan');
-var bunyanLogentries = require('bunyan-logentries');
 
 var badge_types = require('./badges/');
-
-var logentries_stream = bunyanLogentries.createStream({token: logentries_creds.TOKEN});
-var logger = module.exports.logger = bunyan.createLogger({
-  name: 'skunkworks',
-  level: 'debug',
-  streams: [{
-    level: 'debug',
-    stream: logentries_stream,
-    type: 'raw'
-  }]
-});
-
-// This is kind of janky, but it's the best mechanism I can yet find for making sure
-// the logs actually flush and get sent to logentries.
-var flushed = false;
-logentries_stream['_logger'].on('connect', function() {
-  flushed = true;
-});
-
-logentries_stream['_logger'].on('connection drain', function() {
-  flushed = true;
-});
-
-var complete = function(err, context) {
-  var counter = 100;
-  var interval = setInterval(function(){
-    --counter;
-    if (flushed || counter <= 0) {
-      clearInterval(interval);
-      if (err) return context.fail(err);
-      context.succeed();
-    }
-  }, 10);
-}
 
 var PURGE_TRIP_DETAIL_FOR_TRIP = "delete from trip_details where trip_id = $1;";
 var GET_TRIP = "select * from trips where id = $1;";
@@ -66,20 +28,27 @@ COLOR_SCALE = [
   "#C44537"
 ];
 
+var complete = function(err, context) {
+  if (err) return context.fail(err);
+  context.succeed();
+};
+
 function calculateTripDetail(client, context, trip_id, cb) {
-  logger.info({trip_id: trip_id}, "Calculating trip detail");
+  console.log("Calculating trip detail for %s", trip_id);
 
   // We plan to build trip detail, so purge any that already exists.
   client.query(PURGE_TRIP_DETAIL_FOR_TRIP, [trip_id], function(err, results) {
     if (err) {
-      logger.error(err, 'Trip detail purge failed');
+      console.log('Trip detail purge failed');
+      console.log(err);
       return complete(err, context);
     }
 
     // Find current trip.  If none and car is in gear, create a new trip.
     client.query(GET_TRIP, [trip_id], function(err, trip_record) {
       if (err) {
-        logger.error(err, 'Trip metric query failed');
+        console.log('Trip metric query failed');
+        console.log(err);
         return complete(err, context);
       }
 
@@ -88,11 +57,12 @@ function calculateTripDetail(client, context, trip_id, cb) {
       // Find current trip.  If none and car is in gear, create a new trip.
       client.query(GET_METRICS_FOR_TRIP, [trip_id], function(err, metrics) {
         if (err) {
-          logger.error(err, 'Trip metric query failed');
+          console.log('Trip metric query failed');
+          console.log(err);
           return complete(err, context);
         }
 
-        logger.info({metrics_count: metrics.rows.length}, "Found metrics for trip.");
+        console.log("Found %s metrics for trip.", metrics.rows.length);
 
         var lowest_lng = highest_lng = lowest_lat = highest_lat = undefined;
         var current_hash = [];
@@ -125,7 +95,7 @@ function calculateTripDetail(client, context, trip_id, cb) {
         // metric and use it to populate pre-computed route paths and to calculate route bounding boxes.
         metrics.rows.forEach(function(metric) {
 
-          logger.debug(metric);
+          console.log(metric);
 
           if (metric.speed !== 0) {
             if (first_movement_timestamp === undefined) first_movement_timestamp = metric.timestamp;
@@ -207,29 +177,32 @@ function calculateTripDetail(client, context, trip_id, cb) {
             var lower_right = JSON.stringify({ lng: highest_lng, lat: lowest_lat });
 
             // Insert new trip_details record
-            logger.info({duration: (new Date().getTime() - start)}, 'Processing completed');
+            console.log('Processing completed after %sms', (new Date().getTime() - start));
 
             // Find current trip.  If none and car is in gear, create a new trip.
             client.query(INSERT_TRIP_DETAILS, [trip.vehicle_id, trip_id, detailed_route, summary_route,
               upper_left, lower_right, (last_movement_timestamp - first_movement_timestamp)], function(err, res) {
 
               if (err) {
-                logger.error(err, 'Trip detail insert failed');
+                console.log('Trip detail insert failed');
+                console.log(err);
                 return complete(err, context);
               }
 
               var trip_detail_id = res.rows[0].id;
-              logger.info({trip_detail_id: trip_detail_id}, "Saved new trip detail id");
+              console.log("Saved new trip detail id %s", trip_detail_id);
 
               // First, delete all badges for this trip.
               client.query("DELETE FROM badges where trip_id = $1;", [trip_id], function(err) {
                 if (err) {
-                  logger.error(err, 'Badge delete failed');
+                  console.log('Badge delete failed');
+                  console.log(err);
                   return complete(err, context);
                 }
 
                 // Render all created badges
-                var trip_details = {logger:logger, id: trip_id, vehicle_id: trip.vehicle_id, trip_detail_id: trip_detail_id, trip: trip};
+                var trip_details = {id: trip_id, vehicle_id: trip.vehicle_id,
+                  trip_detail_id: trip_detail_id, trip: trip};
 
                 // Gather up all the pending sql operations as a result of the pending badge creates / deletes.
                 var sql_functions = [];
@@ -241,9 +214,14 @@ function calculateTripDetail(client, context, trip_id, cb) {
                 // complete.  Otherwise, callback immediately.
                 if (sql_functions.length > 0) {
                   var deferred_cb = _.after(sql_functions.length, cb);
-                  logger.info(sql_functions.length, "Running badge processing operations");
+                  console.log("Running %s badge processing operations", sql_functions.length);
                   sql_functions.forEach(function(sql_fn) {
-                    sql_fn(client, trip_details, deferred_cb);
+                    console.log("Done with badge op");
+                    console.log(trip_details);
+                    sql_fn(client, trip_details, function(err) {
+                      console.log(err);
+                      deferred_cb();
+                    });
                   });
                 } else cb();
               });
@@ -271,7 +249,6 @@ exports.handler = function(record, context) {
 
         client.query0 = client.query;
         client.query = function(config, params, cb) {
-          logger.info({values: params}, config);
           client.query0(config, params, cb);
         };
       }
