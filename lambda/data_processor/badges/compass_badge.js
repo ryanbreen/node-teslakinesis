@@ -50,7 +50,7 @@ CompassDirectionalBadge.prototype.createSQL = function() {
           }
         };
 
-        console.log("global exemplar for badge: %s", global_exemplar);
+        console.log("global exemplar for badge: %s", current_exemplar);
 
         // Send the dummy_metric through process_metric.  If it replaces this_obj's exemplar, it means that the current
         // metric is more exemplar than this one, so there's no need to update badges.
