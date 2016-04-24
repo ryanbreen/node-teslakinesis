@@ -1,0 +1,16 @@
+<html>
+<head><title>Login</title>
+</head>
+<body>
+<script src="https://cdn.auth0.com/js/lock-8.1.min.js"></script>
+<script type="text/javascript">  
+var lock = new Auth0Lock('7ounT2Ohg2gZ6tuuGAFFjGfzupCjcfc2', 'ryanbreen.auth0.com');
+lock.show({
+    callbackURL: 'http://localhost:3000/auth/auth0/callback'
+  , responseType: 'code'
+  , authParams: {
+    scope: 'openid profile'
+  }
+});
+</script>
+</body>
