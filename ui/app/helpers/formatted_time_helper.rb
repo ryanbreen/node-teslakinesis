@@ -22,9 +22,8 @@ module FormattedTimeHelper
   end
 
   def pretty_precise_duration(trip)
-    now = DateTime.now
     if trip.end_time != nil
-      precise_distance_of_time_in_words(now - (trip.trip_detail.true_duration/1000), now)
+      precise_distance_of_time_in_words(trip.end_time - (trip.trip_detail.true_duration/1000), trip.end_time)
     else
       precise_distance_of_time_in_words(trip.start_time, Time.now)
     end
