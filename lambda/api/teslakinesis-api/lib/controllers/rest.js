@@ -17,26 +17,25 @@ module.exports.respond = function(event, cb) {
     'key' : event.key,
     'value' : event.value
   };
+
   switch (response.method) {
-      case 'POST':
-          Trip.create(response, cb);
-          break;
-      case 'GET':
-          if (event.key) {
-              
-          } else{
-            break;
-          };   
-          break;
-      case 'PUT':
-          
-          break;
-      case 'DELETE':
-          
-          break;
-      default:
-    }
-  };
+    case 'POST':
+      break;
+    case 'GET':
+      if (event.key) {
+        
+      } else {
+        Trip.findAll().then(function (trip) {
+          console.log(trip);
+        });
+      }
+      break;
+    case 'PUT':
+      break;
+    case 'DELETE':
+      break;
+    default:
+  }
 
   return cb(null, response);
 };
