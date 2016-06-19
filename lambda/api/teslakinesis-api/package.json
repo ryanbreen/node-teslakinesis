@@ -9,5 +9,9 @@
     "type": "git",
     "url": "git@github.com:ryanbreen/node-teslakinesis.git"
   },
-  "dependencies": {}
+  "dependencies": {
+    "aws-sdk": "^2.4.0",
+    "sequelize": "^3.23.3",
+    "serverless-helpers-js": "^0.2.0"
+  }
 }

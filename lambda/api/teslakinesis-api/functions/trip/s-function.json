@@ -1,0 +1,45 @@
+{
+  "name": "trip",
+  "handler": "handler.handler",
+  "runtime": "nodejs",
+  "description": "some description for your lambda",
+  "timeout": 6,
+  "memorySize": 1024,
+  "custom": {
+    "excludePatterns": []
+  },
+  "endpoints": [
+    {
+      "path": "trip",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {
+        "application/json": ""
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    }
+  ]
+} 
