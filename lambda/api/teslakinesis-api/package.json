@@ -14,5 +14,11 @@
     "pg": "^5.1.0",
     "sequelize": "^3.23.3",
     "serverless-helpers-js": "^0.2.0"
-  }
+  },
+  "bundledDependencies": [
+    "aws-sdk",
+    "pg",
+    "sequelize",
+    "serverless-helpers-js"
+  ]
 }

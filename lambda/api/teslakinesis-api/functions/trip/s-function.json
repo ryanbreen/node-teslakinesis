@@ -1,9 +1,9 @@
 {
   "name": "trip",
-  "handler": "handler.handler",
+  "handler": "trip/handler.trips",
   "runtime": "nodejs",
-  "description": "some description for your lambda",
-  "timeout": 6,
+  "description": "Management of Trips",
+  "timeout": 10,
   "memorySize": 1024,
   "custom": {
     "excludePatterns": []
