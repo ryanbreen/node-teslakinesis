@@ -2,7 +2,7 @@ var DB_CREDS = require('../creds/db.js');
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(DB_CREDS.URI);
 
-var Trip = sequelize.define('trip', {
+var Trip = module.exports = sequelize.define('trip', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,

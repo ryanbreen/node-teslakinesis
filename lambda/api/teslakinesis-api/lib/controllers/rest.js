@@ -23,10 +23,9 @@ module.exports.respond = function(event, cb) {
       break;
     case 'GET':
       if (event.key) {
-        
       } else {
-        Trip.findAll().then(function (trip) {
-          console.log(trip);
+        Trip.findAll().then(function (trips) {
+          return cb(null, trips);
         });
       }
       break;
@@ -36,6 +35,4 @@ module.exports.respond = function(event, cb) {
       break;
     default:
   }
-
-  return cb(null, response);
 };
