@@ -2,6 +2,6 @@
  * Lib
  */
 
-var trips = require("./controllers/trips");
+var rest = require("./controllers/rest.js");
 
-module.exports.trips = trips.respond;
+module.exports.rest = rest.respond;

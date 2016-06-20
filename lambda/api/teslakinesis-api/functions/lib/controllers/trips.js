@@ -15,6 +15,7 @@ module.exports.respond = function(event, cb) {
       break;
     case 'GET':
       if (event.id) {
+        console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
         Trip.findOne({ where: { vehicle_id : event.vehicle_id, id: event.id } }).then(function (trip) {
           return cb(null, trip);
         });
