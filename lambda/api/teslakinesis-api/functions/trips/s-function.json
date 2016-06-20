@@ -1,0 +1,44 @@
+{
+  "name": "trips",
+  "handler": "trips/handler.trips",
+  "runtime": "nodejs",
+  "description": "Management of Trips",
+  "timeout": 10,
+  "memorySize": 1024,
+  "endpoints": [
+    {
+      "path": "/{vehicle_id}/trips",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {
+        "integration.request.path.vehicle_id": "method.request.path.vehicle_id"
+      },
+      "requestTemplates": {
+        "application/json": "{ \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    }
+  ]
+}
