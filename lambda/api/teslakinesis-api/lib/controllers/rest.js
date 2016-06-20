@@ -24,7 +24,7 @@ module.exports.respond = function(event, cb) {
     case 'GET':
       if (event.key) {
       } else {
-        Trip.findAll().then(function (trips) {
+        Trip.findAll({ order: 'id DESC' }).then(function (trips) {
           return cb(null, trips);
         });
       }
