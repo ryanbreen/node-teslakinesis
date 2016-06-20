@@ -1,5 +1,3 @@
-console.log('Loading function');
-
 /**
  * Provide an event that contains the following keys:
  *
@@ -12,19 +10,16 @@ var Trip = require('../models/trip');
 
 module.exports.respond = function(event, cb) {
 
-  var response = {
-    'method' : event.httpmethod,
-    'key' : event.key,
-    'value' : event.value
-  };
-
-  switch (response.method) {
+  switch (event.httpmethod) {
     case 'POST':
       break;
     case 'GET':
-      if (event.key) {
+      if (event.id) {
+        Trip.findOne({ where: { vehicle_id : event.vehicle_id, id: event.id } }).then(function (trip) {
+          return cb(null, trip);
+        });
       } else {
-        Trip.findAll({ order: 'id DESC' }).then(function (trips) {
+        Trip.findAll({ where: { vehicle_id : event.vehicle_id }, order: 'id DESC' }).then(function (trips) {
           return cb(null, trips);
         });
       }
