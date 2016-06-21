@@ -1,4 +1,5 @@
 {
+  "filter": "unsummarized",
   "type": "trips",
   "httpmethod": "GET",
   "vehicle_id": "6856198612260671482",

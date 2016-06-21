@@ -32,13 +32,22 @@ module.exports.respond = function(event, cb) {
           event.page = 1;
         }
 
+        var where = { vehicle_id : event.vehicle_id };
+        var include_where = {  };
+
+        if (event.filter == 'unsummarized') {
+          include_where.trip_id = null;
+        }
+
         Trip.findAll({
-          where: { vehicle_id : event.vehicle_id },
+          where: where,
           order: 'id DESC',
           limit: PAGE_SIZE,
           offset: event.page * PAGE_SIZE,
           include: [{
-            model: TripDetail
+            model: TripDetail,
+            where: include_where,
+            required: false
           }]
         }).then(function (trips) {
           return cb(null, trips);
