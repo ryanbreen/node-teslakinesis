@@ -26,9 +26,15 @@ module.exports.respond = function(event, cb) {
           return cb(null, trip);
         });
       } else {
+        if (!event.page) {
+          event.page = 1;
+        }
+
         Trip.findAll({
           where: { vehicle_id : event.vehicle_id },
           order: 'id DESC',
+          limit: 10,
+          offset: event.page,
           include: [{
             model: TripDetail
           }]

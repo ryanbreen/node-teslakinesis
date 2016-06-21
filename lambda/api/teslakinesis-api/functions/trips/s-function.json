@@ -12,10 +12,11 @@
       "authorizationType": "none",
       "apiKeyRequired": false,
       "requestParameters": {
-        "integration.request.path.vehicle_id": "method.request.path.vehicle_id"
+        "integration.request.path.vehicle_id": "method.request.path.vehicle_id",
+        "integration.request.querystring.page": "method.request.querystring.page"
       },
       "requestTemplates": {
-        "application/json": "{ \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
