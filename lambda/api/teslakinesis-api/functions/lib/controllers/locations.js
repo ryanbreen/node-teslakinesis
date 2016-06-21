@@ -6,8 +6,7 @@
  *   - payload: a parameter to pass to the operation being performed
  */
 
-var Trip = require('../models/trip.js');
-var TripDetail = require('../models/trip_detail.js');
+var Location = require('../models/location.js');
 
 const PAGE_SIZE = 10;
 
@@ -18,30 +17,23 @@ module.exports.respond = function(event, cb) {
       break;
     case 'GET':
       if (event.id) {
-        console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
-        Trip.findOne({
-          where: { vehicle_id : event.vehicle_id, id: event.id },
-          include: [{
-            model: TripDetail
-          }]
-        }).then(function (trip) {
-          return cb(null, trip);
+        Location.findOne({
+          where: { vehicle_id : event.vehicle_id, id: event.id }
+        }).then(function (location) {
+          return cb(null, location);
         });
       } else {
         if (!event.page) {
           event.page = 1;
         }
 
-        Trip.findAll({
+        Location.findAll({
           where: { vehicle_id : event.vehicle_id },
           order: 'id DESC',
           limit: PAGE_SIZE,
-          offset: event.page * PAGE_SIZE,
-          include: [{
-            model: TripDetail
-          }]
-        }).then(function (trips) {
-          return cb(null, trips);
+          offset: event.page * PAGE_SIZE
+        }).then(function (locations) {
+          return cb(null, locations);
         });
       }
       break;
