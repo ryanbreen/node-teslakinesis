@@ -6,6 +6,7 @@
  *   - payload: a parameter to pass to the operation being performed
  */
 
+var locations = require('./locations.js');
 var trips = require('./trips.js');
 
 module.exports.respond = function(event, cb) {
@@ -15,6 +16,9 @@ module.exports.respond = function(event, cb) {
   switch (event.type) {
     case 'trips':
       trips.respond(event, cb);
+      break;
+    case 'locations':
+      locations.respond(event, cb);
       break;
     default:
       cb("Invalid type");
