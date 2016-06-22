@@ -15,6 +15,8 @@ const METRIC_PAGE_SIZE = 1000;
 
 module.exports.respond = function(event, cb) {
 
+  console.log(event);
+
   switch (event.httpmethod) {
     case 'POST':
       break;
@@ -23,7 +25,7 @@ module.exports.respond = function(event, cb) {
         event.page = 0;
       }
 
-      switch (event.path) {
+      switch (event.mode) {
         case 'metrics':
           Metric.findAll({
             where: { vehicle_id : event.vehicle_id, trip_id: event.id },
@@ -44,30 +46,32 @@ module.exports.respond = function(event, cb) {
           }).then(function (trip) {
             return cb(null, trip);
           });
-        }
-        break;
-      case 'unsummarized':
-        var where = { vehicle_id : event.vehicle_id, trip_id: null };
-      case 'index':
-        if (!where) {
-          var where = { vehicle_id : event.vehicle_id };
-        }
-        var include_where = {  };
+          break;
+        case 'unsummarized':
+          var where = { vehicle_id : event.vehicle_id, trip_id: null };
+        case 'index':
+          if (!where) {
+            var where = { vehicle_id : event.vehicle_id };
+          }
+          var include_where = {  };
 
-        Trip.findAll({
-          where: where,
-          order: 'id DESC',
-          limit: PAGE_SIZE,
-          offset: event.page * PAGE_SIZE,
-          include: [{
-            model: TripDetail,
-            where: include_where,
-            required: false
-          }]
-        }).then(function (trips) {
-          return cb(null, trips);
-        });
-        break;
+          Trip.findAll({
+            where: where,
+            order: 'id DESC',
+            limit: PAGE_SIZE,
+            offset: event.page * PAGE_SIZE,
+            include: [{
+              model: TripDetail,
+              where: include_where,
+              required: false
+            }]
+          }).then(function (trips) {
+            return cb(null, trips);
+          });
+          break;
+        default:
+          console.log("oops, mode %s not found", event.mode);
+      }
       break;
     case 'PUT':
       break;

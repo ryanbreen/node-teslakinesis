@@ -1,7 +1,7 @@
 {
-  "path": "metrics",
   "id": 2712,
   "type": "trips",
+  "mode": "index",
   "httpmethod": "GET",
   "vehicle_id": "6856198612260671482",
   "page": 0

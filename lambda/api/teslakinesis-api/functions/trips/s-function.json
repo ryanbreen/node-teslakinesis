@@ -16,7 +16,7 @@
         "integration.request.querystring.page": "method.request.querystring.page"
       },
       "requestTemplates": {
-        "application/json": "{ \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"mode\": \"index\", \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
@@ -51,7 +51,7 @@
         "integration.request.querystring.page": "method.request.querystring.page"
       },
       "requestTemplates": {
-        "application/json": "{ \"path\": \"unsummarized\", \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"mode\": \"unsummarized\", \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
@@ -83,7 +83,7 @@
       "apiKeyRequired": false,
       "requestParameters": {},
       "requestTemplates": {
-        "application/json": "{ \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"mode\": \"show\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
@@ -115,7 +115,7 @@
       "apiKeyRequired": false,
       "requestParameters": {},
       "requestTemplates": {
-        "application/json": "{ \"path\": \"metrics\", \"page\": \"$input.params('page')\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"mode\": \"metrics\", \"page\": \"$input.params('page')\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
@@ -147,7 +147,7 @@
       "apiKeyRequired": false,
       "requestParameters": {},
       "requestTemplates": {
-        "application/json": "{ \"path\": \"badges\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"mode\": \"badges\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
