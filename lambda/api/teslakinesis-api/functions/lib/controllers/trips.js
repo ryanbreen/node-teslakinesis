@@ -21,6 +21,9 @@ module.exports.respond = function(event, cb) {
     case 'GET':
       if (event.id) {
         if (event.path == 'metrics') {
+          if (!event.page) {
+            event.page = 0;
+          }
           Metric.findAll({
             where: { vehicle_id : event.vehicle_id, trip_id: event.id },
             order: 'id DESC',
@@ -42,7 +45,7 @@ module.exports.respond = function(event, cb) {
         }
       } else {
         if (!event.page) {
-          event.page = 1;
+          event.page = 0;
         }
 
         var where = { vehicle_id : event.vehicle_id };

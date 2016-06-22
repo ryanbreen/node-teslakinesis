@@ -3,7 +3,7 @@
   "handler": "trips/handler.trips",
   "runtime": "nodejs",
   "description": "Management of Trips",
-  "timeout": 10,
+  "timeout": 60,
   "memorySize": 1024,
   "endpoints": [
     {
@@ -115,7 +115,7 @@
       "apiKeyRequired": false,
       "requestParameters": {},
       "requestTemplates": {
-        "application/json": "{ \"path\": \"metrics\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"path\": \"metrics\", \"page\": \"$input.params('page')\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
