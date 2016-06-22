@@ -51,7 +51,7 @@
         "integration.request.querystring.page": "method.request.querystring.page"
       },
       "requestTemplates": {
-        "application/json": "{ \"filter\": \"unsummarized\", \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
+        "application/json": "{ \"path\": \"unsummarized\", \"type\": \"trips\", \"page\": \"$input.params('page')\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {
@@ -84,6 +84,38 @@
       "requestParameters": {},
       "requestTemplates": {
         "application/json": "{ \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    },
+    {
+      "path": "/{vehicle_id}/trips/{id}/metrics",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {
+        "application/json": "{ \"path\": \"metrics\", \"type\": \"trips\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
       },
       "responses": {
         "400": {

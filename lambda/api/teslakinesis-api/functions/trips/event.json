@@ -1,7 +1,8 @@
 {
-  "filter": "unsummarized",
+  "path": "metrics",
+  "id": 2700,
   "type": "trips",
   "httpmethod": "GET",
   "vehicle_id": "6856198612260671482",
-  "page": 1
+  "page": 0
 }

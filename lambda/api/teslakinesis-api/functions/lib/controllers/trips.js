@@ -6,10 +6,12 @@
  *   - payload: a parameter to pass to the operation being performed
  */
 
+var Metric = require('../models/metric.js');
 var Trip = require('../models/trip.js');
 var TripDetail = require('../models/trip_detail.js');
 
 const PAGE_SIZE = 10;
+const METRIC_PAGE_SIZE = 1000;
 
 module.exports.respond = function(event, cb) {
 
@@ -18,15 +20,26 @@ module.exports.respond = function(event, cb) {
       break;
     case 'GET':
       if (event.id) {
-        console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
-        Trip.findOne({
-          where: { vehicle_id : event.vehicle_id, id: event.id },
-          include: [{
-            model: TripDetail
-          }]
-        }).then(function (trip) {
-          return cb(null, trip);
-        });
+        if (event.path == 'metrics') {
+          Metric.findAll({
+            where: { vehicle_id : event.vehicle_id, trip_id: event.id },
+            order: 'id DESC',
+            limit: METRIC_PAGE_SIZE,
+            offset: event.page * METRIC_PAGE_SIZE,
+          }).then(function (metrics) {
+            return cb(null, metrics);
+          });
+        } else {
+          console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
+          Trip.findOne({
+            where: { vehicle_id : event.vehicle_id, id: event.id },
+            include: [{
+              model: TripDetail
+            }]
+          }).then(function (trip) {
+            return cb(null, trip);
+          });
+        }
       } else {
         if (!event.page) {
           event.page = 1;
@@ -35,7 +48,7 @@ module.exports.respond = function(event, cb) {
         var where = { vehicle_id : event.vehicle_id };
         var include_where = {  };
 
-        if (event.filter == 'unsummarized') {
+        if (event.path == 'unsummarized') {
           include_where.trip_id = null;
         }
 
