@@ -19,11 +19,12 @@ module.exports.respond = function(event, cb) {
     case 'POST':
       break;
     case 'GET':
-      if (event.id) {
-        if (event.path == 'metrics') {
-          if (!event.page) {
-            event.page = 0;
-          }
+      if (!event.page) {
+        event.page = 0;
+      }
+
+      switch (event.path) {
+        case 'metrics':
           Metric.findAll({
             where: { vehicle_id : event.vehicle_id, trip_id: event.id },
             order: 'id DESC',
@@ -32,7 +33,8 @@ module.exports.respond = function(event, cb) {
           }).then(function (metrics) {
             return cb(null, metrics);
           });
-        } else {
+          break;
+        case 'show':
           console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
           Trip.findOne({
             where: { vehicle_id : event.vehicle_id, id: event.id },
@@ -43,17 +45,14 @@ module.exports.respond = function(event, cb) {
             return cb(null, trip);
           });
         }
-      } else {
-        if (!event.page) {
-          event.page = 0;
+        break;
+      case 'unsummarized':
+        var where = { vehicle_id : event.vehicle_id, trip_id: null };
+      case 'index':
+        if (!where) {
+          var where = { vehicle_id : event.vehicle_id };
         }
-
-        var where = { vehicle_id : event.vehicle_id };
         var include_where = {  };
-
-        if (event.path == 'unsummarized') {
-          include_where.trip_id = null;
-        }
 
         Trip.findAll({
           where: where,
@@ -68,7 +67,7 @@ module.exports.respond = function(event, cb) {
         }).then(function (trips) {
           return cb(null, trips);
         });
-      }
+        break;
       break;
     case 'PUT':
       break;
