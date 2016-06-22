@@ -7,6 +7,7 @@
  */
 
 var Metric = require('../models/metric.js');
+var Badge = require('../models/badge.js');
 var Trip = require('../models/trip.js');
 var TripDetail = require('../models/trip_detail.js');
 
@@ -26,6 +27,14 @@ module.exports.respond = function(event, cb) {
       }
 
       switch (event.mode) {
+        case 'badges':
+          Badge.findAll({
+            where: { vehicle_id : event.vehicle_id, trip_id: event.id },
+            order: 'id DESC'
+          }).then(function (badges) {
+            return cb(null, badges);
+          });
+          break;
         case 'metrics':
           Metric.findAll({
             where: { vehicle_id : event.vehicle_id, trip_id: event.id },
