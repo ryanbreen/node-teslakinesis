@@ -2,6 +2,8 @@ var DB_CREDS = require('../creds/db.js');
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(DB_CREDS.URI);
 
+var BadgeType = require('./badge_type.js');
+
 var Badge = module.exports = sequelize.define('badge', {
   id: {
     type: Sequelize.INTEGER,
@@ -20,3 +22,5 @@ var Badge = module.exports = sequelize.define('badge', {
   tableName: 'badges',
   timestamps: false
 });
+
+Badge.belongsTo(BadgeType, { foreignKey: "badge_type_id" });
