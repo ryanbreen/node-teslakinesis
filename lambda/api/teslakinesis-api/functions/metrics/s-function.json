@@ -1,0 +1,76 @@
+{
+  "name": "metrics",
+  "handler": "metrics/handler.metrics",
+  "runtime": "nodejs",
+  "description": "Management of metrics",
+  "timeout": 10,
+  "memorySize": 1024,
+  "endpoints": [
+    {
+      "path": "/{vehicle_id}/metrics",
+      "method": "POST",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {
+        "integration.request.path.vehicle_id": "method.request.path.vehicle_id"
+      },
+      "requestTemplates": {
+        "application/json": "{ \"body\": $input.json('$'), \"type\": \"metrics\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"httpmethod\" : \"POST\" }"
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    },
+    {
+      "path": "/{vehicle_id}/metrics/{id}",
+      "method": "GET",
+      "authorizationType": "none",
+      "apiKeyRequired": false,
+      "requestParameters": {},
+      "requestTemplates": {
+        "application/json": "{ \"type\": \"metrics\", \"vehicle_id\" : \"$input.params('vehicle_id')\", \"id\" : \"$input.params('id')\", \"httpmethod\" : \"GET\" }"
+      },
+      "responses": {
+        "400": {
+          "selectionPattern": "^\\[BadRequest\\].*",
+          "statusCode": "400"
+        },
+        "403": {
+          "selectionPattern": "^\\[Forbidden\\].*",
+          "statusCode": "403"
+        },
+        "404": {
+          "selectionPattern": "^\\[NotFound\\].*",
+          "statusCode": "404"
+        },
+        "default": {
+          "statusCode": "200",
+          "responseParameters": {},
+          "responseModels": {},
+          "responseTemplates": {
+            "application/json": ""
+          }
+        }
+      }
+    }
+  ]
+}

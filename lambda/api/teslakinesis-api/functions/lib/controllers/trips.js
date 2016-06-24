@@ -50,7 +50,6 @@ module.exports.respond = function(event, cb) {
           });
           break;
         case 'show':
-          console.log("Looking for trip %s for vehicle %s", event.id, event.vehicle_id);
           Trip.findOne({
             where: { vehicle_id : event.vehicle_id, id: event.id },
             include: [{
