@@ -14,6 +14,18 @@ module.exports.respond = function(event, cb) {
 
   switch (event.httpmethod) {
     case 'POST':
+
+      var now = new Date();
+
+      // Make sure we exclusively trust the value in the path
+      event.body.vehicle_id = event.vehicle_id;
+      event.body.created_at = now;
+      event.body.updated_at = now;
+
+      Metric.create(event.body).then(function(metric) {
+        return cb(null, { Location: metric.id });
+      });
+
       break;
     case 'GET':
       if (event.id) {

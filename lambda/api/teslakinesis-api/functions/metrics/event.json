@@ -1,9 +1,29 @@
 {
   "type": "metrics",
-  "httpmethod": "GET",
-  "id": "227668",
-  "vehicle_id": "6856198612260671482",
+  "httpmethod": "POST",
+  "vehicle_id": "DEADBEEF",
   "body": {
-
+    "vehicle_id": "DEADBEEF",
+    "timestamp": "2015-06-21T19:01:57.773Z",
+    "speed": 78,
+    "odometer": 33944.7,
+    "soc": 84,
+    "elevation": 72,
+    "heading": 49,
+    "location": {
+        "type": "Point",
+        "coordinates": [
+            -71.195144,
+            42.485953,
+            72
+        ]
+    },
+    "power": 87,
+    "shift_state": "D",
+    "range": 169,
+    "est_range": 141,
+    "created_at": "2015-06-21T19:01:58.724Z",
+    "updated_at": "2015-06-21T19:01:58.724Z",
+    "trip_id": 183
   }
 }

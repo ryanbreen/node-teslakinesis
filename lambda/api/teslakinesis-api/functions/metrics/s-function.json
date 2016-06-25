@@ -31,8 +31,10 @@
           "statusCode": "404"
         },
         "default": {
-          "statusCode": "200",
-          "responseParameters": {},
+          "statusCode": "201",
+          "responseParameters": {
+            "method.response.header.Location": "integration.response.body.Location"
+          },
           "responseModels": {},
           "responseTemplates": {
             "application/json": ""
