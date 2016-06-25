@@ -23,7 +23,7 @@ module.exports.respond = function(event, cb) {
       event.body.updated_at = now;
 
       Metric.create(event.body).then(function(metric) {
-        return cb(null, { Location: metric.id });
+        return cb(null, { location: "/" + metric.vehicle_id + "/metrics/" + metric.id });
       });
 
       break;

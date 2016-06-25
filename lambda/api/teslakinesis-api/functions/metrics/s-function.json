@@ -33,7 +33,7 @@
         "default": {
           "statusCode": "201",
           "responseParameters": {
-            "method.response.header.Location": "integration.response.body.Location"
+            "method.response.header.Location": "integration.response.body.location"
           },
           "responseModels": {},
           "responseTemplates": {
