@@ -1,6 +1,6 @@
 var DB_CREDS = require('../creds/db.js');
-var Sequelize = require('sequelize');
-var sequelize = new Sequelize(DB_CREDS.URI);
+var Sequelize = require('sequelize')
+var sequelize = DB_CREDS.sequelize;
 
 var Trip = module.exports = sequelize.define('trip', {
   id: {
