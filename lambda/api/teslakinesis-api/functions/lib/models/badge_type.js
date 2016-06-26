@@ -11,8 +11,7 @@ var BadgeType = module.exports = sequelize.define('badge_type', {
   name: Sequelize.CHAR,
   description: Sequelize.CHAR,
   icon: Sequelize.CHAR,
-  flavor: Sequelize.CHAR,
-  type: Sequelize.CHAR,
+  flavor: Sequelize.CHAR
 }, {
   timestamps: true,
   underscored: true
