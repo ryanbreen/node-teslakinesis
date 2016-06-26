@@ -10,7 +10,6 @@ var Metric = require('../models/metric.js');
 var Badge = require('../models/badge.js');
 var BadgeType = require('../models/badge_type.js');
 var Trip = require('../models/trip.js');
-var TripDetail = require('../models/trip_detail.js');
 
 const PAGE_SIZE = 10;
 const METRIC_PAGE_SIZE = 1000;
@@ -51,32 +50,17 @@ module.exports.respond = function(event, cb) {
           break;
         case 'show':
           Trip.findOne({
-            where: { vehicle_id : event.vehicle_id, id: event.id },
-            include: [{
-              model: TripDetail
-            }]
+            where: { vehicle_id : event.vehicle_id, id: event.id }
           }).then(function (trip) {
             return cb(null, trip);
           });
           break;
-        case 'unsummarized':
-          var where = { vehicle_id : event.vehicle_id, trip_id: null };
         case 'index':
-          if (!where) {
-            var where = { vehicle_id : event.vehicle_id };
-          }
-          var include_where = {  };
-
           Trip.findAll({
-            where: where,
+            where: { vehicle_id : event.vehicle_id },
             order: 'id DESC',
             limit: PAGE_SIZE,
-            offset: event.page * PAGE_SIZE,
-            include: [{
-              model: TripDetail,
-              where: include_where,
-              required: false
-            }]
+            offset: event.page * PAGE_SIZE
           }).then(function (trips) {
             return cb(null, trips);
           });
