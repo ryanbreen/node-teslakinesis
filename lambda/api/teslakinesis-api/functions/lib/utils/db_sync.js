@@ -3,7 +3,7 @@
 require('../models/');
 
 var sequelize = require('../creds/db.js').sequelize;
-sequelize.sync(function(err, done) {
+sequelize.sync({force: true}, function(err, done) {
   console.log(err);
   console.log(done);
 });
