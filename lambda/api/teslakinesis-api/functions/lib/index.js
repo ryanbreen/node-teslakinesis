@@ -1,3 +1,1 @@
-var rest = require("./controllers/rest.js");
-
-module.exports.rest = rest.respond;
+module.exports.rest = require("./controllers/rest.js").respond;
