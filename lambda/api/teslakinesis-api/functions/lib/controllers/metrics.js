@@ -1,11 +1,3 @@
-/**
- * Provide an event that contains the following keys:
- *
- *   - operation: one of the operations in the switch statement below
- *   - tableName: required for operations that interact with DynamoDB
- *   - payload: a parameter to pass to the operation being performed
- */
-
 var Metric = require('../models/metric.js');
 
 const PAGE_SIZE = 10;
