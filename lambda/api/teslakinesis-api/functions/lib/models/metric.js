@@ -11,7 +11,7 @@ var Metric = module.exports = sequelize.define('metric', {
     primaryKey: true,
     autoIncrement: true
   },
-  timestamp: Sequelize.TIME,
+  timestamp: Sequelize.DATE,
   speed: Sequelize.INTEGER,
   odometer: Sequelize.DOUBLE,
   soc: Sequelize.INTEGER,
