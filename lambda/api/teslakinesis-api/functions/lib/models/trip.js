@@ -11,8 +11,8 @@ var Trip = module.exports = sequelize.define('trip', {
     primaryKey: true,
     autoIncrement: true
   },
-  start_time: Sequelize.TIME,
-  end_time: Sequelize.TIME,
+  start_time: Sequelize.DATE,
+  end_time: Sequelize.DATE,
   start_location: Sequelize.GEOGRAPHY,
   end_location: Sequelize.GEOGRAPHY,
   detailed_route: Sequelize.TEXT,
