@@ -27,6 +27,8 @@ var Metric = module.exports = sequelize.define('metric', {
   underscored: true
 });
 
-Metric.belongsTo(Trip);
+Metric.belongsTo(Trip, {
+  constraints: false
+});
 Metric.belongsTo(Vehicle);
 Trip.hasMany(Metric);
